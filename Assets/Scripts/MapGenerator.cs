@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-	[SerializeField] private int width = 100;
-	[SerializeField] private int height = 100;
+	[SerializeField] private int width = 200;
+	[SerializeField] private int height = 200;
 
 	[Tooltip("Ключ для генерации карты")]
 	[SerializeField]
@@ -18,11 +18,10 @@ public class MapGenerator : MonoBehaviour
 	[Tooltip("Максимальный процент непроходимой местности")]
 	[SerializeField]
 	[Range(0, 100)]
-	private int randomFillPercent = 5;
+	private int randomFillPercent = 47;
 
-	private const int smoothCount = 5;
-	private const int sorroundWallCount = 4;
-	private const int gridStep = 1;
+	private int smoothCount = 5;
+	private int surroundWallCount = 4;
 
 	private int[,] map;
 
@@ -34,7 +33,7 @@ public class MapGenerator : MonoBehaviour
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.G))
+		if (Input.GetKeyDown(KeyCode.G))
 		{
 			GenerateMap();
 		}
@@ -81,7 +80,7 @@ public class MapGenerator : MonoBehaviour
 		{
 			for (int y = 0; y < height; y++)
 			{
-				//граница карты непроходима
+				// Граница карты непроходима
 				if (x == 0 || x == width - 1 || y == 0 || y == height - 1)
 				{
 					map[x, y] = 1;
@@ -95,24 +94,24 @@ public class MapGenerator : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Соединяет непроходимые области
+	/// Соединяет близкие непроходимые/непроходимые области в одну большую
 	/// </summary>
 	private void SmoothMap()
 	{
-		for (int x = 1; x < width - 1; x++)
+		for (int x = 0; x < width; x++)
 		{
-			for (int y = 1; y < height - 1; y++)
+			for (int y = 0; y < height; y++)
 			{
-				int neighbourWallTiles = GetSorroundWallCount(x, y);
+				int neighbourWallTiles = GetSurroundWallCount(x, y);
 
-				if (neighbourWallTiles > sorroundWallCount)
+				if (neighbourWallTiles > surroundWallCount)
 				{
 					map[x, y] = 1;
 				}
 				else
 				{
-					//TODO проверить для случая <=
-					if (neighbourWallTiles < sorroundWallCount)
+					// Можно поставить <= или -1 справа
+					if (neighbourWallTiles < surroundWallCount)
 					{
 						map[x, y] = 0;
 					}
@@ -122,27 +121,33 @@ public class MapGenerator : MonoBehaviour
 		}
 	}
 
-	private int GetSorroundWallCount(int gridX, int gridY)
+	/// <summary>
+	/// Число стен вокруг клетки [gridX, gridY]
+	/// </summary>
+	/// <returns></returns>
+	private int GetSurroundWallCount(int gridX, int gridY)
 	{
 		int wallCount = 0;
 
-		// Зона, в которой ищутся стены - [gridX -+ gridStep, gridY -+ gridStep]
-		for (int neighbourX = gridX - gridStep; neighbourX <= gridX + gridStep; neighbourX++)
+		// Зона, в которой ищутся стены - [gridX -+ 1, gridY -+ 1]
+		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
 		{
-			for (int neighbourY = gridY - gridStep; neighbourY <= gridY + gridStep; neighbourY++)
+			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
 			{
-				//вне карты только непроходимые места
+				// Считаются точки только в соседних клетках
+				if (neighbourX == gridX && neighbourY == gridY)
+				{
+					continue;
+				}
+
+				// Вне карты только непроходимые места
 				if (neighbourX < 0 || neighbourX >= width || neighbourY < 0 || neighbourY >= height)
 				{
 					wallCount++;
 				}
 				else
 				{
-					//TODO проверить || вместо &&
-					if (neighbourX != gridX || neighbourY != gridY)
-					{
-						wallCount += map[neighbourX, neighbourY];
-					}
+					wallCount += map[neighbourX, neighbourY];
 				}
 			}
 		}
