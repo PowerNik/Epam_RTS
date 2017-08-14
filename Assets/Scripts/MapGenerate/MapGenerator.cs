@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,13 @@ public class MapGenerator : MonoBehaviour
 {
 	[SerializeField] private int width = 200;
 	[SerializeField] private int height = 200;
+
+	[SerializeField]
+	[Range(0.2f, 1)]
+	private float squareSize = 1;
+
+	[SerializeField] private int xt, zt;
+	[SerializeField] private Vector3 fw;
 
 	[Tooltip("Ключ для генерации карты")]
 	[SerializeField]
@@ -23,11 +31,13 @@ public class MapGenerator : MonoBehaviour
 	private int smoothCount = 5;
 	private int surroundWallCount = 4;
 
+	MeshGenerator meshGen;
 	private int[,] map;
 
 
 	void Start()
 	{
+		meshGen = GetComponent<MeshGenerator>();
 		GenerateMap();
 	}
 
@@ -37,7 +47,51 @@ public class MapGenerator : MonoBehaviour
 		{
 			GenerateMap();
 		}
+
+		if (Input.GetKeyDown(KeyCode.D))
+		{
+			DestructMap();
+		}
+
+		if (Input.GetKeyDown(KeyCode.C))
+		{
+			ConstructMap();
+		}
 	}
+
+	private void DestructMap()
+	{
+		CalculateMousePosition();
+		ChangeMap(0);
+	}
+
+	private void ConstructMap()
+	{
+		CalculateMousePosition();
+		ChangeMap(1);
+	}
+
+	private void CalculateMousePosition()
+	{
+		fw = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+		xt = (int)(fw.x / squareSize + width / 2);
+		zt = (int)(fw.z / squareSize + height / 2);
+	}
+
+	private void ChangeMap(int changeValue)
+	{
+		// Границу нельзя изменить
+		if (0 < xt && xt < width - 1 && 0 < zt && zt < height - 1)
+		{
+			if (map[xt, zt] != changeValue)
+			{
+				map[xt, zt] = changeValue;
+				meshGen.GenerateMesh(map, squareSize);
+			}
+		}
+	}
+
 
 	private void GenerateMap()
 	{
@@ -49,8 +103,7 @@ public class MapGenerator : MonoBehaviour
 			SmoothMap();
 		}
 
-		MeshGenerator mesh = GetComponent<MeshGenerator>();
-		mesh.GenerateMesh(map, 1);
+		meshGen.GenerateMesh(map, squareSize);
 	}
 
 	private void RandomFillMap()
