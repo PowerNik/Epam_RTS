@@ -5,15 +5,18 @@ using UnityEngine;
 
 public class CaveGenerator : MonoBehaviour
 {
+	#region Fields
+
 	[SerializeField] private int width = 200;
+	public int Width { get { return width; } }
+
 	[SerializeField] private int height = 200;
+	public int Height { get { return height; } }
 
 	[SerializeField]
 	[Range(0.2f, 1)]
 	private float squareSize = 1;
-
-	[SerializeField] private int xt, zt;
-	[SerializeField] private Vector3 fw;
+	public float SquareSize { get { return squareSize; } }
 
 	[Tooltip("Ключ для генерации карты")]
 	[SerializeField]
@@ -28,12 +31,16 @@ public class CaveGenerator : MonoBehaviour
 	[Range(0, 100)]
 	private int randomFillPercent = 47;
 
+
 	private int smoothCount = 5;
 	private int surroundWallCount = 4;
+
+	private int curX, curZ;
 
 	MeshCaveGenerator meshGen;
 	private int[,] map;
 
+	#endregion
 
 	void Start()
 	{
@@ -59,6 +66,8 @@ public class CaveGenerator : MonoBehaviour
 		}
 	}
 
+	#region ChangeMap
+
 	private void DestructMap()
 	{
 		CalculateMousePosition();
@@ -73,25 +82,29 @@ public class CaveGenerator : MonoBehaviour
 
 	private void CalculateMousePosition()
 	{
-		fw = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-		xt = (int)(fw.x / squareSize + width / 2);
-		zt = (int)(fw.z / squareSize + height / 2);
+		curX = (int)(worldPoint.x / squareSize + width / 2);
+		curZ = (int)(worldPoint.z / squareSize + height / 2);
 	}
-
+	/// <summary>
+	/// </summary>
+	/// <param name="changeValue">0 - удалить возвышенность, 1 - создать возвышенность</param>
 	private void ChangeMap(int changeValue)
 	{
 		// Границу нельзя изменить
-		if (0 < xt && xt < width - 1 && 0 < zt && zt < height - 1)
+		if (0 < curX && curX < width - 1 && 0 < curZ && curZ < height - 1)
 		{
-			if (map[xt, zt] != changeValue)
+			if (map[curX, curZ] != changeValue)
 			{
-				map[xt, zt] = changeValue;
+				map[curX, curZ] = changeValue;
 				meshGen.GenerateMesh(map, squareSize);
 			}
 		}
 	}
+	#endregion
 
+	#region MapGenerating
 
 	private void GenerateMap()
 	{
@@ -163,7 +176,6 @@ public class CaveGenerator : MonoBehaviour
 	/// <summary>
 	/// Число стен вокруг клетки [gridX, gridY]
 	/// </summary>
-	/// <returns></returns>
 	private int GetSurroundWallCount(int gridX, int gridY)
 	{
 		int wallCount = 0;
@@ -193,4 +205,6 @@ public class CaveGenerator : MonoBehaviour
 
 		return wallCount;
 	}
+
+	#endregion
 }
