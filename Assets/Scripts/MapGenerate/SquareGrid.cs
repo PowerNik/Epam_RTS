@@ -5,6 +5,8 @@ namespace MapGenerate
 	public class SquareGrid
 	{
 		public Square[,] squares;
+		public float noiseScale = 2.5f;
+		public float noiseHeight = 4f;
 
 		public SquareGrid(int[,] map, float squareSize)
 		{
@@ -22,7 +24,9 @@ namespace MapGenerate
 					float curX = -mapWidth / 2f + x * squareSize + squareSize / 2f;
 					float curZ = -mapHeight / 2f + y * squareSize + squareSize / 2f;
 
-					Vector3 pos = new Vector3(curX, 0, curZ);
+					float curY = noiseHeight * Mathf.PerlinNoise(x / noiseScale, y / noiseScale);
+
+					Vector3 pos = new Vector3(curX, curY, curZ);
 					controlNodes[x, y] = new ControlNode(pos, map[x, y] == 1, squareSize);
 				}
 			}

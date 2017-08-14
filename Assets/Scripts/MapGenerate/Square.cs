@@ -8,6 +8,9 @@
 		// Середины сторон фигур
 		public Node centreTop, centreBot, centreRight, centreLeft;
 
+		// Середины сторон видимых стен
+		public Node wallCentreTop, wallCentreBot, wallCentreRight, wallCentreLeft;
+
 		public SquareConfiguration configration;
 
 		public Square(ControlNode topLeft, ControlNode topRight, ControlNode botRight, ControlNode botLeft)
@@ -24,12 +27,26 @@
 			// |        |
 			// BL--CB--BR
 
+			CalculateCenterNodes();
+			CalculateWallCenterNodes();
+
+			CalculateConfiguration();
+		}
+
+		private void CalculateCenterNodes()
+		{
 			centreTop = topLeft.right;
 			centreBot = botLeft.right;
 			centreRight = botRight.above;
 			centreLeft = botLeft.above;
+		}
 
-			CalculateConfiguration();
+		private void CalculateWallCenterNodes()
+		{
+			wallCentreTop = topLeft.wallRight;
+			wallCentreBot = botLeft.wallRight;
+			wallCentreRight = botRight.wallAbove;
+			wallCentreLeft = botLeft.wallAbove;
 		}
 
 		private void CalculateConfiguration()
