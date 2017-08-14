@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapGenerator : MonoBehaviour
+public class CaveGenerator : MonoBehaviour
 {
 	[SerializeField] private int width = 200;
 	[SerializeField] private int height = 200;
@@ -31,13 +31,13 @@ public class MapGenerator : MonoBehaviour
 	private int smoothCount = 5;
 	private int surroundWallCount = 4;
 
-	MeshGenerator meshGen;
+	MeshCaveGenerator meshGen;
 	private int[,] map;
 
 
 	void Start()
 	{
-		meshGen = GetComponent<MeshGenerator>();
+		meshGen = GetComponent<MeshCaveGenerator>();
 		GenerateMap();
 	}
 

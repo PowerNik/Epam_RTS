@@ -5,7 +5,7 @@ using UnityEngine;
 
 using MapGenerate;
 
-public class MeshGenerator : MonoBehaviour
+public class MeshCaveGenerator : MonoBehaviour
 {
 	public SquareGrid squareGrid;
 
