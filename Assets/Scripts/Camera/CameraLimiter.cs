@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraBounder : MonoBehaviour
+public class CameraLimiter: MonoBehaviour
 {
 	private Camera camera;
 
