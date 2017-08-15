@@ -42,7 +42,6 @@ public class CameraController : MonoBehaviour
 		Apply();
 	}
 
-
 	private void MoveCamera()
 	{
 		horiz = (left) ? -1 : ((right) ? 1 : 0);
@@ -94,7 +93,6 @@ public class CameraController : MonoBehaviour
 		transform.position = new Vector3(transform.position.x, height, transform.position.z);
 		transform.rotation = Quaternion.Euler(rotationX, camRotation, 0);
 	}
-
 
 	public void CursorTriggerEnter(string triggerName)
 	{
