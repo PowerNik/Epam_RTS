@@ -75,13 +75,13 @@ public class MapGenerator : MonoBehaviour
 				int squareIndex = z * width + x;
 				int triOffset = squareIndex * 6;
 
-				triangles[triOffset + 0] = z * vertCountX + x +             0;
+				triangles[triOffset + 0] = z * vertCountX + x +              0;
 				triangles[triOffset + 1] = z * vertCountX + x + vertCountX + 0;
 				triangles[triOffset + 2] = z * vertCountX + x + vertCountX + 1;
 
-				triangles[triOffset + 3] = z * vertCountX + x +             0;
+				triangles[triOffset + 3] = z * vertCountX + x +              0;
 				triangles[triOffset + 4] = z * vertCountX + x + vertCountX + 1;
-				triangles[triOffset + 5] = z * vertCountX + x +             1;
+				triangles[triOffset + 5] = z * vertCountX + x +              1;
 			}
 		}
 
@@ -92,5 +92,6 @@ public class MapGenerator : MonoBehaviour
 		mesh.triangles = triangles;
 
 		GetComponent<MeshFilter>().mesh = mesh;
+		GetComponent<MeshCollider>().sharedMesh = mesh;
 	}
 }

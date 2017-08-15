@@ -36,6 +36,7 @@ public class MeshCaveGenerator : MonoBehaviour
 		mesh.RecalculateNormals();
 
 		GetComponent<MeshFilter>().mesh = mesh;
+		GetComponent<MeshCollider>().sharedMesh = mesh;
 	}
 
 	private void TriangulateSquare(Square sq)
