@@ -27,29 +27,29 @@ public class CameraBounder : MonoBehaviour
 		Gizmos.color = Color.red;
 
 		Vector3 leftDown = new Vector3(0, 0, 0);
-		Vector3 leftUp = new Vector3(camera.pixelWidth, 0, 0);
-		Vector3 RightUp = new Vector3(camera.pixelWidth, camera.pixelHeight, 0);
-		Vector3 rightDown = new Vector3(0, camera.pixelHeight, 0);
+		Vector3 leftUp = new Vector3(1, 0, 0);
+		Vector3 RightUp = new Vector3(1, 1, 0);
+		Vector3 rightDown = new Vector3(0, 1, 0);
 
-		Ray ray = camera.ScreenPointToRay(leftDown);
+		Ray ray = camera.ViewportPointToRay(leftDown);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldLeftDown = hit.point;
 		}
 
-		ray = camera.ScreenPointToRay(leftUp);
+		ray = camera.ViewportPointToRay(leftUp);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldLeftUp = hit.point;
 		}
 
-		ray = camera.ScreenPointToRay(RightUp);
+		ray = camera.ViewportPointToRay(RightUp);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldRightUp = hit.point;
 		}
 
-		ray = camera.ScreenPointToRay(rightDown);
+		ray = camera.ViewportPointToRay(rightDown);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldRightDown = hit.point;
