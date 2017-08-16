@@ -18,7 +18,7 @@ public class MapGenerator : MonoBehaviour
 		tileSize = caveGen.SquareSize;
 
 		BuildMesh();
-		BuildTexture();
+		//BuildTexture();
 	}
 
 	private void BuildTexture()
