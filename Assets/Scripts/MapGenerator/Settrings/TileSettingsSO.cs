@@ -2,7 +2,7 @@
 using System.Collections;
 
 [CreateAssetMenu(fileName = "TileSettings", menuName = "My Scriptable Objects/Tile Settings", order = 0)]
-public class TileSO : ScriptableObject
+public class TileSettingsSO : ScriptableObject
 {
 	[SerializeField] private Tile[] tiles;
 

@@ -6,6 +6,8 @@ using UnityEngine;
 public class MapLayer
 {
 	public string name = "Ground";
-	public MapLayerType MapLayerType = MapLayerType.LayerGround;
-
+	public MapLayerType mapLayerType = MapLayerType.LayerGround;
+	public TileType tileType = TileType.Ground;
+	
+	public GameObject[] prefabs;
 }

@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "MapLayerSettings", menuName = "My Scriptable Objects/MapLayer Settings", order = 1)]
-public class MapLayerSO : ScriptableObject
+[System.Serializable]
+public class MapGeneratorSettings
 {
 	[SerializeField] private int width = 200;
-
 	[SerializeField] private int length = 200;
 
 	[SerializeField]
@@ -24,11 +23,4 @@ public class MapLayerSO : ScriptableObject
 	[SerializeField]
 	[Range(0, 100)]
 	private int randomFillPercent = 47;
-
-	[SerializeField] private MapLayer[] mapLayer;
-
-	public MapLayer[] MapSettings()
-	{
-		return mapLayer;
-	}
 }
