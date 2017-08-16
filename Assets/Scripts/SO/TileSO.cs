@@ -6,7 +6,7 @@ public class TileSO : ScriptableObject
 {
 	[SerializeField] private Tile[] tiles;
 
-	public Tile GetBulletSettings(TileType type)
+	public Tile GetTileSettings(TileType type)
 	{
 		foreach (var tile in tiles)
 		{
@@ -17,5 +17,22 @@ public class TileSO : ScriptableObject
 		}
 
 		return tiles[0];
+	}
+
+	public Tile[] GetAllSettings()
+	{
+		return tiles;
+	}
+
+	public TileType[] GetTileTypes()
+	{
+		TileType[] res = new TileType[tiles.Length];
+
+		for(int i = 0; i < tiles.Length; i++)
+		{
+			res[i] = tiles[i].TileType;
+		}
+
+		return res;
 	}
 }

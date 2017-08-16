@@ -7,48 +7,67 @@ public class TileGrid
 	/// <summary>
 	/// X count
 	/// </summary>
-	public int GridWidth { get; private set; }
+	public int Width { get; private set; }
 
 	/// <summary>
 	/// Z count
 	/// </summary>
-	public int GridLength { get; private set; }
+	public int Length { get; private set; }
 
-	private TileType[,] grid;
-	private Dictionary<TileType, Tile> tiles;
+	public TileType[,] Grid { get; private set; }
+
+	public TileType this[int x, int z]
+	{
+		get
+		{
+			return Grid[x, z];
+		}
+		set
+		{
+			Grid[x, z] = value;
+		}
+	}
+
+	private TileType[] tileTypes;
+	private MapManager mapManager;
+
 
 	public TileGrid(int width, int length, TileType defaultTileType = TileType.Ground)
 	{
-		GridWidth = width;
-		GridLength = length;
+		Width = width;
+		Length = length;
 
+		ReceiveMapManager();
 		CreateGrid(defaultTileType);
 	}
 
-	private void CreateGrid(TileType defaultTileType)
+	private void ReceiveMapManager()
 	{
-		ReceiveTiles();
+		mapManager = SceneManager.MapManager;
+	}
 
-		TileType tiletype = TileType.Ground;
+	private void CreateGrid(TileType tileType)
+	{
+		ReceiveTileTypes();
 
-		if(tiles.ContainsKey(defaultTileType))
+		Grid = new TileType[Width, Length];
+
+		for (int x = 0; x < Width; x++)
 		{
-			tiletype = defaultTileType;
-		}
-
-		grid = new TileType[GridWidth, GridLength];
-
-		for (int x = 0; x < GridWidth; x++)
-		{
-			for(int z = 0; z < GridLength; z++)
+			for (int z = 0; z < Length; z++)
 			{
-				grid[x, z] = tiletype;
+				Grid[x, z] = tileType;
 			}
 		}
 	}
 
-	private void ReceiveTiles()
+	private void ReceiveTileTypes()
 	{
-		//TODO Reading from SceneManager
+		tileTypes = mapManager.GetTileTypes();
+	}
+
+	public void SetTileType(int x, int z, TileType type)
+	{
+		Grid[x, z] = type;
 	}
 }
