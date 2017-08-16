@@ -3,19 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapGenerator : MonoBehaviour
+public class GroundGenerator : MonoBehaviour
 {
-	public CaveGenerator caveGen;
-
 	int width;
 	int height;
 	float tileSize;
 
-	private void Start()
+	public void GenerateMesh(int[,] map, float squareSize)
 	{
-		width = caveGen.Width;
-		height = caveGen.Height;
-		tileSize = caveGen.SquareSize;
+		width = map.GetLength(0);
+		height = map.GetLength(1);
+		tileSize = squareSize;
 
 		BuildMesh();
 		//BuildTexture();
@@ -25,20 +23,11 @@ public class MapGenerator : MonoBehaviour
 	{
 		Texture2D texture = new Texture2D(width, height);
 
-		for (int z = 0; z < height; z++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				Color col = new Color(0.7f, 0.7f, 0.1f);
-				texture.SetPixel(x, z, col);
-			}
-		}
-
 		texture.filterMode = FilterMode.Point;
 		texture.wrapMode = TextureWrapMode.Clamp;
 		texture.Apply();
 
-		GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
+		//GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
 	}
 
 	private void BuildMesh()

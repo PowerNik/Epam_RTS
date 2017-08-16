@@ -1,12 +1,14 @@
 fileFormatVersion: 2
 guid: 816e3aa0fd7759a41af01a757251086a
-timeCreated: 1502890558
+timeCreated: 1502913269
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - tileSettings: {fileID: 11400000, guid: a1f815963537a1740a34fc54ac3f47f9, type: 2}
-  - MapLayerSettings: {fileID: 11400000, guid: 648aeaca0090d084d8b3c0e2af05ed8f, type: 2}
+  - mapSettings: {fileID: 11400000, guid: 648aeaca0090d084d8b3c0e2af05ed8f, type: 2}
+  - prefabMap: {fileID: 1151417494180544, guid: 808fcdcd68c0b2343aba446718869ead,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

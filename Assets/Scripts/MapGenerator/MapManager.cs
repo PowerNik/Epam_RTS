@@ -24,12 +24,38 @@ public class MapManager : MonoBehaviour
 	#region MapLayerSettings
 
 	[SerializeField]
-	private MapSettingsSO MapLayerSettings;
+	private MapSettingsSO mapSettings;
+
+	public MapGeneratorSettings GetMapGeneratorSettings()
+	{
+		return mapSettings.MapGeneratorSettings();
+	}
 
 	public MapLayer[] GetMapLayers()
 	{
-		return MapLayerSettings.GetMapLayers();
+		return mapSettings.MapLayers();
 	}
 
 	#endregion
+
+
+	[SerializeField]
+	private GameObject prefabMap;
+
+	private MapCreator mapCreator;
+
+	public TileGrid TileGrid { get; private set; }
+
+	private void Awake()
+	{
+		SceneManager.MapManager = this;
+	}
+
+	private void Start()
+	{
+		GameObject go = Instantiate(prefabMap);
+
+		mapCreator = new MapCreator(GetMapGeneratorSettings(), GetMapLayers(), go);
+		TileGrid = mapCreator.TileGrid;
+	}
 }

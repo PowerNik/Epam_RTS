@@ -11,12 +11,12 @@ public class MapSettingsSO : ScriptableObject
 	[SerializeField]
 	private MapLayer[] mapLayers;
 
-	public MapGeneratorSettings GetMapGeneratorSettings()
+	public MapGeneratorSettings MapGeneratorSettings()
 	{
 		return mapGenSet;
 	}
 
-	public MapLayer[] GetMapLayers()
+	public MapLayer[] MapLayers()
 	{
 		return mapLayers;
 	}
