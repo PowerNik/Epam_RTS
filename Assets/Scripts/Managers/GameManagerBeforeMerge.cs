@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManagerBeforeMerge : MonoBehaviour
 {
-    private static GameManager instance = null;
+    private static GameManagerBeforeMerge instance = null;
 
     private List<PlayerManager> players;
 
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public static GameManager GetGameManager()
+    public static GameManagerBeforeMerge GetGameManager()
     {
         return instance;
     }
