@@ -116,17 +116,18 @@ public class MapCreator
 
 	private void CreateMeshes()
 	{
+		//TODO
 		int[,] mas = GetLayerMap(MapLayerType.LayerMountain);
 		var meshGen = map.transform.GetChild(0).GetComponent<MeshGenerator>();
-		meshGen.GenerateMesh(mas, genSets.tileSize);
+		meshGen.GenerateMesh(mas, genSets.tileSize, 5f);
 
 		var mas1 = GetLayerMap(MapLayerType.LayerGround);
-		var meshGen1 = map.transform.GetChild(1).GetComponent<GroundGenerator>();
-		meshGen1.GenerateMesh(mas, genSets.tileSize);
+		var meshGen1 = map.transform.GetChild(1).GetComponent<MeshGenerator>();
+		meshGen1.GenerateMesh(mas1, genSets.tileSize, 1f);
 
-		var mas2 = GetLayerMap(MapLayerType.LayerGround);
-		var meshGen2 = map.transform.GetChild(2).GetComponent<GroundGenerator>();
-		meshGen2.GenerateMesh(mas, genSets.tileSize);
+		var mas2 = GetLayerMap(MapLayerType.LayerWater);
+		var meshGen2 = map.transform.GetChild(2).GetComponent<MeshGenerator>();
+		meshGen2.GenerateMesh(mas2, genSets.tileSize, 0.5f);
 	}
 
 	private int[,] GetLayerMap(MapLayerType layerType)
