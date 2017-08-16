@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 <<<<<<< HEAD:Assets/Prefabs.meta
 guid: 44b89d5a72320c040838b618ca5e30d7
 folderAsset: yes
@@ -8,6 +9,11 @@ guid: 54315da9d59617a43a2d2ed763e9d5ca
 folderAsset: yes
 timeCreated: 1502802525
 >>>>>>> Structures:Assets/Data/Models.meta
+=======
+guid: 444379b7821c975458d27cd08beff69b
+folderAsset: yes
+timeCreated: 1502290505
+>>>>>>> units
 licenseType: Free
 DefaultImporter:
   userData: 

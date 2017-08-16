@@ -35,6 +35,19 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private List<Structure> structures;
 
+    //TODELETE
+    #region RegionForTestingSpawnUnity
+    [SerializeField]
+    GameObject unit1;
+    [SerializeField]
+    GameObject unit2;
+    [SerializeField]
+    GameObject unit3;
+    [SerializeField]
+    GameObject unit4;
+    #endregion
+
+
 
     public static StructureSettings getStructureSettings(StructureSettingsType type)
     {
@@ -61,7 +74,7 @@ public class GameManager : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown("b"))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -71,6 +84,45 @@ public class GameManager : MonoBehaviour {
                 csf.SpawnBaseStructure(StructureSettingsType.CitizenBaseStructure_level1, hit.point);
             }
         }
+        //TODELETE
+        #region RegionForTestingSpawnUnity
+        if (Input.GetKeyDown("["))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+                Instantiate(unit1, hit.point, transform.rotation);
+            }
+        }
+        if (Input.GetKeyDown("i"))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+                Instantiate(unit2, hit.point, transform.rotation);
+            }
+        }
+        if (Input.GetKeyDown("o"))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+                Instantiate(unit3, hit.point, transform.rotation);
+            }
+        }
+        if (Input.GetKeyDown("p"))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+                Instantiate(unit4, hit.point, transform.rotation);
+            }
+        }
+        #endregion
     }
 
     public void Start()
