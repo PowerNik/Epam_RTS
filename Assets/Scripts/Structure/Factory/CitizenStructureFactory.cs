@@ -8,6 +8,7 @@ public class CitizenStructureFactory : StructureFactory
     public override BaseStructure SpawnBaseStructure(StructureSettingsType settingsType, Vector3 SpawnPosition)
     {
         StructureSettings settings = GameManager.getStructureSettings(settingsType);
+   
         CitizenBaseStructure newStructure = new CitizenBaseStructure(settings, SpawnPosition);
         return newStructure;
     }
