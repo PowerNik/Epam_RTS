@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class StructureScriptableObject : ScriptableObject {
-
+[CreateAssetMenu(fileName = "Game Structures", menuName = "Structures")]
+public class StructureScriptableObject : ScriptableObject 
+{
     public List<StructureSettings> structureSettings;
-
 }

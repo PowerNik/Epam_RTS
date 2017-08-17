@@ -125,11 +125,9 @@ public class GameManager : MonoBehaviour {
         #endregion
     }
 
-    public void Start()
-    {
-        //CitizenStructureFactory csf = new CitizenStructureFactory();
-        //csf.SpawnBaseStructure(StructureSettingsType.CitizenBaseStructure_level1, new Vector3(0, 0, 0));
-    }
+    // public void Start()
+    // {
+    // }
 
 
 

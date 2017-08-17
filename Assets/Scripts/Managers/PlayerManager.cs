@@ -16,22 +16,32 @@ public class PlayerManager : MonoBehaviour
                 equipResource,
                 specialResource;
 
-    private Race playerRace;
+    public StructureFactory playerFactory { get;set; }
+    
+    List<Structure> playerStructures;
 
-    PlayerManager(Race race)
+    List<Unit> playerUnits;
+
+    private static GameObject structuresPlaceHolder;
+    public static GameObject StructuresPlaceHolder
     {
-        playerRace = race;
-    }
-    public int GetRace()
-    {
-        try
+        get
         {
-            return (int) playerRace;
-        }
-        catch (NullReferenceException nExp)
-        {
-            Debug.Log("Race not setted");
-            return -1;
+            return structuresPlaceHolder;
         }
     }
+
+    #region MonoBehaviour
+    void Awake()
+    {
+        playerStructures = new List<Structure>();
+        playerUnits = new List<Unit>();
+
+        //DELETE
+        #region TestInit
+        playerFactory = new CitizenStructureFactory();
+        #endregion
+    }
+    #endregion
+
 }
