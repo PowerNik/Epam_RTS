@@ -5,16 +5,16 @@ using UnityEngine;
 
 using MapGenerate;
 
-public class MeshCaveGenerator : MonoBehaviour
+public class MeshGenerator : MonoBehaviour
 {
 	public SquareGrid squareGrid;
 
 	private List<Vector3> vertices;
 	private List<int> triangles;
 
-	public void GenerateMesh(int[,] map, float squareSize)
+	public void GenerateMesh(int[,] map, float squareSize, float height = -1, float scale = -1)
 	{
-		squareGrid = new SquareGrid(map, squareSize);
+		squareGrid = new SquareGrid(map, squareSize, height, scale);
 
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
@@ -37,6 +37,11 @@ public class MeshCaveGenerator : MonoBehaviour
 
 		GetComponent<MeshFilter>().mesh = mesh;
 		GetComponent<MeshCollider>().sharedMesh = mesh;
+	}
+
+	public void GenerateMesh(int[,] map, MapLayer mapLayer)
+	{
+		//TODO
 	}
 
 	private void TriangulateSquare(Square sq)

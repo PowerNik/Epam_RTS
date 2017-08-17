@@ -8,8 +8,17 @@ namespace MapGenerate
 		public float noiseScale = 2.5f;
 		public float noiseHeight = 4f;
 
-		public SquareGrid(int[,] map, float squareSize)
+		public SquareGrid(int[,] map, float squareSize, float height = -1, float scale = -1)
 		{
+			if (height != -1)
+			{
+				noiseHeight = height;
+			}
+			if(scale != -1)
+			{
+				noiseScale = scale;
+			}
+
 			int nodeCountX = map.GetLength(0);
 			int nodeCountY = map.GetLength(1);
 			float mapWidth = nodeCountX * squareSize;
