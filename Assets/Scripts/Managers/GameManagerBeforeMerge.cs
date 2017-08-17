@@ -28,6 +28,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+        initPlayer += InitCitizenPlayer;
     }
 
     #endregion
@@ -47,6 +48,8 @@ public class GameManagerBeforeMerge : MonoBehaviour
             initPlayer += InitFermerPlayer;
         }
     }
+    
+
     #region SceneManagment
     void OnEnable()
     {
