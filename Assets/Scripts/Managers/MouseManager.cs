@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MouseManager : MonoBehaviour
 {
@@ -110,9 +111,7 @@ public class MouseManager : MonoBehaviour
                         {
                             if (unit.GetComponent<Movable>() != null)
                             {
-                                unit.GetComponent<Movable>().MoveToTarget(hit.point);
-                                unit.GetComponent<Movable>().ApproachingContainer = true;
-                                unit.GetComponent<Movable>().Container = hit.collider.GetComponent<UnitContainer>();
+                                unit.GetComponent<Movable>().ApproachContainer(hit.collider.GetComponent<UnitContainer>());
                             }
                         }
                     }
@@ -136,6 +135,8 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
         LeftMouseButtonHandler();
         RightMouseButtonHandler();
     }

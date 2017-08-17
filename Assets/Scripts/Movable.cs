@@ -26,6 +26,8 @@ public class Movable : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        GetComponent<Unit>().UnitAnimator.SetFloat("Speed", agent.velocity.magnitude);
         if (isMoving && Vector3.Distance(agent.destination, transform.position) < StoppingDistance)
         {
             agent.isStopped = true;
@@ -47,5 +49,12 @@ public class Movable : MonoBehaviour {
         agent.isStopped = false;
         agent.SetDestination(target);
         isMoving = true;
+    }
+
+    public void ApproachContainer(UnitContainer container)
+    {
+        MoveToTarget(container.transform.position);
+        ApproachingContainer = true;
+        Container = container;
     }
 }
