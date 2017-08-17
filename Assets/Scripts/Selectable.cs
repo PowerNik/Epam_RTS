@@ -17,11 +17,17 @@ public class Selectable : MonoBehaviour {
     {
         selected = true;
         highlight.enabled = true;
+        ActionButtonManager.Current.ClearButtons();
+        foreach (var action in GetComponents<ActionBehaviour>())
+            ActionButtonManager.Current.AddButton(action.ButtonIcon, action.GetClickAction());
     }
+
+
     public void Deselect()
     {
         selected = false;
         highlight.enabled = false;
+        ActionButtonManager.Current.ClearButtons();
     }
     public void AttackSelection()
     {

@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class Unit : MonoBehaviour {
 
     // Игровые переменные
@@ -16,33 +17,29 @@ public class Unit : MonoBehaviour {
     public enum Fraction {Citizen, Farmer, Nature}
 
     Fraction fraction;
+
+    public List<UnityAction> AvaliableActions = new List<UnityAction>();
+
     [SerializeField]                        //убрать
     bool isEnemy;                           //убрать
     public bool IsEnemy { get { return isEnemy; } }
 
-    // Технические переменные
-    NavMeshAgent agent;
-    //bool isShooting;
-
     // Анимация
-    Animator UnitAnimator;
-    string SpeedAnim = "Speed";
-    string ShootingBool = "Shooting";
 
+    private Animator unitAnimator;
+    public Animator UnitAnimator { get { return unitAnimator; } }
 
-	// Use this for initialization
-	void Start () {
-        agent = GetComponent<NavMeshAgent>();
-        UnitAnimator = GetComponent<Animator>();
+    // Use this for initialization
+    void Start () {
+        if(GetComponent<Animator>()!=null)
+        unitAnimator = GetComponent<Animator>();
 	}
     private void Update()
     {
-        UnitAnimator.SetFloat(SpeedAnim, agent.velocity.magnitude);
-        //UnitAnimator.SetBool(ShootingBool, isShooting);
-
         if (Health<=0)
         {
-            UnitAnimator.Play("Death");
+            if (GetComponent<Animator>() != null)
+                unitAnimator.Play("Death");
             Destroy(GetComponent<Unit>());
             Destroy(gameObject, 3f);
         }
@@ -50,7 +47,6 @@ public class Unit : MonoBehaviour {
 
     private void OnDestroy()
     {
-        print("i dead");
     }
 
 
