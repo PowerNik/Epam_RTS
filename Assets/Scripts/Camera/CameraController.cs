@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class CameraController : MonoBehaviour
-{	public Transform startPoint;
+{
+	public Transform startPoint;
 
-	public float moveSpeed = 20;
-	public float fastMoveSpeed = 50;
+	public float moveSpeed = 50;
 
 	public KeyCode rotateCamLeft = KeyCode.Q;
 	public KeyCode rotateCamRight = KeyCode.E;
@@ -24,7 +24,6 @@ public class CameraController : MonoBehaviour
 
 	private float horiz, vert;
 	private bool left, right, up, down;
-	private bool isFastMove = false;
 
 	void Start()
 	{
@@ -78,17 +77,7 @@ public class CameraController : MonoBehaviour
 	private void Apply()
 	{
 		Vector3 direction = new Vector3(horiz, vert, 0);
-
-		if (isFastMove == false)
-		{
-			direction *= moveSpeed;
-		}
-		else
-		{
-			direction *= fastMoveSpeed;
-		}
-
-		transform.Translate(direction * Time.deltaTime);
+		transform.Translate(direction * moveSpeed * Time.deltaTime);
 
 		transform.position = new Vector3(transform.position.x, height, transform.position.z);
 		transform.rotation = Quaternion.Euler(rotationX, camRotation, 0);
@@ -96,19 +85,11 @@ public class CameraController : MonoBehaviour
 
 	public void CursorTriggerEnter(string triggerName)
 	{
-		isFastMove = false;
-		SetTrigger(triggerName, true);
-	}
-
-	public void FastCursorTriggerEnter(string triggerName)
-	{
-		isFastMove = true;
 		SetTrigger(triggerName, true);
 	}
 
 	public void CursorTriggerExit(string triggerName)
 	{
-		isFastMove = false;
 		SetTrigger(triggerName, false);
 	}
 
