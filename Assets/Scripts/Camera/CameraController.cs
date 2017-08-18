@@ -6,60 +6,40 @@ public class CameraController : MonoBehaviour
 	public Transform startPoint;
 
 	public float moveSpeed = 50;
-
-	public KeyCode rotateCamLeft = KeyCode.Q;
-	public KeyCode rotateCamRight = KeyCode.E;
-
-	public int rotationX = 50;
-	public int rotationLimit = 180;
+	public float scrollSpeed = 2;
 
 	public float maxHeight = 50;
 	public float minHeight = 5;
-	public float scrollSpeed = 2;
 
-	private float rotationSpeed = 3;
-	private float camRotation;
 	private float height;
 	private float tempHeight;
 
 	private float horiz, vert;
 	private bool left, right, up, down;
 
+	private CameraLimiter camLimiter;
+
 	void Start()
 	{
 		height = (maxHeight + minHeight) / 2;
 		tempHeight = height;
 		transform.position = new Vector3(startPoint.position.x, height, startPoint.position.z);
+
+		camLimiter = GetComponent<CameraLimiter>();
 	}
 
 	void Update()
 	{
 		MoveCamera();
 		ScrollCamera();
-		RotateCamera();
 
 		Apply();
 	}
 
 	private void MoveCamera()
 	{
-		horiz = (left) ? -1 : ((right) ? 1 : 0);
-		vert = (down) ? -1 : ((up) ? 1 : 0);
-	}
-
-	private void RotateCamera()
-	{
-		if (Input.GetKey(rotateCamLeft))
-		{
-			camRotation -= rotationSpeed;
-		}
-
-		if (Input.GetKey(rotateCamRight))
-		{
-			camRotation += rotationSpeed;
-		}
-
-		camRotation = Mathf.Clamp(camRotation, -rotationLimit, rotationLimit);
+		horiz = (right) ? 1 : ((left) ? -1 : 0);
+		vert = (up) ? 1 : ((down) ? -1 : 0);
 	}
 
 	private void ScrollCamera()
@@ -71,16 +51,17 @@ public class CameraController : MonoBehaviour
 		}
 
 		tempHeight = Mathf.Clamp(tempHeight, minHeight, maxHeight);
-		height = Mathf.Lerp(height, tempHeight, 3 * Time.deltaTime);
+		height = Mathf.Lerp(height, tempHeight, 10 * Time.deltaTime);
 	}
 
 	private void Apply()
 	{
-		Vector3 direction = new Vector3(horiz, vert, 0);
-		transform.Translate(direction * moveSpeed * Time.deltaTime);
+		Vector3 direction = new Vector3(horiz, 0, vert) * moveSpeed * Time.deltaTime;
+		direction = camLimiter.CalculateLimitPosition(direction);
 
-		transform.position = new Vector3(transform.position.x, height, transform.position.z);
-		transform.rotation = Quaternion.Euler(rotationX, camRotation, 0);
+		float xPos = Mathf.Lerp(transform.position.x, direction.x, 100 * Time.deltaTime);
+		float zPos = Mathf.Lerp(transform.position.z, direction.z, 100 * Time.deltaTime);
+		transform.position = new Vector3(xPos, height, zPos);
 	}
 
 	public void CursorTriggerEnter(string triggerName)

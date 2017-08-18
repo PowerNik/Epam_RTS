@@ -55,9 +55,9 @@ public class MapManager : MonoBehaviour
 	{
 		GameObject go = Instantiate(prefabMap);
 
-	    go.AddComponent<LocalNavMeshBuilder>();
-	    LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
-        lnmb.m_Size = new Vector3(200,200,200);
+		go.AddComponent<LocalNavMeshBuilder>();
+		LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
+		lnmb.m_Size = new Vector3(200, 200, 200);
 
 		mapCreator = new MapCreator(GetMapGeneratorSettings(), GetMapLayers(), go);
 		TileGrid = mapCreator.TileGrid;

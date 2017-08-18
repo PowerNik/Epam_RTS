@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraLimiter: MonoBehaviour
+public class CameraLimiter : MonoBehaviour
 {
 	private Camera camera;
 
@@ -11,25 +12,30 @@ public class CameraLimiter: MonoBehaviour
 	private Vector3 worldRightUp;
 	private Vector3 worldRightDown;
 
+	// Координаты углов ViewPort'а камеры
+	private Vector3 leftDown = new Vector3(0, 0, 0);
+	private Vector3 leftUp = new Vector3(0, 1, 0);
+	private Vector3 rightUp = new Vector3(1, 1, 0);
+	private Vector3 rightDown = new Vector3(1, 0, 0);
+
+	private float limitLeft;
+	private float limitRight;
+	private float limitTop;
+	private float limitBot;
+
 	void Start()
 	{
 		camera = GetComponent<Camera>();
+
+		limitRight = SceneManagerRTS.MapManager.GetMapGeneratorSettings().width / 2;
+		limitLeft = -limitRight;
+		limitTop = SceneManagerRTS.MapManager.GetMapGeneratorSettings().length / 2;
+		limitBot = -limitTop;
 	}
 
-	private void OnDrawGizmos()
+	private void GetViewRect()
 	{
-		if (camera == null)
-		{
-			return;
-		}
-
 		RaycastHit hit;
-		Gizmos.color = Color.red;
-
-		Vector3 leftDown = new Vector3(0, 0, 0);
-		Vector3 leftUp = new Vector3(1, 0, 0);
-		Vector3 RightUp = new Vector3(1, 1, 0);
-		Vector3 rightDown = new Vector3(0, 1, 0);
 
 		Ray ray = camera.ViewportPointToRay(leftDown);
 		if (Physics.Raycast(ray, out hit))
@@ -43,7 +49,7 @@ public class CameraLimiter: MonoBehaviour
 			worldLeftUp = hit.point;
 		}
 
-		ray = camera.ViewportPointToRay(RightUp);
+		ray = camera.ViewportPointToRay(rightUp);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldRightUp = hit.point;
@@ -54,10 +60,44 @@ public class CameraLimiter: MonoBehaviour
 		{
 			worldRightDown = hit.point;
 		}
+	}
+
+	private void OnDrawGizmos()
+	{
+		if(camera == null)
+		{
+			return;
+		}
+
+		GetViewRect();
+		Gizmos.color = Color.red;
 
 		Gizmos.DrawLine(worldLeftDown, worldLeftUp);
 		Gizmos.DrawLine(worldLeftUp, worldRightUp);
 		Gizmos.DrawLine(worldRightUp, worldRightDown);
 		Gizmos.DrawLine(worldRightDown, worldLeftDown);
+	}
+
+
+	public Vector3 CalculateLimitPosition(Vector3 direction)
+	{
+		Vector3 movePos = camera.transform.position + direction;
+		float height = movePos.y;
+
+		float camRotate = camera.transform.rotation.eulerAngles.x;
+		float topSideAngle = camRotate - 0.5f * camera.fieldOfView;
+		float botSideAngle = camRotate + 0.5f * camera.fieldOfView;
+
+		float zTop = limitTop - height / Mathf.Tan(topSideAngle * Mathf.Deg2Rad);
+		float zBot = limitBot - height / Mathf.Tan(botSideAngle * Mathf.Deg2Rad); ;
+		float zPos = Mathf.Clamp(movePos.z, zBot, zTop);
+
+		float rectWidth = height * camera.aspect * Mathf.Cos(topSideAngle * Mathf.Deg2Rad);
+
+		float xRight = limitRight - rectWidth;
+		float xLeft = limitLeft + rectWidth;
+		float xPos = Mathf.Clamp(movePos.x, xLeft, xRight);
+
+		return new Vector3(xPos, height, zPos);
 	}
 }
