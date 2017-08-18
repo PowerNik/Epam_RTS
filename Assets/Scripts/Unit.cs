@@ -18,6 +18,8 @@ public class Unit : MonoBehaviour {
 
     Fraction fraction;
 
+    public bool Loadable;
+
     public List<UnityAction> AvaliableActions = new List<UnityAction>();
 
     [SerializeField]                        //убрать
