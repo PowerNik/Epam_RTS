@@ -64,7 +64,7 @@ public class CameraLimiter : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if(camera == null)
+		if (camera == null)
 		{
 			return;
 		}
@@ -88,11 +88,11 @@ public class CameraLimiter : MonoBehaviour
 		float topSideAngle = camRotate - 0.5f * camera.fieldOfView;
 		float botSideAngle = camRotate + 0.5f * camera.fieldOfView;
 
-		float zTop = limitTop - height / Mathf.Tan(topSideAngle * Mathf.Deg2Rad);
-		float zBot = limitBot - height / Mathf.Tan(botSideAngle * Mathf.Deg2Rad); ;
+		float zTop = limitTop - 0.9f * height / Mathf.Tan(topSideAngle * Mathf.Deg2Rad);
+		float zBot = limitBot - 0.9f * height / Mathf.Tan(botSideAngle * Mathf.Deg2Rad);
 		float zPos = Mathf.Clamp(movePos.z, zBot, zTop);
 
-		float rectWidth = height * camera.aspect * Mathf.Cos(topSideAngle * Mathf.Deg2Rad);
+		float rectWidth = 0.7f * height * camera.aspect * Mathf.Cos(topSideAngle * Mathf.Deg2Rad);
 
 		float xRight = limitRight - rectWidth;
 		float xLeft = limitLeft + rectWidth;
