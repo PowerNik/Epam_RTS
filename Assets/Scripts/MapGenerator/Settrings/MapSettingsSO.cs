@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "MapSettings", menuName = "My Scriptable Objects/Map Settings", order = 1)]
+[CreateAssetMenu(fileName = "MapSettings", menuName = "Map/Map Settings", order = 1)]
 public class MapSettingsSO : ScriptableObject
 {
 	[SerializeField]

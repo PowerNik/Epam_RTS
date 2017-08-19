@@ -8,13 +8,23 @@ public class GameManagerBeforeMerge : MonoBehaviour
 {
     private static GameManagerBeforeMerge instance = null;
 
+    public float GameClock { get; private set; }
+
     private List<PlayerManager> players;
 
     [SerializeField]
     PlayerManager playerPrefab;
 
-    delegate void InitPlayerDelegate();
-    InitPlayerDelegate initPlayer;
+    [SerializeField]
+    MapManager mapManagerPrefab;
+
+    public MapManager MapManagerInstance { get; private set; }
+
+    delegate void InitGameDelegate();
+    InitGameDelegate initGame;
+
+    delegate void GameClockDelegate(float TimeUpdate);
+    private GameClockDelegate updateClock;
 
     #region Init
     void Awake()
@@ -28,7 +38,10 @@ public class GameManagerBeforeMerge : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        initPlayer += InitCitizenPlayer;
+
+        #region TestInit_TODELETE
+        StartGame(1);
+        #endregion
     }
 
     #endregion
@@ -40,13 +53,15 @@ public class GameManagerBeforeMerge : MonoBehaviour
 
     public void StartGame(int raceId)
     {
-        SceneManager.LoadScene("MainScene");
+        //SceneManager.LoadScene("MainScene");
+        initGame += InstantiateMapManager;
         if((Race)raceId == Race.Citizen)
         {
-            initPlayer += InitCitizenPlayer;
+            initGame += InitCitizenPlayer;
         }else{
-            initPlayer += InitFermerPlayer;
+            initGame += InitFermerPlayer;
         }
+        updateClock = UpdateGameClock;
     }
     
 
@@ -64,10 +79,15 @@ public class GameManagerBeforeMerge : MonoBehaviour
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         if(scene.name != "Menu"){
-            initPlayer.Invoke();
+            initGame.Invoke();
         }
     }
     #endregion
+
+    void InstantiateMapManager()
+    {
+        MapManagerInstance = Instantiate(mapManagerPrefab, Vector3.zero, transform.rotation);
+    }
 
     void InstantiatePlayerManager()
     {
@@ -88,4 +108,18 @@ public class GameManagerBeforeMerge : MonoBehaviour
         players.Last().playerFactory = new FermersStructureFactory();
     }
 
+    #region MonoBehaviour
+    void Update()
+    {
+        if (updateClock != null)
+        {
+            updateClock.Invoke(Time.deltaTime);
+        }
+    }
+    #endregion
+
+    private void UpdateGameClock(float timeUpdate)
+    {
+        GameClock += timeUpdate;
+    }
 }

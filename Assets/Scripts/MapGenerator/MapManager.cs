@@ -46,10 +46,6 @@ public class MapManager : MonoBehaviour
 
 	public TileGrid TileGrid { get; private set; }
 
-	private void Awake()
-	{
-		SceneManagerRTS.MapManager = this;
-	}
 
 	private void Start()
 	{
