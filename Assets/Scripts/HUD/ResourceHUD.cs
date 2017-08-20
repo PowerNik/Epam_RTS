@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ResourceType
 {
@@ -13,13 +14,32 @@ public class ResourceHUD : MonoBehaviour
 
 	[SerializeField]
 	ResourceType resource;
-	// Use this for initialization
-	void Start () {
-			
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    private Text resourceValuePresentation;
+
+    void Awake()
+    {
+        resourceValuePresentation = gameObject.GetComponent<Text>();
+    }
+
+    public void SetPlayer(PlayerManager player)
+    {
+        switch (resource)
+        {
+            case ResourceType.Food:
+                player.foodResChange = ChangeValue;
+                break;
+            case ResourceType.Eqipment:
+                player.equipResChange = ChangeValue;
+                break;
+            case ResourceType.Special:
+                player.specialResChange = ChangeValue;
+                break;
+        }
+    }
+
+    private void ChangeValue(int newVal)
+    {
+        resourceValuePresentation.text = newVal.ToString();
+    }
 }

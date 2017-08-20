@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
+
 public class GameManagerBeforeMerge : MonoBehaviour
 {
     private static GameManagerBeforeMerge instance = null;
@@ -21,7 +22,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
     public MapManager MapManagerInstance { get; private set; }
 
     delegate void InitGameDelegate();
-    InitGameDelegate initGame;
+    private InitGameDelegate initGame;
 
     delegate void GameClockDelegate(float TimeUpdate);
     private GameClockDelegate updateClock;
@@ -38,7 +39,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-
+        //TODO.Delete test block of code
         #region TestInit_TODELETE
         StartGame(1);
         #endregion
@@ -61,6 +62,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
         }else{
             initGame += InitFermerPlayer;
         }
+        initGame += InitResourceBoard;
         updateClock = UpdateGameClock;
     }
     
@@ -89,24 +91,31 @@ public class GameManagerBeforeMerge : MonoBehaviour
         MapManagerInstance = Instantiate(mapManagerPrefab, Vector3.zero, transform.rotation);
     }
 
+    #region Player
+
     void InstantiatePlayerManager()
     {
-            players.Add(
-                Instantiate(playerPrefab, Vector3.zero, transform.rotation) as PlayerManager
-            );
+        players.Add(
+            Instantiate(playerPrefab, Vector3.zero, transform.rotation)
+        );
     }
 
     void InitCitizenPlayer()
     {
         InstantiatePlayerManager();
+        players.Last().playerRace = Race.Citizen;
         players.Last().playerFactory = new CitizenStructureFactory();
     }
 
     void InitFermerPlayer()
     {
         InstantiatePlayerManager();
+        players.Last().playerRace = Race.Fermer;
         players.Last().playerFactory = new FermersStructureFactory();
     }
+
+    #endregion
+
 
     #region MonoBehaviour
     void Update()
@@ -122,4 +131,29 @@ public class GameManagerBeforeMerge : MonoBehaviour
     {
         GameClock += timeUpdate;
     }
+
+    #region HUD
+    //TODO.Rewrite hardcode setting player.Will works only when playing local with bots.
+    void InitResourceBoard()
+    {
+        
+        Transform ResourceHUDTransform = GameObject.FindGameObjectWithTag("HUD").transform;
+        GameObject ResHUD;
+        if (players[0].playerRace == Race.Citizen)
+        {
+            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceCitizenHUD"), ResourceHUDTransform);
+        }
+        else
+        {
+            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceFermerHUD"), ResourceHUDTransform);
+        }
+        ResourceHUD[] resources = ResHUD.GetComponentsInChildren<ResourceHUD>();
+        for (int it = 0; it < resources.Length; it++)
+        {
+            resources[it].SetPlayer(players[0]);
+        }
+        //Instantiate(ResourceBoard, Vector3.zero, transform.rotation);
+    }
+
+    #endregion
 }
