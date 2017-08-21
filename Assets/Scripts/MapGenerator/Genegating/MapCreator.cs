@@ -25,7 +25,7 @@ public class MapCreator
 		this.map = map;
 		this.genSets = genSets;
 
-		Creating();
+        Creating();
 	}
 
 	private void Creating()
