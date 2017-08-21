@@ -14,7 +14,7 @@ public class MapCreator
 	private MapLayer[] layerData;
 
 	private LayerGenerator layerGen;
-	MapGeneratorSettings genSets;
+	public MapGeneratorSettings genSets { get; private set; }
 
 	public TileGrid TileGrid { get; private set; }
 
