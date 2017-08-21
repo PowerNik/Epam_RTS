@@ -59,6 +59,7 @@ public class Attack : MonoBehaviour
     }
     public void SwitchAttackType(AttackType attackType)
     {
+        this.attackType = attackType;
         switch (attackType)
         {
             case AttackType.Range:
@@ -103,7 +104,11 @@ public class Attack : MonoBehaviour
                 transform.LookAt(enemy.transform);
                 transform.Rotate(Vector3.right, transform.rotation.eulerAngles.x);
             }
-
+            if (enemy.Health <= 0)
+            {
+                isAttacking = false;
+                return;
+            }
             switch (attackType)
             {
 

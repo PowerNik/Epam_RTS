@@ -15,10 +15,13 @@ public class Unit : MonoBehaviour {
     public float Cost;
 
     public enum Fraction {Citizen, Farmer, Nature}
-
-    Fraction fraction;
+    [SerializeField]
+    public Fraction fraction;
 
     public bool Loadable;
+
+    public Sprite Icon;
+    public string Name;
 
     public List<UnityAction> AvaliableActions = new List<UnityAction>();
 
@@ -42,7 +45,14 @@ public class Unit : MonoBehaviour {
         {
             if (GetComponent<Animator>() != null)
                 unitAnimator.Play("Death");
-            Destroy(GetComponent<Unit>());
+            if (GetComponent<Attack>()!=null)
+            {
+                Destroy(GetComponent<Attack>());
+            }
+            if (GetComponent<Movable>()!=null)
+            {
+                Destroy(GetComponent<Movable>());
+            }
             Destroy(gameObject, 3f);
         }
     }

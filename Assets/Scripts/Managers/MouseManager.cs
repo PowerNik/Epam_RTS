@@ -39,19 +39,21 @@ public class MouseManager : MonoBehaviour
 
             if (hit.collider.GetComponent<Selectable>())
             {
+                if (selectedObjects.Contains(hit.collider.GetComponent<Selectable>()))
+                    return;
                 var selectable = hit.collider.GetComponent<Selectable>();
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     if (selectable.GetComponent<Movable>() && !selectable.GetComponent<Unit>().IsEnemy)
                     {
-                        selectedObjects.Add(selectable);
                         selectable.Select();
+                        selectedObjects.Add(selectable);
                     }
                     else
                     {
                         selectedObjects.Clear();
-                        selectedObjects.Add(selectable);
                         selectable.Select();
+                        selectedObjects.Add(selectable);
                     }
                 }
                 else
@@ -61,8 +63,8 @@ public class MouseManager : MonoBehaviour
                         selection.Deselect();
                     }
                     selectedObjects.Clear();
-                    selectedObjects.Add(selectable);
                     selectable.Select();
+                    selectedObjects.Add(selectable);
                 }
 
             }
@@ -164,8 +166,15 @@ public class MouseManager : MonoBehaviour
                 holder.y = Screen.height - holder.y;
                 if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemy) && (u.GetComponent<Movable>() != null))
                 {
-                    selectedObjects.Add(u);
-                    u.Select();
+                    if (selectedObjects.Contains(u))
+                        return;
+                    else
+                    {
+                        selectedObjects.Add(u);
+                        u.Select();
+                        print(u);
+                    }
+                    
                 }
             }
         }

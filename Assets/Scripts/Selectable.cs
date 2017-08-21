@@ -20,6 +20,20 @@ public class Selectable : MonoBehaviour {
         ActionButtonManager.Current.ClearButtons();
         foreach (var action in GetComponents<ActionBehaviour>())
             ActionButtonManager.Current.AddButton(action.ButtonIcon, action.GetClickAction());
+
+        if (MouseManager.Current.SelectedObjects.Count == 0)
+            InfoPanel.Current.ShowSingleUnitInfo(GetComponent<Unit>());
+        if (MouseManager.Current.SelectedObjects.Count == 1)
+        {
+            InfoPanel.Current.AddUnitToGroupSelection(MouseManager.Current.SelectedObjects[0].GetComponent<Unit>());
+            InfoPanel.Current.AddUnitToGroupSelection(GetComponent<Unit>());
+        }
+        if (MouseManager.Current.SelectedObjects.Count > 1)
+        {
+            InfoPanel.Current.AddUnitToGroupSelection(GetComponent<Unit>());
+        }
+
+        
     }
 
 
@@ -28,6 +42,13 @@ public class Selectable : MonoBehaviour {
         selected = false;
         highlight.enabled = false;
         ActionButtonManager.Current.ClearButtons();
+        if (MouseManager.Current.SelectedObjects.Count == 1)
+        {
+            InfoPanel.Current.Clear();
+        }
+
+        if (MouseManager.Current.SelectedObjects.Count >= 2)
+            InfoPanel.Current.RemoveUnitFromGroupSelection(GetComponent<Unit>());
     }
     public void AttackSelection()
     {
@@ -52,7 +73,7 @@ public class Selectable : MonoBehaviour {
     }
     private void OnDestroy()
     {
+        Deselect();
         MouseManager.Current.SelectedObjects.Remove(this);
-        Deselect();   
     }
 }
