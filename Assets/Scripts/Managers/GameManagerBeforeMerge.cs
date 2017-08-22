@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
-
+//TODO.Rename class after merge
 public class GameManagerBeforeMerge : MonoBehaviour
 {
     private static GameManagerBeforeMerge instance = null;
@@ -18,6 +18,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
 
     [SerializeField]
     MapManager mapManagerPrefab;
+    
 
     public MapManager MapManagerInstance { get; private set; }
 
@@ -56,7 +57,7 @@ public class GameManagerBeforeMerge : MonoBehaviour
     {
         //SceneManager.LoadScene("MainScene");
         initGame += InstantiateMapManager;
-        if((Race)raceId == Race.Citizen)
+        if ((Race)raceId == Race.Citizen)
         {
             initGame += InitCitizenPlayer;
         }else{
@@ -131,6 +132,15 @@ public class GameManagerBeforeMerge : MonoBehaviour
     {
         GameClock += timeUpdate;
     }
+
+    #region Camera
+
+    void InitCamera()
+    {
+    }
+    
+
+    #endregion
 
     #region HUD
     //TODO.Rewrite hardcode setting player.Will works only when playing local with bots.
