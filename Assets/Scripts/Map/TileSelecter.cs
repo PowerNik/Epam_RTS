@@ -26,7 +26,7 @@ public class TileSelecter : MonoBehaviour
 
 	private void Update()
 	{
-		AreaSelect(selectedTile.position, 2.1f, 1.9f);
+		AreaSelect(selectedTile.position, 5.1f, 3.9f);
 		TileSelect();
 	}
 
@@ -36,8 +36,8 @@ public class TileSelecter : MonoBehaviour
 		{
 			CreateSelectedArea(pos, areaSizeX, areaSizeZ);
 			PlaceSelectedArea();
-			AreaRevision();
 		}
+		AreaRevision();
 
 		if (Input.GetKeyUp(KeyCode.Alpha1))
 		{
@@ -52,7 +52,7 @@ public class TileSelecter : MonoBehaviour
 		if (Physics.Raycast(ray, out hit))
 		{
 			Vector3 pos = mapManager.GetTilePos(hit.point);
-			selectedTile.position = pos + Vector3.up * 0.1f;
+			selectedTile.position = pos + Vector3.up * 0.3f;
 		}
 	}
 
@@ -98,13 +98,11 @@ public class TileSelecter : MonoBehaviour
 		for (int i = 0; i < selectedTile.childCount; i++)
 		{
 			Renderer rend = selectedTile.GetChild(i).gameObject.GetComponent<Renderer>();
-			if (((int)selectedTile.position.x) % 2 == 0)
+			rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
+
+			if (!mapManager.IsBuildableTile(selectedTile.GetChild(i).transform.position))
 			{
 				rend.sharedMaterial = impassibleTileMat;
-			}
-			else
-			{
-				rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
 			}
 		}
 	}

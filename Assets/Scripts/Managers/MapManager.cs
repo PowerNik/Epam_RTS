@@ -58,13 +58,22 @@ public class MapManager : MonoBehaviour
 		lnmb.m_Size = new Vector3(200, 200, 200);
 
 		mapCreator = new MapCreator(genSets, mapSettings.MapLayers(), go);
-
 		gridManager = GameManager.Instance.GetComponent<GridManager>();
-		gridManager.SetTileGrid(mapCreator.TileGrid);
+
+		TileGrid tileGrid = mapCreator.TileGrid;
+		gridManager.SetTileGrid(tileGrid);
+
+		TileCountX = tileGrid.countX;
+		TileCountZ = tileGrid.countZ;
 	}
 
 	public Vector3 GetTilePos(Vector3 position)
 	{
 		return gridManager.GetTilePos(position);
 	}
+	public bool IsBuildableTile(Vector3 position)
+	{
+		return gridManager.IsBuildableTile(position);
+	}
+
 }

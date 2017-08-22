@@ -41,5 +41,24 @@ public class GridManager : MonoBehaviour
 		}
 		return new Vector3(x, position.y, z);
 	}
+
+	public bool IsBuildableTile(Vector3 position)
+	{
+		int x = (int)((position.x - position.x % tileSize) / tileSize);
+		int z = (int)((position.z - position.z % tileSize) / tileSize);
+
+		x += tileCountX / 2;
+		z += tileCountZ / 2;
+
+		TileType type = tileGrid[x, z];
+		if (type == TileType.Ground)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 

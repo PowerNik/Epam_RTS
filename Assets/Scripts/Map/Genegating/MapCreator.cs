@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class MapCreator
 {
+	public TileGrid TileGrid { get; private set; }
+
+	private MapGeneratorSettings genSets;
 	private GameObject map;
 
 	/// <summary>
@@ -12,12 +15,7 @@ public class MapCreator
 	/// </summary>
 	private MapLayerType[,] layerGrid;
 	private MapLayer[] layerData;
-
 	private LayerGenerator layerGen;
-	public MapGeneratorSettings genSets { get; private set; }
-
-	public TileGrid TileGrid { get; private set; }
-
 
 	public MapCreator(MapGeneratorSettings genSets, MapLayer[] layerData, GameObject map)
 	{
