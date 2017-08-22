@@ -6,8 +6,8 @@ using UnityEngine;
 public class LayerGenerator
 {
 	private int callCount = 0;
-	public int Width { get; private set; }
-	public int Length { get; private set; }
+	public int TileCountX { get; private set; }
+	public int TileCountZ { get; private set; }
 
 	private string seed;
 	private bool isRandomSeed;
@@ -21,8 +21,8 @@ public class LayerGenerator
 
 	public LayerGenerator(MapGeneratorSettings genSets)
 	{
-		Width = (int)(genSets.width / genSets.tileSize);
-		Length = (int)(genSets.length / genSets.tileSize);
+		TileCountX = (int)(genSets.width / genSets.tileSize);
+		TileCountZ = (int)(genSets.length / genSets.tileSize);
 
 		seed = genSets.seed;
 		isRandomSeed = genSets.isRandomSeed;
@@ -37,7 +37,7 @@ public class LayerGenerator
 	/// <returns></returns>
 	public int[,] Generate(bool isSmooth = true)
 	{
-		map = new int[Width, Length];
+		map = new int[TileCountX, TileCountZ];
 		RandomFillMap();
 
 		if (isSmooth)
@@ -63,12 +63,12 @@ public class LayerGenerator
 
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		for (int x = 0; x < Width; x++)
+		for (int x = 0; x < TileCountX; x++)
 		{
-			for (int y = 0; y < Length; y++)
+			for (int y = 0; y < TileCountZ; y++)
 			{
 				// Граница карты непроходима
-				if (x == 0 || x == Width - 1 || y == 0 || y == Length - 1)
+				if (x == 0 || x == TileCountX - 1 || y == 0 || y == TileCountZ - 1)
 				{
 					map[x, y] = 1;
 				}
@@ -85,9 +85,9 @@ public class LayerGenerator
 	/// </summary>
 	private void SmoothMap()
 	{
-		for (int x = 0; x < Width; x++)
+		for (int x = 0; x < TileCountX; x++)
 		{
-			for (int y = 0; y < Length; y++)
+			for (int y = 0; y < TileCountZ; y++)
 			{
 				int neighbourWallTiles = GetSurroundWallCount(x, y);
 
@@ -127,7 +127,7 @@ public class LayerGenerator
 				}
 
 				// Вне карты только непроходимые места
-				if (neighbourX < 0 || neighbourX >= Width || neighbourY < 0 || neighbourY >= Length)
+				if (neighbourX < 0 || neighbourX >= TileCountX || neighbourY < 0 || neighbourY >= TileCountZ)
 				{
 					wallCount++;
 				}

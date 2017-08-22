@@ -7,12 +7,12 @@ public class TileGrid
 	/// <summary>
 	/// X count
 	/// </summary>
-	public int Width { get; private set; }
+	public int countX { get; private set; }
 
 	/// <summary>
 	/// Z count
 	/// </summary>
-	public int Length { get; private set; }
+	public int countZ { get; private set; }
 
 	public TileType[,] Grid { get; private set; }
 
@@ -32,10 +32,10 @@ public class TileGrid
 	private MapManager mapManager;
 
 
-	public TileGrid(int width, int length, TileType defaultTileType = TileType.Ground)
+	public TileGrid(int countX, int countZ, TileType defaultTileType = TileType.Ground)
 	{
-		Width = width;
-		Length = length;
+		this.countX = countX;
+		this.countZ = countZ;
 
 		ReceiveMapManager();
 		CreateGrid(defaultTileType);
@@ -50,11 +50,11 @@ public class TileGrid
 	{
 		ReceiveTileTypes();
 
-		Grid = new TileType[Width, Length];
+		Grid = new TileType[countX, countZ];
 
-		for (int x = 0; x < Width; x++)
+		for (int x = 0; x < countX; x++)
 		{
-			for (int z = 0; z < Length; z++)
+			for (int z = 0; z < countZ; z++)
 			{
 				Grid[x, z] = tileType;
 			}

@@ -27,9 +27,9 @@ public class CameraLimiter : MonoBehaviour
 	{
 		camera = GetComponent<Camera>();
 
-		limitRight = SceneManagerRTS.MapManager.GetMapGeneratorSettings().width / 2;
+		limitRight = SceneManagerRTS.MapManager.MapWidth/ 2;
 		limitLeft = -limitRight;
-		limitTop = SceneManagerRTS.MapManager.GetMapGeneratorSettings().length / 2;
+		limitTop = SceneManagerRTS.MapManager.MapLength / 2;
 		limitBot = -limitTop;
 	}
 

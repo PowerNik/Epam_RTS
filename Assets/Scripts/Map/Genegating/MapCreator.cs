@@ -31,7 +31,7 @@ public class MapCreator
 	private void Creating()
 	{
 		layerGen = new LayerGenerator(genSets);
-		TileGrid = new TileGrid(layerGen.Width, layerGen.Length);
+		TileGrid = new TileGrid(layerGen.TileCountX, layerGen.TileCountZ);
 
 		CreateLayers();
 		SetTiles();
@@ -44,11 +44,11 @@ public class MapCreator
 	/// </summary>
 	private void CreateLayers()
 	{
-		layerGrid = new MapLayerType[TileGrid.Width, TileGrid.Length];
+		layerGrid = new MapLayerType[TileGrid.countX, TileGrid.countZ];
 
-		for (int x = 0; x < TileGrid.Width; x++)
+		for (int x = 0; x < TileGrid.countX; x++)
 		{
-			for (int z = 0; z < TileGrid.Length; z++)
+			for (int z = 0; z < TileGrid.countZ; z++)
 			{
 				layerGrid[x, z] = MapLayerType.LayerGround;
 			}
@@ -66,9 +66,9 @@ public class MapCreator
 	{
 		int[,] grid = layerGen.Generate();
 
-		for (int x = 0; x < TileGrid.Width; x++)
+		for (int x = 0; x < TileGrid.countX; x++)
 		{
-			for (int z = 0; z < TileGrid.Length; z++)
+			for (int z = 0; z < TileGrid.countZ; z++)
 			{
 				if (grid[x, z] == 1)
 				{
@@ -84,9 +84,9 @@ public class MapCreator
 		int i = 0;
 		for (; i < 3; i++)
 		{
-			for (int x = 0; x < TileGrid.Width; x++)
+			for (int x = 0; x < TileGrid.countX; x++)
 			{
-				for (int z = 0; z < TileGrid.Length; z++)
+				for (int z = 0; z < TileGrid.countZ; z++)
 				{
 					if (layerGrid[x, z] == layerData[i].mapLayerType)
 					{
@@ -101,9 +101,9 @@ public class MapCreator
 		{
 			int[,] grid = layerGen.Generate();
 
-			for (int x = 0; x < TileGrid.Width; x++)
+			for (int x = 0; x < TileGrid.countX; x++)
 			{
-				for (int z = 0; z < TileGrid.Length; z++)
+				for (int z = 0; z < TileGrid.countZ; z++)
 				{
 					if (grid[x, z] == 1 && layerData[i].mapLayerType == layerGrid[x, z])
 					{
@@ -135,10 +135,10 @@ public class MapCreator
 
 	private int[,] GetLayerMap(MapLayerType layerType)
 	{
-		int[,] mas = new int[TileGrid.Width, TileGrid.Length];
-		for (int x = 0; x < TileGrid.Width; x++)
+		int[,] mas = new int[TileGrid.countX, TileGrid.countZ];
+		for (int x = 0; x < TileGrid.countX; x++)
 		{
-			for (int z = 0; z < TileGrid.Length; z++)
+			for (int z = 0; z < TileGrid.countZ; z++)
 			{
 				if (layerGrid[x, z] == layerType)
 				{

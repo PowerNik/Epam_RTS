@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
+	public int MapWidth { get; private set; }
+	public int MapLength { get; private set; }
+
+	public int TileCountX { get; private set; }
+	public int TileCountZ { get; private set; }
+	public float TileSize { get; private set; }
+
 	#region TileSettings
 
 	[SerializeField]
@@ -21,38 +28,25 @@ public class MapManager : MonoBehaviour
 
 	#endregion
 
-	#region MapLayerSettings
 
 	[SerializeField]
 	private MapSettingsSO mapSettings;
 
-	public MapGeneratorSettings GetMapGeneratorSettings()
-	{
-		if (genSets == null)
-		{
-			genSets = mapSettings.MapGeneratorSettings();
-		}
-		return genSets;
-	}
-
-	public MapLayer[] GetMapLayers()
-	{
-		return mapSettings.MapLayers();
-	}
-
-	#endregion
-
-
 	[SerializeField]
 	private GameObject prefabMap;
 
+	private GridManager gridManager;
 	private MapCreator mapCreator;
 	private MapGeneratorSettings genSets;
-	public TileGrid TileGrid { get; private set; }
 
 	private void Awake()
 	{
 		SceneManagerRTS.MapManager = this;
+		genSets = mapSettings.MapGeneratorSettings();
+
+		MapWidth = genSets.width;
+		MapLength = genSets.length;
+		TileSize = genSets.tileSize;
 	}
 
 	private void Start()
@@ -63,26 +57,14 @@ public class MapManager : MonoBehaviour
 		LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
 		lnmb.m_Size = new Vector3(200, 200, 200);
 
-		GetMapGeneratorSettings();
-		mapCreator = new MapCreator(genSets, GetMapLayers(), go);
+		mapCreator = new MapCreator(genSets, mapSettings.MapLayers(), go);
 
-		TileGrid = mapCreator.TileGrid;
+		gridManager = GameManager.Instance.GetComponent<GridManager>();
+		gridManager.SetTileGrid(mapCreator.TileGrid);
 	}
 
 	public Vector3 GetTilePos(Vector3 position)
 	{
-		float tileSize = genSets.tileSize;
-		float x = position.x - position.x % tileSize + tileSize / 2f;
-		if(position.x < 0)
-		{
-			x -= tileSize;
-		}
-
-		float z = position.z - position.z % tileSize + tileSize / 2f;
-		if (position.z < 0)
-		{
-			z -= tileSize;
-		}
-		return new Vector3(x, position.y, z);
+		return gridManager.GetTilePos(position);
 	}
 }

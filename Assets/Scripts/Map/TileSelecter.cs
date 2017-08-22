@@ -18,7 +18,7 @@ public class TileSelecter : MonoBehaviour
 	void Start()
 	{
 		mapManager = SceneManagerRTS.MapManager;
-		tileSize = mapManager.GetMapGeneratorSettings().tileSize;
+		tileSize = mapManager.TileSize;
 
 		selectedTile = Instantiate(selectedTilePrefab).transform;
 		selectedTile.localScale *= tileSize;
@@ -127,21 +127,18 @@ public class TileSelecter : MonoBehaviour
 			return;
 		}
 
-		MapGeneratorSettings genSets = mapManager.GetMapGeneratorSettings();
-		for (int x = 0; x < mapManager.TileGrid.Width; x++)
-		{
-			for (int z = 0; z < mapManager.TileGrid.Length; z++)
-			{
-				float xL = -genSets.width / 2;
-				float xR = genSets.width / 2;
-				float curZ = z * genSets.tileSize - genSets.length / 2;
-				Gizmos.DrawLine(new Vector3(xL, 0, curZ), new Vector3(xR, 0, curZ));
-			}
+		float width = mapManager.MapWidth;
+		float length = mapManager.MapLength;
 
-			float zD = -genSets.length / 2;
-			float zU = genSets.length / 2;
-			float curX = x * genSets.tileSize - genSets.width / 2;
-			Gizmos.DrawLine(new Vector3(curX, 0, zD), new Vector3(curX, 0, zU));
+		for (int x = 0; x < mapManager.TileCountX; x++)
+		{
+			for (int z = 0; z < mapManager.TileCountZ; z++)
+			{
+				float curZ = z * tileSize - length / 2;
+				Gizmos.DrawLine(new Vector3(-width / 2, 0, curZ), new Vector3(width / 2, 0, curZ));
+			}
+			float curX = x * tileSize - width / 2;
+			Gizmos.DrawLine(new Vector3(curX, 0, -length / 2), new Vector3(curX, 0, length / 2));
 		}
 	}
 }
