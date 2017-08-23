@@ -9,6 +9,7 @@ public class Unit : MonoBehaviour {
 
     // Игровые переменные
     private float health;
+    private float maxHealth;
     private float cost;
     private Fraction fraction;
     private bool isLoadable;

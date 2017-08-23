@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Attack : MonoBehaviour
 {
 
-    public enum AttackType { Melee, Range, Area, Rocket };
+    public enum AttackType { Melee, Range, Area, Siege };
     [SerializeField]
     AttackType attackType;
     [SerializeField]
@@ -21,7 +21,7 @@ public class Attack : MonoBehaviour
     [SerializeField]
     float AreaAttackRadius;
     [SerializeField]
-    float RocketAttackRadius;
+    float SiegeAttackRadius;
     [SerializeField]
     float MeleeDPS;
     [SerializeField]
@@ -29,7 +29,7 @@ public class Attack : MonoBehaviour
     [SerializeField]
     float AreaDPS;
     [SerializeField]
-    float RocketDPS;
+    float SiegeDPS;
 
 
 
@@ -74,9 +74,9 @@ public class Attack : MonoBehaviour
                 CurrentAttackRadius = AreaAttackRadius;
                 CurrentDPS = AreaDPS;
                 break;
-            case AttackType.Rocket:
-                CurrentAttackRadius = RocketAttackRadius;
-                CurrentDPS = RocketDPS;
+            case AttackType.Siege:
+                CurrentAttackRadius = SiegeAttackRadius;
+                CurrentDPS = SiegeDPS;
                 break;
         }
     }
@@ -149,7 +149,7 @@ public class Attack : MonoBehaviour
                     EnableFlameThrower();
                     print(attackType.ToString());
                     break;
-                case AttackType.Rocket:
+                case AttackType.Siege:
                     break;
             }
         }
