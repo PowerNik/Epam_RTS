@@ -7,8 +7,9 @@ public class MapCreator
 {
 	public TileGrid TileGrid { get; private set; }
 
-	private MapGeneratorSettings genSets;
 	private GameObject map;
+	private MapGeneratorSettings genSets;
+	private BasePointSettings basePointSets;
 
 	/// <summary>
 	/// Карта расположения слоев
@@ -17,13 +18,15 @@ public class MapCreator
 	private MapLayer[] layerData;
 	private LayerGenerator layerGen;
 
-	public MapCreator(MapGeneratorSettings genSets, MapLayer[] layerData, GameObject map)
+	public MapCreator(MapSettingsSO mapSettings, GameObject map)
 	{
-		this.layerData = layerData;
 		this.map = map;
-		this.genSets = genSets;
 
-        Creating();
+		layerData = mapSettings.MapLayers();
+		genSets = mapSettings.MapGeneratorSettings();
+		basePointSets = mapSettings.BasePointSettings();
+
+		Creating();
 	}
 
 	private void Creating()

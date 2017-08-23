@@ -11,8 +11,6 @@ public class MapManager : MonoBehaviour
 	public int TileCountZ { get; private set; }
 	public float TileSize { get; private set; }
 
-	#region TileSettings
-
 	[SerializeField]
 	private TileSettingsSO tileSettings;
 
@@ -25,8 +23,6 @@ public class MapManager : MonoBehaviour
 	{
 		return tileSettings.GetAllSettings();
 	}
-
-	#endregion
 
 
 	[SerializeField]
@@ -56,7 +52,7 @@ public class MapManager : MonoBehaviour
 		LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
 		lnmb.m_Size = new Vector3(200, 200, 200);
 
-		mapCreator = new MapCreator(genSets, mapSettings.MapLayers(), go);
+		mapCreator = new MapCreator(mapSettings, go);
 		gridManager = GameManager.Instance.GetComponent<GridManager>();
 
 		TileGrid tileGrid = mapCreator.TileGrid;

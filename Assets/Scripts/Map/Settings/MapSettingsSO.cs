@@ -11,6 +11,10 @@ public class MapSettingsSO : ScriptableObject
 	[SerializeField]
 	private MapLayer[] mapLayers;
 
+	[Space(15)]
+	[SerializeField]
+	private BasePointSettings basePointSettings;
+
 	public MapGeneratorSettings MapGeneratorSettings()
 	{
 		return mapGenSet;
@@ -19,5 +23,10 @@ public class MapSettingsSO : ScriptableObject
 	public MapLayer[] MapLayers()
 	{
 		return mapLayers;
+	}
+
+	public BasePointSettings BasePointSettings()
+	{
+		return basePointSettings;
 	}
 }

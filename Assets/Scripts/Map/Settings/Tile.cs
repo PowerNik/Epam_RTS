@@ -8,9 +8,9 @@ public class Tile
 	public string TileName = "Ground";
 	public TileType TileType = TileType.Ground;
 
-	public Texture texture;
 	public Material material;
 
+	public bool isAllowBuild = true;
 	public bool isAllowMove = true;
 	public bool isAllowFly = true;
 
