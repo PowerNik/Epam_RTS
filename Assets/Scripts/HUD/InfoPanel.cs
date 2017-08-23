@@ -46,7 +46,7 @@ public class InfoPanel : MonoBehaviour {
         SingleSelection.gameObject.SetActive(true);
         SingleSelection.Icon.sprite = unit.Icon;
         SingleSelection.Name.text = unit.Name;
-        SingleSelection.Fraction.text = unit.fraction.ToString();
+        SingleSelection.Fraction.text = unit.Fraction.ToString();
         SingleSelection.Health.text = unit.Health.ToString();
     }
 

@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private StructureScriptableObject sso;
     [SerializeField]
+    private UnitScriptableObject uso;
+    [SerializeField]
     private List<Structure> structures;
 
     //TODELETE
@@ -55,7 +57,17 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < settings.Count; i++)
         {
             if (settings[i].Type == type)
-                return Instance.sso.structureSettings[0];
+                return Instance.sso.structureSettings[i];
+        }
+        return null;
+    }
+    public static UnitSettings getUnitSettings(UnitType type)
+    {
+        List<UnitSettings> settings = Instance.uso.unitSettings;
+        for (int i = 0; i < settings.Count; i++)
+        {
+            if (settings[i].Type == type)
+                return Instance.uso.unitSettings[i];
         }
         return null;
     }
@@ -70,6 +82,17 @@ public class GameManager : MonoBehaviour {
         s_Instance = Instance;
         structures = new List<Structure>();
         structuresPlaceHolder = new GameObject("Structures");
+
+        #region RegionForTestingSpawnUnityWithFactory
+        RhiroUnitFactory ruf = new RhiroUnitFactory();
+        ruf.CreateUnit(new Vector3(10, 0, 27));
+        RoverUnitFactory rovuf = new RoverUnitFactory();
+        rovuf.CreateUnit(new Vector3(18, 0, 27));
+        FootSoldierUnitFactory fsuf = new FootSoldierUnitFactory();
+        fsuf.CreateUnit(new Vector3(14, 0, 27));
+        FlamerUnitFactory flameruf = new FlamerUnitFactory();
+        flameruf.CreateUnit(new Vector3(12,0,29));
+        #endregion
     }
 
     private void Update()

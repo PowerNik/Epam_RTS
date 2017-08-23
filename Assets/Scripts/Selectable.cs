@@ -73,7 +73,9 @@ public class Selectable : MonoBehaviour {
     }
     private void OnDestroy()
     {
-        Deselect();
+        #region ErrorDeselect
+        //Deselect();
+        #endregion
         MouseManager.Current.SelectedObjects.Remove(this);
     }
 }
