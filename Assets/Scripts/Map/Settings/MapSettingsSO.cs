@@ -15,17 +15,17 @@ public class MapSettingsSO : ScriptableObject
 	[SerializeField]
 	private BasePointSettings basePointSettings;
 
-	public MapGeneratorSettings MapGeneratorSettings()
+	public MapGeneratorSettings GetMapGeneratorSettings()
 	{
 		return mapGenSet;
 	}
 
-	public MapLayer[] MapLayers()
+	public MapLayer[] GetMapLayers()
 	{
 		return mapLayers;
 	}
 
-	public BasePointSettings BasePointSettings()
+	public BasePointSettings GetBasePointSettings()
 	{
 		return basePointSettings;
 	}

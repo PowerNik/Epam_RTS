@@ -35,7 +35,7 @@ public class LayerGenerator
 	/// </summary>
 	/// <param name="isSmooth">Соединять близкие 1 в одну область?</param>
 	/// <returns></returns>
-	public int[,] Generate(bool isSmooth = true)
+	public int[,] Generate(bool isSmooth)
 	{
 		map = new int[TileCountX, TileCountZ];
 		RandomFillMap();

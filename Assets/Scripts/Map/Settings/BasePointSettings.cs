@@ -5,12 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class BasePointSettings
 {
-	[Tooltip("Число и размер баз горожан")]
-	public int[] citizenBases = new int[1] { 30 };
+	[Tooltip("Размер базы горожан")]
+	public int citizenBaseSize = 20;
 
 	[Space(10)]
 	[Tooltip("Число и размер баз фермеров")]
-	public int[] fermerBases = new int[3] { 15, 20, 15 };
+	public int[] fermerBases = new int[3] { 10, 15, 10 };
 
 	[Space(20)]
 	[Tooltip("Число секторов по Х. В одном секторе будет только одна база")]

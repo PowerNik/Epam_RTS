@@ -37,7 +37,7 @@ public class MapManager : MonoBehaviour
 
 	private void Awake()
 	{
-		genSets = mapSettings.MapGeneratorSettings();
+		genSets = mapSettings.GetMapGeneratorSettings();
 
 		MapWidth = genSets.width;
 		MapLength = genSets.length;
@@ -66,9 +66,20 @@ public class MapManager : MonoBehaviour
 	{
 		return gridManager.GetTilePos(position);
 	}
+
 	public bool IsBuildableTile(Vector3 position)
 	{
 		return gridManager.IsBuildableTile(position);
 	}
 
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawSphere(mapCreator.CitizenBasePoint, 5);
+
+		Gizmos.color = Color.green;
+		Gizmos.DrawSphere(mapCreator.FermerBasePoint[0], 5);
+		Gizmos.DrawSphere(mapCreator.FermerBasePoint[1], 5);
+		Gizmos.DrawSphere(mapCreator.FermerBasePoint[2], 5);
+	}
 }
