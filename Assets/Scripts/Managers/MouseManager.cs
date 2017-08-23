@@ -31,7 +31,7 @@ public class MouseManager : MonoBehaviour
     }
     void LeftMouseButtonHandler()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -141,22 +141,11 @@ public class MouseManager : MonoBehaviour
             return;
         LeftMouseButtonHandler();
         RightMouseButtonHandler();
+        RectHelper();
     }
 
-    private void OnGUI()
+    void RectHelper()
     {
-
-
-        var texture = new Texture2D(1, 1);
-        texture.SetPixel(0, 0, new Color(0, 0, 0, 0.25f));
-        texture.Apply();
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            startPosX = Input.mousePosition.x;
-            startPosY = Screen.height - Input.mousePosition.y;
-            drawing = true;
-        }
         if (Input.GetMouseButtonUp(0))
         {
             drawing = false;
@@ -174,9 +163,24 @@ public class MouseManager : MonoBehaviour
                         u.Select();
                         print(u);
                     }
-                    
+
                 }
             }
+        }
+    }
+    private void OnGUI()
+    {
+
+
+        var texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, new Color(0, 0, 0, 0.25f));
+        texture.Apply();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            startPosX = Input.mousePosition.x;
+            startPosY = Screen.height - Input.mousePosition.y;
+            drawing = true;
         }
         if (drawing)
         {
