@@ -41,7 +41,6 @@ public class MapManager : MonoBehaviour
 
 	private void Awake()
 	{
-		//SceneManagerRTS.MapManager = this;
 		genSets = mapSettings.MapGeneratorSettings();
 
 		MapWidth = genSets.width;

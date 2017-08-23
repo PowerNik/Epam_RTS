@@ -15,6 +15,7 @@ public class GridManager : MonoBehaviour
 	void Start()
 	{
 		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
+		tileSize = mapManager.TileSize;
 	}
 
 	public void SetTileGrid(TileGrid tileGrid)
@@ -23,7 +24,6 @@ public class GridManager : MonoBehaviour
 
 		tileCountX = tileGrid.countX;
 		tileCountZ = tileGrid.countZ;
-		tileSize = mapManager.TileSize;
 	}
 
 	public Vector3 GetTilePos(Vector3 position)
