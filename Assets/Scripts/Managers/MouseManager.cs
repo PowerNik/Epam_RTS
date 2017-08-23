@@ -170,7 +170,8 @@ public class MouseManager : MonoBehaviour
     }
     private void OnGUI()
     {
-
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
 
         var texture = new Texture2D(1, 1);
         texture.SetPixel(0, 0, new Color(0, 0, 0, 0.25f));
