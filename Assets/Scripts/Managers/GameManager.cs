@@ -115,7 +115,8 @@ public class GameManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                Instantiate(unit1, hit.point, transform.rotation);
+                RoverUnitFactory rover = new RoverUnitFactory();
+                rover.CreateUnit(hit.point);
             }
         }
         if (Input.GetKeyDown("i"))
@@ -124,7 +125,8 @@ public class GameManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                Instantiate(unit2, hit.point, transform.rotation);
+                RhiroUnitFactory rhino = new RhiroUnitFactory();
+                rhino.CreateUnit(hit.point);
             }
         }
         if (Input.GetKeyDown("o"))
@@ -133,7 +135,9 @@ public class GameManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                Instantiate(unit3, hit.point, transform.rotation);
+
+                FootSoldierUnitFactory FS_Basic = new FootSoldierUnitFactory();
+                FS_Basic.CreateUnit(hit.point);
             }
         }
         if (Input.GetKeyDown("p"))
@@ -142,7 +146,8 @@ public class GameManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                Instantiate(unit4, hit.point, transform.rotation);
+                FlamerUnitFactory FS_Flamer = new FlamerUnitFactory();
+                FS_Flamer.CreateUnit(hit.point);
             }
         }
         #endregion
