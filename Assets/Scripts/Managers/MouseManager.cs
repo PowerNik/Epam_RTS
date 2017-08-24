@@ -31,7 +31,7 @@ public class MouseManager : MonoBehaviour
     }
     void LeftMouseButtonHandler()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -39,19 +39,21 @@ public class MouseManager : MonoBehaviour
 
             if (hit.collider.GetComponent<Selectable>())
             {
+                if (selectedObjects.Contains(hit.collider.GetComponent<Selectable>()))
+                    return;
                 var selectable = hit.collider.GetComponent<Selectable>();
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     if (selectable.GetComponent<Movable>() && !selectable.GetComponent<Unit>().IsEnemy)
                     {
-                        selectedObjects.Add(selectable);
                         selectable.Select();
+                        selectedObjects.Add(selectable);
                     }
                     else
                     {
                         selectedObjects.Clear();
-                        selectedObjects.Add(selectable);
                         selectable.Select();
+                        selectedObjects.Add(selectable);
                     }
                 }
                 else
@@ -61,8 +63,8 @@ public class MouseManager : MonoBehaviour
                         selection.Deselect();
                     }
                     selectedObjects.Clear();
-                    selectedObjects.Add(selectable);
                     selectable.Select();
+                    selectedObjects.Add(selectable);
                 }
 
             }
@@ -139,11 +141,37 @@ public class MouseManager : MonoBehaviour
             return;
         LeftMouseButtonHandler();
         RightMouseButtonHandler();
+        RectHelper();
     }
 
+    void RectHelper()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            drawing = false;
+            foreach (var u in VisibleUnits)
+            {
+                var holder = Camera.main.WorldToScreenPoint(u.transform.position);
+                holder.y = Screen.height - holder.y;
+                if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemy) && (u.GetComponent<Movable>() != null))
+                {
+                    if (selectedObjects.Contains(u))
+                        return;
+                    else
+                    {
+                        selectedObjects.Add(u);
+                        u.Select();
+                        print(u);
+                    }
+
+                }
+            }
+        }
+    }
     private void OnGUI()
     {
-
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
 
         var texture = new Texture2D(1, 1);
         texture.SetPixel(0, 0, new Color(0, 0, 0, 0.25f));
@@ -154,20 +182,6 @@ public class MouseManager : MonoBehaviour
             startPosX = Input.mousePosition.x;
             startPosY = Screen.height - Input.mousePosition.y;
             drawing = true;
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            drawing = false;
-            foreach (var u in VisibleUnits)
-            {
-                var holder = Camera.main.WorldToScreenPoint(u.transform.position);
-                holder.y = Screen.height - holder.y;
-                if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemy) && (u.GetComponent<Movable>() != null))
-                {
-                    selectedObjects.Add(u);
-                    u.Select();
-                }
-            }
         }
         if (drawing)
         {

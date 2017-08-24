@@ -6,13 +6,14 @@ using UnityEngine.AI;
 public class Attack : MonoBehaviour
 {
 
-    public enum AttackType { Melee, Range, Area, Rocket };
+    public enum AttackType { Melee, Range, Area, Siege };
     [SerializeField]
     AttackType attackType;
     [SerializeField]
     float CurrentAttackRadius;
     [SerializeField]
     float CurrentDPS;
+    public float currentDPS { get { return CurrentDPS; } }
     [SerializeField]
     float RangeAttackRadius;
     [SerializeField]
@@ -20,7 +21,7 @@ public class Attack : MonoBehaviour
     [SerializeField]
     float AreaAttackRadius;
     [SerializeField]
-    float RocketAttackRadius;
+    float SiegeAttackRadius;
     [SerializeField]
     float MeleeDPS;
     [SerializeField]
@@ -28,7 +29,7 @@ public class Attack : MonoBehaviour
     [SerializeField]
     float AreaDPS;
     [SerializeField]
-    float RocketDPS;
+    float SiegeDPS;
 
 
 
@@ -58,6 +59,7 @@ public class Attack : MonoBehaviour
     }
     public void SwitchAttackType(AttackType attackType)
     {
+        this.attackType = attackType;
         switch (attackType)
         {
             case AttackType.Range:
@@ -72,9 +74,9 @@ public class Attack : MonoBehaviour
                 CurrentAttackRadius = AreaAttackRadius;
                 CurrentDPS = AreaDPS;
                 break;
-            case AttackType.Rocket:
-                CurrentAttackRadius = RocketAttackRadius;
-                CurrentDPS = RocketDPS;
+            case AttackType.Siege:
+                CurrentAttackRadius = SiegeAttackRadius;
+                CurrentDPS = SiegeDPS;
                 break;
         }
     }
@@ -91,6 +93,7 @@ public class Attack : MonoBehaviour
             {
                 approachingTarget = false;
                 isAttacking = true;
+                timeWaited = 1f;
             }
         }
         if (isAttacking)
@@ -98,51 +101,75 @@ public class Attack : MonoBehaviour
             if (GetComponent<NavMeshAgent>() != null)
             {
                 GetComponent<NavMeshAgent>().isStopped = true;
-                // изменить transform.rotation;
+                transform.LookAt(enemy.transform);
+                transform.Rotate(Vector3.right, transform.rotation.eulerAngles.x);
             }
-
-
+            if (enemy.Health <= 0)
+            {
+                isAttacking = false;
+                return;
+            }
             switch (attackType)
             {
 
                 case AttackType.Range:
+                    GetComponent<Animator>().SetBool(attackType.ToString(), true);
 
-                    if (timeWaited < 1)
-                    {
-                        timeWaited += Time.deltaTime;
-                    }
-                    else
-                    {
-                        GetComponent<Animator>().SetBool(attackType.ToString(), true);
+                    if (timeWaited >= 1f)
+                    { 
+                        GetComponentInChildren<LineRenderer>().enabled = true;
+                        GetComponentInChildren<LineRenderer>().SetPosition(0, GetComponentInChildren<LineRenderer>().transform.position);
+                        GetComponentInChildren<LineRenderer>().SetPosition(1, enemy.transform.position);
                         print(attackType.ToString());
                         enemy.Health -= CurrentDPS;
                         timeWaited = 0;
                     }
+                    else
+                        timeWaited += Time.deltaTime;
+                    if (timeWaited > 0.2f)
+                        GetComponentInChildren<LineRenderer>().enabled = false;
+
                     break;
 
                 case AttackType.Melee:
+                    GetComponent<Animator>().SetBool(attackType.ToString(), true);
                     if (timeWaited < 1)
                     {
                         timeWaited += Time.deltaTime;
                     }
                     else
                     {
-                        GetComponent<Animator>().SetBool(attackType.ToString(), true);
                         print(attackType.ToString());
                         enemy.Health -= CurrentDPS;
                         timeWaited = 0;
                     }
                     break;
                 case AttackType.Area:
+                    GetComponent<Animator>().SetBool(attackType.ToString(), true);
+                    EnableFlameThrower();
+                    print(attackType.ToString());
                     break;
-                case AttackType.Rocket:
+                case AttackType.Siege:
                     break;
             }
         }
         else
         {
             GetComponent<Animator>().SetBool(attackType.ToString(), false);
+            if (GetComponentInChildren<Flamethrower>() != null)
+                DisableFlameThrower();
+            if (GetComponentInChildren<LineRenderer>() != null)
+                GetComponentInChildren<LineRenderer>().enabled = false;
         }
+    }
+    void EnableFlameThrower()
+    {
+        if (GetComponentInChildren<Flamethrower>() != null)
+            GetComponentInChildren<Flamethrower>().Enable();
+    }
+    void DisableFlameThrower()
+    {
+            GetComponentInChildren<Flamethrower>().Disable();
     }
 }
 

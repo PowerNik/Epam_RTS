@@ -74,6 +74,11 @@ public class MapManager : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
+		if(mapCreator == null)
+		{
+			return;
+		}
+
 		Gizmos.color = Color.red;
 		Gizmos.DrawSphere(mapCreator.CitizenBasePoint, 5);
 

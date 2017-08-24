@@ -24,6 +24,8 @@ public class UnitContainer : MonoBehaviour {
 
     public void LoadUnit(Unit unit)
     {
+        if (!unit.IsLoadable)
+            return;
         if (UnitsInside.Count < capacity)
         {
             UnitsInside.Add(unit);
@@ -35,8 +37,9 @@ public class UnitContainer : MonoBehaviour {
     {
         foreach (var unit in UnitsInside)
         {
-            unit.transform.position = transform.position;
+            unit.transform.position = transform.position+new Vector3(Random.Range(0, 2f), 0, Random.Range(0, 2f));
             unit.gameObject.SetActive(true);
         }
+        UnitsInside.Clear();
     }
 }
