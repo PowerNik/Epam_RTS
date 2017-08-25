@@ -33,30 +33,29 @@ public class MapManager : MonoBehaviour
 
 	private GridManager gridManager;
 	private MapCreator mapCreator;
-	private MapGeneratorSettings genSets;
+	private MapSizeSettings mapSizeSets;
 
 	private void Awake()
 	{
-		genSets = mapSettings.GetMapGeneratorSettings();
-
 		SetParams();
 		CreateMap();
 	}
 
 	private void SetParams()
 	{
-		MapWidth = genSets.width;
-		MapLength = genSets.length;
-		TileSize = genSets.tileSize;
+		mapSizeSets = mapSettings.GetMapSizeSettings();
+		MapWidth = mapSizeSets.width;
+		MapLength = mapSizeSets.length;
+		TileSize = mapSizeSets.tileSize;
 
-		TileCountX = (int)(MapWidth / TileSize);
-		TileCountZ = (int)(MapLength / TileSize);
+		TileCountX = mapSizeSets.TileCountX;
+		TileCountZ = mapSizeSets.TileCountZ;
 	}
 
 	private void CreateMap()
 	{
 		mapCreator = new MapCreator(mapSettings);
-		gridManager = new GridManager(genSets);
+		gridManager = new GridManager(mapSizeSets);
 
 		GameObject mapGO = Instantiate(prefabMap);
 

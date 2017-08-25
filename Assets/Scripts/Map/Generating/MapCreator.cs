@@ -10,7 +10,7 @@ public class MapCreator
 
 	private LayerGenerator layerGen;
 
-	private MapGeneratorSettings genSets;
+	private MapSizeSettings mapSizeSets;
 	private BasePointSettings basePointSets;
 
 	private int tileCountX;
@@ -24,10 +24,11 @@ public class MapCreator
 
 	public MapCreator(MapSettingsSO mapSettings)
 	{
-		genSets = mapSettings.GetMapGeneratorSettings();
+		mapSizeSets = mapSettings.GetMapSizeSettings();
 		basePointSets = mapSettings.GetBasePointSettings();
 
-		layerGen = new LayerGenerator(genSets);
+		//TODO Убрать генерацию слоя в другое место
+		layerGen = new LayerGenerator(mapSettings.GetMapSizeSettings(), new GeneratorSettings());
 		tileCountX = layerGen.TileCountX;
 		tileCountZ = layerGen.TileCountZ;
 
@@ -88,17 +89,17 @@ public class MapCreator
 	{
 		int[,] mas = GetLayerMap(MapLayerType.LayerMountain);
 		MeshGenerator meshGen = map.transform.GetChild(0).GetComponent<MeshGenerator>();
-		meshGen.GenerateMesh(mas, genSets.tileSize, 5f);
+		meshGen.GenerateMesh(mas, mapSizeSets.tileSize, 5f);
 		meshGen.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas1 = GetLayerMap(MapLayerType.LayerGround);
 		MeshGenerator meshGen1 = map.transform.GetChild(1).GetComponent<MeshGenerator>();
-		meshGen1.GenerateMesh(mas1, genSets.tileSize, 0.8f);
+		meshGen1.GenerateMesh(mas1, mapSizeSets.tileSize, 0.8f);
 		meshGen1.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas2 = GetLayerMap(MapLayerType.LayerWater);
 		MeshGenerator meshGen2 = map.transform.GetChild(2).GetComponent<MeshGenerator>();
-		meshGen2.GenerateMesh(mas2, genSets.tileSize, 0.5f);
+		meshGen2.GenerateMesh(mas2, mapSizeSets.tileSize, 0.5f);
 		meshGen2.gameObject.AddComponent<NavMeshSourceTag>();
 	}
 
@@ -291,16 +292,16 @@ public class MapCreator
 	{
 		SetAreaParams(basePointSets.citizenBaseSize / 2, CitizenBasePoint);
 
-		float newX = CitizenBasePoint.x - genSets.width / 2;
-		float newZ = CitizenBasePoint.z - genSets.length / 2;
+		float newX = CitizenBasePoint.x - mapSizeSets.width / 2;
+		float newZ = CitizenBasePoint.z - mapSizeSets.length / 2;
 		CitizenBasePoint = new Vector3(newX, 0, newZ);
 
 		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
 		{
 			SetAreaParams(basePointSets.fermerBases[i] / 2, FermerBasePoint[i]);
 
-			newX = FermerBasePoint[i].x - genSets.width / 2;
-			newZ = FermerBasePoint[i].z - genSets.length / 2;
+			newX = FermerBasePoint[i].x - mapSizeSets.width / 2;
+			newZ = FermerBasePoint[i].z - mapSizeSets.length / 2;
 			FermerBasePoint[i] = new Vector3(newX, 0, newZ);
 		}
 	}

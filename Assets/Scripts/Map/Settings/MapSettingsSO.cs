@@ -5,22 +5,22 @@ using System.Collections;
 public class MapSettingsSO : ScriptableObject
 {
 	[SerializeField]
-	private MapGeneratorSettings mapGenSet;
+	private MapSizeSettings mapSizeSetting;
 
-	[Space(15)]
+	[Space(10)]
 	[SerializeField]
-	private MapLayer[] mapLayers;
+	private MapLayers mapLayers;
 
-	[Space(15)]
+	[Space(10)]
 	[SerializeField]
 	private BasePointSettings basePointSettings;
 
-	public MapGeneratorSettings GetMapGeneratorSettings()
+	public MapSizeSettings GetMapSizeSettings()
 	{
-		return mapGenSet;
+		return mapSizeSetting;
 	}
 
-	public MapLayer[] GetMapLayers()
+	public MapLayers GetMapLayers()
 	{
 		return mapLayers;
 	}

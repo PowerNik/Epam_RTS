@@ -39,7 +39,7 @@ public class MeshGenerator : MonoBehaviour
 		GetComponent<MeshCollider>().sharedMesh = mesh;
 	}
 
-	public void GenerateMesh(int[,] map, MapLayer mapLayer)
+	public void GenerateMesh(int[,] map, MapLayers mapLayer)
 	{
 		//TODO
 	}

@@ -13,14 +13,13 @@ public class GridManager
 
 	private Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
 
-	public GridManager(MapGeneratorSettings genSets)
+	public GridManager(MapSizeSettings mapSizeSets)
 	{
-		tileCountX = (int)(genSets.width / genSets.tileSize);
-		tileCountZ = (int)(genSets.length / genSets.tileSize);
+		tileCountX = mapSizeSets.TileCountX;
+		tileCountZ = mapSizeSets.TileCountZ;
 		tileGrid = new TileGrid(tileCountX, tileCountZ);
 
-		tileSize = genSets.tileSize;
-
+		tileSize = mapSizeSets.tileSize;
 	}
 
 	public Vector3 GetTilePos(Vector3 position)

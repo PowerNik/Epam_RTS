@@ -19,15 +19,14 @@ public class LayerGenerator
 
 	private int[,] map;
 
-	public LayerGenerator(MapGeneratorSettings genSets)
+	public LayerGenerator(MapSizeSettings mapSizeSets, GeneratorSettings genSets)
 	{
-		TileCountX = (int)(genSets.width / genSets.tileSize);
-		TileCountZ = (int)(genSets.length / genSets.tileSize);
+		TileCountX = mapSizeSets.TileCountX;
+		TileCountZ = mapSizeSets.TileCountZ;
 
 		seed = genSets.seed;
-		isRandomSeed = genSets.isRandomSeed;
-
-		randomFillPercent = genSets.randomFillPercent;
+		isRandomSeed = genSets.isRandom;
+		randomFillPercent = genSets.fillPercent;
 	}
 
 	/// <summary>
