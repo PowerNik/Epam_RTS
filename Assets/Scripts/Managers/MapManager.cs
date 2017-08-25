@@ -39,27 +39,31 @@ public class MapManager : MonoBehaviour
 	{
 		genSets = mapSettings.GetMapGeneratorSettings();
 
+		SetParams();
+		CreateMap();
+	}
+
+	private void SetParams()
+	{
 		MapWidth = genSets.width;
 		MapLength = genSets.length;
 		TileSize = genSets.tileSize;
+
+		TileCountX = (int)(MapWidth / TileSize);
+		TileCountZ = (int)(MapLength / TileSize);
 	}
 
-	private void Start()
+	private void CreateMap()
 	{
-		GameObject go = Instantiate(prefabMap);
+		mapCreator = new MapCreator(mapSettings);
+		gridManager = new GridManager(genSets);
 
-		go.AddComponent<LocalNavMeshBuilder>();
-		LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
+		GameObject mapGO = Instantiate(prefabMap);
+
+		mapGO.AddComponent<LocalNavMeshBuilder>();
+		LocalNavMeshBuilder lnmb = mapGO.GetComponent<LocalNavMeshBuilder>();
 		lnmb.m_Size = new Vector3(200, 200, 200);
-
-		mapCreator = new MapCreator(mapSettings, go);
-		gridManager = GameManager.Instance.GetComponent<GridManager>();
-
-		TileGrid tileGrid = mapCreator.TileGrid;
-		gridManager.SetTileGrid(tileGrid);
-
-		TileCountX = tileGrid.countX;
-		TileCountZ = tileGrid.countZ;
+		mapCreator.CreateMeshes(mapGO);
 	}
 
 	public Vector3 GetTilePos(Vector3 position)

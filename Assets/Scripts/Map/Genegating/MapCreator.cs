@@ -5,17 +5,16 @@ using UnityEngine;
 
 public class MapCreator
 {
-	public TileGrid TileGrid { get; private set; }
-
 	public Vector3 CitizenBasePoint { get; private set; }
 	public Vector3[] FermerBasePoint { get; private set; }
 
-	private GameObject mapGO;
 	private LayerGenerator layerGen;
 
 	private MapGeneratorSettings genSets;
 	private BasePointSettings basePointSets;
-	private MapLayer[] layerData;
+
+	private int tileCountX;
+	private int tileCountZ;
 
 	/// <summary>
 	/// Карта расположения слоев
@@ -23,28 +22,22 @@ public class MapCreator
 	private MapLayerType[,] layerGrid;
 
 
-	public MapCreator(MapSettingsSO mapSettings, GameObject map)
+	public MapCreator(MapSettingsSO mapSettings)
 	{
-		mapGO = map;
-
-		layerData = mapSettings.GetMapLayers();
 		genSets = mapSettings.GetMapGeneratorSettings();
 		basePointSets = mapSettings.GetBasePointSettings();
+
+		layerGen = new LayerGenerator(genSets);
+		tileCountX = layerGen.TileCountX;
+		tileCountZ = layerGen.TileCountZ;
 
 		Creating();
 	}
 
 	private void Creating()
 	{
-		layerGen = new LayerGenerator(genSets);
-		TileGrid = new TileGrid(layerGen.TileCountX, layerGen.TileCountZ);
-
 		CreateLayers();
-		SetTiles();
-
 		CreateBasePoints();
-
-		CreateMeshes();
 	}
 
 	/// <summary>
@@ -66,15 +59,15 @@ public class MapCreator
 		bool isFirstLayer = false;
 		if (layerGrid == null)
 		{
-			layerGrid = new MapLayerType[TileGrid.countX, TileGrid.countZ];
+			layerGrid = new MapLayerType[tileCountX, tileCountZ];
 			isFirstLayer = true;
 		}
 
 		int[,] grid = layerGen.Generate(true);
 
-		for (int x = 0; x < TileGrid.countX; x++)
+		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int z = 0; z < TileGrid.countZ; z++)
+			for (int z = 0; z < tileCountZ; z++)
 			{
 				if (isFirstLayer)
 				{
@@ -91,57 +84,20 @@ public class MapCreator
 		}
 	}
 
-	private void SetTiles()
-	{
-		// TODO
-		//Тайловая карта пустая, поэтому "переносим" на нее тайлы первых трех РАЗНЫХ слоев
-		int i = 0;
-		for (; i < 3; i++)
-		{
-			for (int x = 0; x < TileGrid.countX; x++)
-			{
-				for (int z = 0; z < TileGrid.countZ; z++)
-				{
-					if (layerGrid[x, z] == layerData[i].mapLayerType)
-					{
-						TileGrid[x, z] = layerData[i].tileType;
-					}
-				}
-			}
-		}
-
-		//Остальные тайлы рандомно размещаются на своих слоях
-		for (; i < layerData.Length; i++)
-		{
-			int[,] grid = layerGen.Generate(true);
-
-			for (int x = 0; x < TileGrid.countX; x++)
-			{
-				for (int z = 0; z < TileGrid.countZ; z++)
-				{
-					if (grid[x, z] == 1 && layerData[i].mapLayerType == layerGrid[x, z])
-					{
-						TileGrid[x, z] = layerData[i].tileType;
-					}
-				}
-			}
-		}
-	}
-
-	private void CreateMeshes()
+	public void CreateMeshes(GameObject map)
 	{
 		int[,] mas = GetLayerMap(MapLayerType.LayerMountain);
-		MeshGenerator meshGen = mapGO.transform.GetChild(0).GetComponent<MeshGenerator>();
+		MeshGenerator meshGen = map.transform.GetChild(0).GetComponent<MeshGenerator>();
 		meshGen.GenerateMesh(mas, genSets.tileSize, 5f);
 		meshGen.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas1 = GetLayerMap(MapLayerType.LayerGround);
-		MeshGenerator meshGen1 = mapGO.transform.GetChild(1).GetComponent<MeshGenerator>();
+		MeshGenerator meshGen1 = map.transform.GetChild(1).GetComponent<MeshGenerator>();
 		meshGen1.GenerateMesh(mas1, genSets.tileSize, 0.8f);
 		meshGen1.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas2 = GetLayerMap(MapLayerType.LayerWater);
-		MeshGenerator meshGen2 = mapGO.transform.GetChild(2).GetComponent<MeshGenerator>();
+		MeshGenerator meshGen2 = map.transform.GetChild(2).GetComponent<MeshGenerator>();
 		meshGen2.GenerateMesh(mas2, genSets.tileSize, 0.5f);
 		meshGen2.gameObject.AddComponent<NavMeshSourceTag>();
 	}
@@ -152,10 +108,10 @@ public class MapCreator
 	/// <returns></returns>
 	private int[,] GetLayerMap(MapLayerType layerType)
 	{
-		int[,] mas = new int[TileGrid.countX, TileGrid.countZ];
-		for (int x = 0; x < TileGrid.countX; x++)
+		int[,] mas = new int[tileCountX, tileCountZ];
+		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int z = 0; z < TileGrid.countZ; z++)
+			for (int z = 0; z < tileCountZ; z++)
 			{
 				if (layerGrid[x, z] == layerType)
 				{
@@ -280,8 +236,8 @@ public class MapCreator
 		int seedHash = basePointSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = TileGrid.countX / basePointSets.sectorsAtX;
-		int sectorLength = TileGrid.countZ / basePointSets.sectorsAtZ;
+		int sectorWidth = tileCountX / basePointSets.sectorsAtX;
+		int sectorLength = tileCountZ / basePointSets.sectorsAtZ;
 
 		// Размещение в центре сектора + сдвиг
 		int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
@@ -304,8 +260,8 @@ public class MapCreator
 		int seedHash = basePointSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = TileGrid.countX / basePointSets.sectorsAtX;
-		int sectorLength = TileGrid.countZ / basePointSets.sectorsAtZ;
+		int sectorWidth = tileCountX / basePointSets.sectorsAtX;
+		int sectorLength = tileCountZ / basePointSets.sectorsAtZ;
 
 		FermerBasePoint = new Vector3[basePointSets.fermerBases.Length];
 		bool isSetBase = false;

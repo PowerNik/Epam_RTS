@@ -3,27 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager
 {
 	private int tileCountX;
 	private int tileCountZ;
 	private float tileSize;
 
 	private TileGrid tileGrid;
-	private MapManager mapManager;
 
-	void Start()
+	private Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+	public GridManager(MapGeneratorSettings genSets)
 	{
-		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
-		tileSize = mapManager.TileSize;
-	}
+		tileCountX = (int)(genSets.width / genSets.tileSize);
+		tileCountZ = (int)(genSets.length / genSets.tileSize);
+		tileGrid = new TileGrid(tileCountX, tileCountZ);
 
-	public void SetTileGrid(TileGrid tileGrid)
-	{
-		this.tileGrid = tileGrid;
+		tileSize = genSets.tileSize;
 
-		tileCountX = tileGrid.countX;
-		tileCountZ = tileGrid.countZ;
 	}
 
 	public Vector3 GetTilePos(Vector3 position)
