@@ -12,9 +12,9 @@ public class MeshGenerator : MonoBehaviour
 	private List<Vector3> vertices;
 	private List<int> triangles;
 
-	public void GenerateMesh(int[,] map, float squareSize, float height = -1, float scale = -1)
+	public void GenerateMesh(int[,] map, float squareSize, MeshSettings meshSets)
 	{
-		squareGrid = new SquareGrid(map, squareSize, height, scale);
+		squareGrid = new SquareGrid(map, squareSize, meshSets);
 
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
@@ -37,11 +37,6 @@ public class MeshGenerator : MonoBehaviour
 
 		GetComponent<MeshFilter>().mesh = mesh;
 		GetComponent<MeshCollider>().sharedMesh = mesh;
-	}
-
-	public void GenerateMesh(int[,] map, MapLayers mapLayer)
-	{
-		//TODO
 	}
 
 	private void TriangulateSquare(Square sq)

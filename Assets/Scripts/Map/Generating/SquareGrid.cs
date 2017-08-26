@@ -5,24 +5,17 @@ namespace MapGenerate
 	public class SquareGrid
 	{
 		public Square[,] squares;
-		public float noiseScale = 2.5f;
-		public float noiseHeight = 4f;
 
-		public SquareGrid(int[,] map, float squareSize, float height = -1, float scale = -1)
+		public SquareGrid(int[,] map, float squareSize, MeshSettings meshSets)
 		{
-			if (height != -1)
-			{
-				noiseHeight = height;
-			}
-			if(scale != -1)
-			{
-				noiseScale = scale;
-			}
-
 			int nodeCountX = map.GetLength(0);
 			int nodeCountY = map.GetLength(1);
 			float mapWidth = nodeCountX * squareSize;
 			float mapHeight = nodeCountY * squareSize;
+
+			float lifting = meshSets.lifting;
+			float height = meshSets.noiseHeight;
+			float frequency = meshSets.noiseFrequency;
 
 			ControlNode[,] controlNodes = new ControlNode[nodeCountX, nodeCountY];
 
@@ -33,7 +26,7 @@ namespace MapGenerate
 					float curX = (x + 0.5f) * squareSize;
 					float curZ = (y + 0.5f) * squareSize;
 
-					float curY = noiseHeight * Mathf.PerlinNoise(x / noiseScale, y / noiseScale);
+					float curY = lifting + height * Mathf.PerlinNoise(x / frequency, y / frequency);
 
 					Vector3 pos = new Vector3(curX, curY, curZ);
 					controlNodes[x, y] = new ControlNode(pos, map[x, y] == 1, squareSize);

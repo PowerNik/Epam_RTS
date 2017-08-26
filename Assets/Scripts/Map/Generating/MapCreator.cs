@@ -16,6 +16,7 @@ public class MapCreator
 
 	private int tileCountX;
 	private int tileCountZ;
+	private float tileSize;
 
 	/// <summary>
 	/// Карта расположения слоев
@@ -31,6 +32,7 @@ public class MapCreator
 
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
+		tileSize = mapSizeSets.tileSize;
 
 		layerGen = new LayerGenerator(tileCountX, tileCountZ);
 		Creating();
@@ -93,18 +95,21 @@ public class MapCreator
 	public void CreateMeshes(GameObject map)
 	{
 		int[,] mas = GetLayerMap(MapLayerType.LayerMountain);
+		MeshSettings meshSets = mapLayers.GetMeshSettings(MapLayerType.LayerMountain);
 		MeshGenerator meshGen = map.transform.GetChild(0).GetComponent<MeshGenerator>();
-		meshGen.GenerateMesh(mas, mapSizeSets.tileSize, 5f);
+		meshGen.GenerateMesh(mas, mapSizeSets.tileSize, meshSets);
 		meshGen.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas1 = GetLayerMap(MapLayerType.LayerGround);
+		MeshSettings meshSets1 = mapLayers.GetMeshSettings(MapLayerType.LayerGround);
 		MeshGenerator meshGen1 = map.transform.GetChild(1).GetComponent<MeshGenerator>();
-		meshGen1.GenerateMesh(mas1, mapSizeSets.tileSize, 0.8f);
+		meshGen1.GenerateMesh(mas1, mapSizeSets.tileSize, meshSets1);
 		meshGen1.gameObject.AddComponent<NavMeshSourceTag>();
 
 		int[,] mas2 = GetLayerMap(MapLayerType.LayerWater);
 		MeshGenerator meshGen2 = map.transform.GetChild(2).GetComponent<MeshGenerator>();
-		meshGen2.GenerateMesh(mas2, mapSizeSets.tileSize, 0.5f);
+		MeshSettings meshSets2 = mapLayers.GetMeshSettings(MapLayerType.LayerWater);
+		meshGen2.GenerateMesh(mas2, mapSizeSets.tileSize, meshSets2);
 		meshGen2.gameObject.AddComponent<NavMeshSourceTag>();
 	}
 
@@ -255,7 +260,9 @@ public class MapCreator
 			{
 				if (sectors[x, z] == 1)
 				{
-					CitizenBasePoint = new Vector3(x * sectorWidth + xCoord, 0, z * sectorLength + zCoord);
+					float xPos = x * sectorWidth + xCoord;
+					float zPos = z * sectorLength + zCoord;
+					CitizenBasePoint = new Vector3(xPos, 0, zPos);
 				}
 			}
 		}
@@ -283,7 +290,10 @@ public class MapCreator
 					{
 						int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
 						int zCoord = sectorLength / 2 + pseudoRandom.Next(-sectorLength / 4, sectorLength / 4);
-						FermerBasePoints[i] = new Vector3(x * sectorWidth + xCoord, 0, z * sectorLength + zCoord);
+
+						float xPos = x * sectorWidth + xCoord;
+						float zPos = z * sectorLength + zCoord;
+						FermerBasePoints[i] = new Vector3(xPos, 0, zPos);
 
 						sectors[x, z] = 0;
 						isSetBase = true;
@@ -295,11 +305,13 @@ public class MapCreator
 
 	private void SetBasePointsArea()
 	{
-		SetAreaParams(basePointSets.citizenBaseSize / 2, CitizenBasePoint);
+		SetAreaParams((int)(basePointSets.citizenBaseSize / tileSize), CitizenBasePoint);
+		CitizenBasePoint *= tileSize;
 
 		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
 		{
-			SetAreaParams(basePointSets.fermerBases[i] / 2, FermerBasePoints[i]);
+			SetAreaParams((int)(basePointSets.fermerBases[i] / tileSize), FermerBasePoints[i]);
+			FermerBasePoints[i] *= tileSize;
 		}
 	}
 
