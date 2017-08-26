@@ -36,6 +36,11 @@ public class MapCreator
 		Creating();
 	}
 
+	public MapLayerType[,] GetLayerGrid()
+	{
+		return layerGrid;
+	}
+
 	private void Creating()
 	{
 		CreateLayers();

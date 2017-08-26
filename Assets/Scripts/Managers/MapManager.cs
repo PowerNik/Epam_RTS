@@ -14,17 +14,6 @@ public class MapManager : MonoBehaviour
 	[SerializeField]
 	private TileSettingsSO tileSettings;
 
-	public TileType[] GetTileTypes()
-	{
-		return tileSettings.GetTileTypes();
-	}
-
-	public Tile[] GetTiles()
-	{
-		return tileSettings.GetAllSettings();
-	}
-
-
 	[SerializeField]
 	private MapSettingsSO mapSettings;
 
@@ -59,13 +48,15 @@ public class MapManager : MonoBehaviour
 	private void CreateMap()
 	{
 		mapCreator = new MapCreator(mapSettings);
-		gridManager = new GridManager(mapSizeSets);
+		gridManager = new GridManager(mapSizeSets, tileSettings.GetAllSettings());
+		gridManager.SetLayersMap(mapCreator.GetLayerGrid(), mapSettings.GetMapLayers());
 
 		GameObject mapGO = Instantiate(prefabMap);
-
 		mapGO.AddComponent<LocalNavMeshBuilder>();
+
 		LocalNavMeshBuilder lnmb = mapGO.GetComponent<LocalNavMeshBuilder>();
 		lnmb.m_Size = new Vector3(200, 200, 200);
+
 		mapCreator.CreateMeshes(mapGO);
 	}
 
@@ -84,7 +75,7 @@ public class MapManager : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit))
 		{
-			IsBuildableArea(GetTilePos(hit.point), 5, 3);
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 5, 3);
 		}
 	}
 

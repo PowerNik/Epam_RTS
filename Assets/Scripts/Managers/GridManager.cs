@@ -13,29 +13,50 @@ public class GridManager
 
 	private Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
 
-	public GridManager(MapSizeSettings mapSizeSets)
+	public GridManager(MapSizeSettings mapSizeSets, Tile[] tileMas)
 	{
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileGrid = new TileGrid(tileCountX, tileCountZ);
 
 		tileSize = mapSizeSets.tileSize;
+
+		SetTiles(tileMas);
 	}
 
-	public Vector3 GetTilePos(Vector3 position)
+	private void SetTiles(Tile[] tileMas)
 	{
-		float x = position.x - position.x % tileSize + tileSize / 2f;
-		if (position.x < 0)
+		for(int i = 0; i < tileMas.Length; i++)
+		{
+			tileDict.Add(tileMas[i].TileType, tileMas[i]);
+		}
+	}
+
+	public Vector3 GetTilePos(Vector3 pos)
+	{
+		float x = pos.x - pos.x % tileSize + tileSize / 2f;
+		if (pos.x < 0)
 		{
 			x -= tileSize;
 		}
 
-		float z = position.z - position.z % tileSize + tileSize / 2f;
-		if (position.z < 0)
+		float z = pos.z - pos.z % tileSize + tileSize / 2f;
+		if (pos.z < 0)
 		{
 			z -= tileSize;
 		}
-		return new Vector3(x, position.y, z);
+		return new Vector3(x, pos.y, z);
+	}
+
+	public void SetLayersMap(MapLayerType[,] map, MapLayers mapLayers)
+	{
+		for(int x = 0; x < tileCountX; x++)
+		{
+			for (int z = 0; z < tileCountZ; z++)
+			{
+				tileGrid[x, z] = mapLayers.GetTileType(map[x, z]);
+			}
+		}
 	}
 
 	public bool IsBuildableTile(Vector3 position)
@@ -46,15 +67,13 @@ public class GridManager
 		x += tileCountX / 2;
 		z += tileCountZ / 2;
 
-		TileType type = tileGrid[x, z];
-		if (type == TileType.Ground)
-		{
-			return true;
-		}
-		else
+		if(x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
 		{
 			return false;
 		}
+
+		TileType type = tileGrid[x, z];
+		return tileDict[type].isAllowBuild;
 	}
 }
 
