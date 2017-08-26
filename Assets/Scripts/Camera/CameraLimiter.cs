@@ -27,10 +27,10 @@ public class CameraLimiter : MonoBehaviour
 	{
 		camera = GetComponent<Camera>();
         
-		limitRight = (float)GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapWidth / 2;
-		limitLeft = -limitRight;
-		limitTop = (float)GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapLength / 2;
-		limitBot = -limitTop;
+		limitRight = GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapWidth;
+		limitLeft = 0;
+		limitTop = GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapLength;
+		limitBot = 0;
 	}
 
 	private void GetViewRect()

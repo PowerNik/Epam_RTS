@@ -64,9 +64,6 @@ public class GridManager
 		int x = (int)((position.x - position.x % tileSize) / tileSize);
 		int z = (int)((position.z - position.z % tileSize) / tileSize);
 
-		x += tileCountX / 2;
-		z += tileCountZ / 2;
-
 		if(x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
 		{
 			return false;

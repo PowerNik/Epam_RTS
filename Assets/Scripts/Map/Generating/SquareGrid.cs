@@ -30,8 +30,8 @@ namespace MapGenerate
 			{
 				for (int y = 0; y < nodeCountY; y++)
 				{
-					float curX = -mapWidth / 2f + x * squareSize + squareSize / 2f;
-					float curZ = -mapHeight / 2f + y * squareSize + squareSize / 2f;
+					float curX = (x + 0.5f) * squareSize;
+					float curZ = (y + 0.5f) * squareSize;
 
 					float curY = noiseHeight * Mathf.PerlinNoise(x / noiseScale, y / noiseScale);
 

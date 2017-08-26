@@ -297,17 +297,9 @@ public class MapCreator
 	{
 		SetAreaParams(basePointSets.citizenBaseSize / 2, CitizenBasePoint);
 
-		float newX = CitizenBasePoint.x - mapSizeSets.width / 2;
-		float newZ = CitizenBasePoint.z - mapSizeSets.length / 2;
-		CitizenBasePoint = new Vector3(newX, 0, newZ);
-
 		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
 		{
 			SetAreaParams(basePointSets.fermerBases[i] / 2, FermerBasePoints[i]);
-
-			newX = FermerBasePoints[i].x - mapSizeSets.width / 2;
-			newZ = FermerBasePoints[i].z - mapSizeSets.length / 2;
-			FermerBasePoints[i] = new Vector3(newX, 0, newZ);
 		}
 	}
 
