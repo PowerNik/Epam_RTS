@@ -13,6 +13,7 @@ public class MapCreator
 	private MapSizeSettings mapSizeSets;
 	private BasePointSettings basePointSets;
 	private MapLayers mapLayers;
+	private Dictionary<TileType, Tile> tileDict;
 
 	private int tileCountX;
 	private int tileCountZ;
@@ -24,7 +25,7 @@ public class MapCreator
 	private MapLayerType[,] layerGrid;
 
 
-	public MapCreator(MapSettingsSO mapSettings)
+	public MapCreator(MapSettingsSO mapSettings, Dictionary<TileType, Tile> tileDict)
 	{
 		mapSizeSets = mapSettings.GetMapSizeSettings();
 		basePointSets = mapSettings.GetBasePointSettings();
@@ -33,6 +34,8 @@ public class MapCreator
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileSize = mapSizeSets.tileSize;
+
+		this.tileDict = tileDict;
 
 		layerGen = new LayerGenerator(tileCountX, tileCountZ);
 		Creating();
@@ -94,23 +97,28 @@ public class MapCreator
 
 	public void CreateMeshes(GameObject map)
 	{
-		int[,] mas = GetLayerMap(MapLayerType.LayerMountain);
-		MeshSettings meshSets = mapLayers.GetMeshSettings(MapLayerType.LayerMountain);
-		MeshGenerator meshGen = map.transform.GetChild(0).GetComponent<MeshGenerator>();
+		CreateMeshForLayer(map, MapLayerType.LayerGround);
+		CreateMeshForLayer(map, MapLayerType.LayerWater);
+		CreateMeshForLayer(map, MapLayerType.LayerMountain);
+	}
+
+	private void CreateMeshForLayer(GameObject map, MapLayerType layerType)
+	{
+		int[,] mas = GetLayerMap(layerType);
+		MeshSettings meshSets = mapLayers.GetMeshSettings(layerType);
+
+		GameObject layerGO = new GameObject();
+		layerGO.transform.parent = map.transform;
+		layerGO.AddComponent<MeshCollider>();
+		layerGO.AddComponent<MeshFilter>();
+
+		TileType tileType = mapLayers.GetTileType(layerType);
+		Material mat = tileDict[tileType].material;
+		layerGO.AddComponent<MeshRenderer>().material = mat;
+
+		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();
 		meshGen.GenerateMesh(mas, mapSizeSets.tileSize, meshSets);
 		meshGen.gameObject.AddComponent<NavMeshSourceTag>();
-
-		int[,] mas1 = GetLayerMap(MapLayerType.LayerGround);
-		MeshSettings meshSets1 = mapLayers.GetMeshSettings(MapLayerType.LayerGround);
-		MeshGenerator meshGen1 = map.transform.GetChild(1).GetComponent<MeshGenerator>();
-		meshGen1.GenerateMesh(mas1, mapSizeSets.tileSize, meshSets1);
-		meshGen1.gameObject.AddComponent<NavMeshSourceTag>();
-
-		int[,] mas2 = GetLayerMap(MapLayerType.LayerWater);
-		MeshGenerator meshGen2 = map.transform.GetChild(2).GetComponent<MeshGenerator>();
-		MeshSettings meshSets2 = mapLayers.GetMeshSettings(MapLayerType.LayerWater);
-		meshGen2.GenerateMesh(mas2, mapSizeSets.tileSize, meshSets2);
-		meshGen2.gameObject.AddComponent<NavMeshSourceTag>();
 	}
 
 	/// <summary>

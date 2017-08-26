@@ -17,9 +17,6 @@ public class MapManager : MonoBehaviour
 	[SerializeField]
 	private MapSettingsSO mapSettings;
 
-	[SerializeField]
-	private GameObject prefabMap;
-
 	private GridManager gridManager;
 	private MapCreator mapCreator;
 	private MapSizeSettings mapSizeSets;
@@ -47,13 +44,14 @@ public class MapManager : MonoBehaviour
 
 	private void CreateMap()
 	{
-		mapCreator = new MapCreator(mapSettings);
-		gridManager = new GridManager(mapSizeSets, tileSettings.GetAllSettings());
+		mapCreator = new MapCreator(mapSettings, tileSettings.GetTileDictionary());
+		gridManager = new GridManager(mapSizeSets, tileSettings.GetTiles());
 		gridManager.SetLayersMap(mapCreator.GetLayerGrid(), mapSettings.GetMapLayers());
 
-		GameObject mapGO = Instantiate(prefabMap);
-		CreateNavMesh(mapGO);
+		GameObject mapGO = new GameObject();
+		mapGO.name = "Map";
 
+		CreateNavMesh(mapGO);
 		mapCreator.CreateMeshes(mapGO);
 	}
 
