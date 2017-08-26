@@ -6,7 +6,7 @@ using UnityEngine;
 public class MapCreator
 {
 	public Vector3 CitizenBasePoint { get; private set; }
-	public Vector3[] FermerBasePoint { get; private set; }
+	public Vector3[] FermerBasePoints { get; private set; }
 
 	private LayerGenerator layerGen;
 
@@ -264,7 +264,7 @@ public class MapCreator
 		int sectorWidth = tileCountX / basePointSets.sectorsAtX;
 		int sectorLength = tileCountZ / basePointSets.sectorsAtZ;
 
-		FermerBasePoint = new Vector3[basePointSets.fermerBases.Length];
+		FermerBasePoints = new Vector3[basePointSets.fermerBases.Length];
 		bool isSetBase = false;
 
 		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
@@ -278,7 +278,7 @@ public class MapCreator
 					{
 						int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
 						int zCoord = sectorLength / 2 + pseudoRandom.Next(-sectorLength / 4, sectorLength / 4);
-						FermerBasePoint[i] = new Vector3(x * sectorWidth + xCoord, 0, z * sectorLength + zCoord);
+						FermerBasePoints[i] = new Vector3(x * sectorWidth + xCoord, 0, z * sectorLength + zCoord);
 
 						sectors[x, z] = 0;
 						isSetBase = true;
@@ -298,11 +298,11 @@ public class MapCreator
 
 		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
 		{
-			SetAreaParams(basePointSets.fermerBases[i] / 2, FermerBasePoint[i]);
+			SetAreaParams(basePointSets.fermerBases[i] / 2, FermerBasePoints[i]);
 
-			newX = FermerBasePoint[i].x - mapSizeSets.width / 2;
-			newZ = FermerBasePoint[i].z - mapSizeSets.length / 2;
-			FermerBasePoint[i] = new Vector3(newX, 0, newZ);
+			newX = FermerBasePoints[i].x - mapSizeSets.width / 2;
+			newZ = FermerBasePoints[i].z - mapSizeSets.length / 2;
+			FermerBasePoints[i] = new Vector3(newX, 0, newZ);
 		}
 	}
 

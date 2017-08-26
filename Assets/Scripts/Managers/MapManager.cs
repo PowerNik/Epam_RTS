@@ -120,8 +120,18 @@ public class MapManager : MonoBehaviour
 		Gizmos.DrawSphere(mapCreator.CitizenBasePoint, 5);
 
 		Gizmos.color = Color.green;
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[0], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[1], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[2], 5);
+		Gizmos.DrawSphere(mapCreator.FermerBasePoints[0], 5);
+		Gizmos.DrawSphere(mapCreator.FermerBasePoints[1], 5);
+		Gizmos.DrawSphere(mapCreator.FermerBasePoints[2], 5);
+	}
+
+	public Vector3 GetCitizenBasePoint()
+	{
+		return mapCreator.CitizenBasePoint;
+	}
+
+	public Vector3[] GetFermerBasePoints()
+	{
+		return mapCreator.FermerBasePoints;
 	}
 }
