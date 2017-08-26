@@ -6,7 +6,7 @@ public class TileSelecter : MonoBehaviour
 {
 	public Material impassibleTileMat;
 	public GameObject selectedTilePrefab;
-	private Transform selectedTile;
+	private Transform selectedArea;
 
 	private MapManager mapManager;
 	private float tileSize;
@@ -20,14 +20,14 @@ public class TileSelecter : MonoBehaviour
 		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
 		tileSize = mapManager.TileSize;
 
-		selectedTile = Instantiate(selectedTilePrefab).transform;
-		selectedTile.localScale *= tileSize;
+		selectedArea = new GameObject().transform;
+		selectedArea.name = "SelectedArea";
 	}
 
 	private void Update()
 	{
-		AreaSelect(selectedTile.position, 5.1f, 3.9f);
 		TileSelect();
+		AreaSelect(selectedArea.position, 5.1f, 3.9f);
 	}
 
 	public void AreaSelect(Vector3 pos, float areaSizeX, float areaSizeZ)
@@ -51,30 +51,31 @@ public class TileSelecter : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit))
 		{
-			Vector3 pos = mapManager.GetTilePos(hit.point);
-			selectedTile.position = pos + Vector3.up * 0.3f;
+			selectedArea.position = mapManager.GetTilePos(hit.point) + Vector3.up * 0.3f;
 		}
 	}
 
 	private void CreateSelectedArea(Vector3 pos, float xSize, float zSize)
 	{
+		selectedArea.position = pos;
+
 		selectedAreaCountX = (int)(xSize / tileSize) + 1;
 		selectAreaCountZ = (int)(zSize / tileSize) + 1;
-		selectedTile.position = pos;
 
 		if (selectedAreaCountX % 2 == 0)
 		{
-			selectedTile.position -= Vector3.left * tileSize / 2f;
-		}
-		if (selectAreaCountZ % 2 == 0)
-		{
-			selectedTile.position += Vector3.forward * tileSize / 2f;
+			selectedArea.position -= Vector3.left * tileSize / 2f;
 		}
 
-		GameObject[] tileArea = new GameObject[selectedAreaCountX * selectAreaCountZ];
+		if (selectAreaCountZ % 2 == 0)
+		{
+			selectedArea.position += Vector3.forward * tileSize / 2f;
+		}
+
+		//GameObject[] tileArea = new GameObject[selectedAreaCountX * selectAreaCountZ];
 		for (int i = 0; i < selectedAreaCountX * selectAreaCountZ; i++)
 		{
-			Instantiate(selectedTilePrefab).transform.parent = selectedTile;
+			Instantiate(selectedTilePrefab).transform.parent = selectedArea.transform;
 		}
 	}
 
@@ -84,23 +85,23 @@ public class TileSelecter : MonoBehaviour
 		{
 			for (int z = 0; z < selectAreaCountZ; z++)
 			{
-				Vector3 parentPos = selectedTile.position;
+				Vector3 parentPos = selectedArea.position;
 				Vector3 dX = x * Vector3.left * tileSize;
 				Vector3 dZ = z * Vector3.forward * tileSize;
 
-				selectedTile.GetChild(x * selectAreaCountZ + z).transform.position = parentPos - dX + dZ;
+				selectedArea.GetChild(x * selectAreaCountZ + z).transform.position = parentPos - dX + dZ;
 			}
 		}
 	}
 
 	private void AreaRevision()
 	{
-		for (int i = 0; i < selectedTile.childCount; i++)
+		for (int i = 0; i < selectedArea.childCount; i++)
 		{
-			Renderer rend = selectedTile.GetChild(i).gameObject.GetComponent<Renderer>();
+			Renderer rend = selectedArea.GetChild(i).gameObject.GetComponent<Renderer>();
 			rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
 
-			if (!mapManager.IsBuildableTile(selectedTile.GetChild(i).transform.position))
+			if (!mapManager.IsBuildableTile(selectedArea.GetChild(i).transform.position))
 			{
 				rend.sharedMaterial = impassibleTileMat;
 			}
@@ -109,9 +110,9 @@ public class TileSelecter : MonoBehaviour
 
 	private void AreaDeselect()
 	{
-		if (selectedTile.transform.childCount > 0)
+		if (selectedArea.transform.childCount > 0)
 		{
-			foreach (Transform child in selectedTile.transform)
+			foreach (Transform child in selectedArea.transform)
 			{
 				Destroy(child.gameObject);
 			}
