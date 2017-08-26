@@ -52,12 +52,20 @@ public class MapManager : MonoBehaviour
 		gridManager.SetLayersMap(mapCreator.GetLayerGrid(), mapSettings.GetMapLayers());
 
 		GameObject mapGO = Instantiate(prefabMap);
-		mapGO.AddComponent<LocalNavMeshBuilder>();
-
-		LocalNavMeshBuilder lnmb = mapGO.GetComponent<LocalNavMeshBuilder>();
-		lnmb.m_Size = new Vector3(200, 200, 200);
+		CreateNavMesh(mapGO);
 
 		mapCreator.CreateMeshes(mapGO);
+	}
+
+	private void CreateNavMesh(GameObject mapGO)
+	{
+		GameObject mapNavMesh = new GameObject();
+		mapNavMesh.transform.parent = mapGO.transform;
+		mapNavMesh.name = "LocalNavMeshBuilder";
+
+		LocalNavMeshBuilder lnmb = mapNavMesh.AddComponent<LocalNavMeshBuilder>();
+		lnmb.transform.position += new Vector3(MapWidth / 2, 0, MapLength / 2);
+		lnmb.m_Size = new Vector3(MapWidth, 10, MapLength);
 	}
 
 	#region FOR TEST selecting buildArea
