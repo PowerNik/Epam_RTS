@@ -3,8 +3,6 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
-	public Transform startPoint;
-
 	public float moveSpeed = 50;
 	public float scrollSpeed = 2;
 
@@ -23,7 +21,10 @@ public class CameraController : MonoBehaviour
 	{
 		height = (maxHeight + minHeight) / 2;
 		tempHeight = height;
-		transform.position = new Vector3(startPoint.position.x, height, startPoint.position.z);
+
+		Vector3 pos = GameManagerBeforeMerge.GetGameManager().MapManagerInstance.GetCitizenBasePoint();
+		float deltaZ = height / Mathf.Tan(transform.eulerAngles.x * Mathf.Deg2Rad);
+		transform.position = pos - Vector3.forward * deltaZ;
 
 		camLimiter = GetComponent<CameraLimiter>();
 	}
