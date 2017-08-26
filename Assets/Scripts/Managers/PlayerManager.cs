@@ -7,8 +7,10 @@ public enum Race
 {
     Spectator = 0,
     Citizen = 1,
-    Fermer = 2
+    Fermer = 2,
+    Nature = 3
 }
+
 
 public class PlayerManager : MonoBehaviour
 {
@@ -67,6 +69,9 @@ public class PlayerManager : MonoBehaviour
     List<Structure> playerStructures;
 
     List<Unit> playerUnits;
+
+    //Color for minimap
+    private Color playerColor;
     
     public static GameObject StructuresPlaceHolder { get; private set; }
     public static GameObject UnitsPlaceHolder { get; private set; }

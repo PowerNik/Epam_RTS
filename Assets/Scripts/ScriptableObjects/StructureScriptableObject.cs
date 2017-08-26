@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Game Structures", menuName = "Structures")]
 public class StructureScriptableObject : ScriptableObject 
 {
-    public List<StructureSettings> structureSettings;
+    public List<Structure> structures;
 }

@@ -6,22 +6,22 @@ using UnityEngine;
 public class FermersStructureFactory : StructureFactory
 {
 
-    public override BaseStructure SpawnBaseStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override BaseStructure SpawnBaseStructure(Vector3 SpawnPosition)
     {
         return new FermersBaseStructure();
     }
 
-    public override ExtractStructure SpawnExtractStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override ExtractStructure SpawnExtractStructure(Vector3 SpawnPosition)
     {
         return new FermersExtractStructure();
     }
 
-    public override MilitaryStructure SpawnMilitaryStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override MilitaryStructure SpawnMilitaryStructure(Vector3 SpawnPosition)
     {
         return new FermersMilitaryStructure();
     }
 
-    public override ScientificStructure SpawnScientificStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override ScientificStructure SpawnScientificStructure(Vector3 SpawnPosition)
     {
         return new FermersScientificStructure();
     }

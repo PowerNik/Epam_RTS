@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     private static GameManager s_Instance = null;
     public static GameManager Instance
@@ -51,16 +52,16 @@ public class GameManager : MonoBehaviour {
 
 
 
-    public static StructureSettings getStructureSettings(StructureSettingsType type)
-    {
-        List<StructureSettings> settings = Instance.sso.structureSettings;
-        for (int i = 0; i < settings.Count; i++)
-        {
-            if (settings[i].Type == type)
-                return Instance.sso.structureSettings[i];
-        }
-        return null;
-    }
+//    public static StructureSettings getStructureSettings(StructureSettingsType type)
+//    {
+//        List<StructureSettings> settings = Instance.sso.structureSettings;
+//        for (int i = 0; i < settings.Count; i++)
+//        {
+//            if (settings[i].Type == type)
+//                return Instance.sso.structureSettings[i];
+//        }
+//        return null;
+//    }
     public static UnitSettings getUnitSettings(UnitType type)
     {
         List<UnitSettings> settings = Instance.uso.unitSettings;
@@ -103,8 +104,8 @@ public class GameManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                CitizenStructureFactory csf = new CitizenStructureFactory();
-                csf.SpawnBaseStructure(StructureSettingsType.CitizenBaseStructure_level1, hit.point);
+//                CitizenStructureFactory csf = new CitizenStructureFactory();
+//                csf.SpawnBaseStructure(StructureSettingsType.CitizenBaseStructure_level1, hit.point);
             }
         }
         //TODELETE

@@ -5,27 +5,23 @@ using UnityEngine;
 
 public class CitizenStructureFactory : StructureFactory
 {
-    public override BaseStructure SpawnBaseStructure(StructureSettingsType settingsType, Vector3 SpawnPosition)
+    public override BaseStructure SpawnBaseStructure(Vector3 SpawnPosition)
     {
-        StructureSettings settings = GameManager.getStructureSettings(settingsType);
-   
-        CitizenBaseStructure newStructure = new CitizenBaseStructure(settings, SpawnPosition);
-        return newStructure;
+        return new CitizenBaseStructure(SpawnPosition);
     }
 
-    public override ExtractStructure SpawnExtractStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override ExtractStructure SpawnExtractStructure(Vector3 SpawnPosition)
     {
         return new CitizenExtractStructure();
     }
 
-    public override MilitaryStructure SpawnMilitaryStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override MilitaryStructure SpawnMilitaryStructure(Vector3 SpawnPosition)
     {
         return new CitizenMiitaryStructure();
     }
 
-    public override ScientificStructure SpawnScientificStructure(StructureSettingsType settings, Vector3 SpawnPosition)
+    public override ScientificStructure SpawnScientificStructure(Vector3 SpawnPosition)
     {
-        
         return new CitizenScientificStructure();
     }
 }

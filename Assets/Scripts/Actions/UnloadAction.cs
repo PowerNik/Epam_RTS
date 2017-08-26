@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnloadAction : ActionBehaviour {
+public class UnloadAction : ActionBehaviour
+{
 
     public override UnityAction GetClickAction()
     {
