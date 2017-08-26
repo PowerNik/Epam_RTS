@@ -35,10 +35,14 @@ public class MapManager : MonoBehaviour
 	private MapCreator mapCreator;
 	private MapSizeSettings mapSizeSets;
 
+	private BuildAreaSelecter tileSelecter;
+
 	private void Awake()
 	{
 		SetParams();
 		CreateMap();
+
+		tileSelecter = gameObject.AddComponent<BuildAreaSelecter>();
 	}
 
 	private void SetParams()
@@ -65,6 +69,31 @@ public class MapManager : MonoBehaviour
 		mapCreator.CreateMeshes(mapGO);
 	}
 
+	#region FOR TEST selecting buildArea
+	private void Update()
+	{
+		if (Input.GetKey(KeyCode.Alpha1))
+			SelectArea();
+		if (Input.GetKeyUp(KeyCode.Alpha1))
+			DeselectArea();
+	}
+
+	public void SelectArea()
+	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit))
+		{
+			IsBuildableArea(GetTilePos(hit.point), 5, 3);
+		}
+	}
+
+	public void DeselectArea()
+	{
+		tileSelecter.DeselectBuildArea();
+	}
+	#endregion
+
 	public Vector3 GetTilePos(Vector3 position)
 	{
 		return gridManager.GetTilePos(position);
@@ -75,9 +104,14 @@ public class MapManager : MonoBehaviour
 		return gridManager.IsBuildableTile(position);
 	}
 
+	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ)
+	{
+		return tileSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ);
+	}
+
 	private void OnDrawGizmos()
 	{
-		if(mapCreator == null)
+		if (mapCreator == null)
 		{
 			return;
 		}
