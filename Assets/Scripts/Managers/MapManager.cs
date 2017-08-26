@@ -44,10 +44,10 @@ public class MapManager : MonoBehaviour
 	private void SetParams()
 	{
 		mapSizeSets = mapSettings.GetMapSizeSettings();
+
 		MapWidth = mapSizeSets.width;
 		MapLength = mapSizeSets.length;
 		TileSize = mapSizeSets.tileSize;
-
 		TileCountX = mapSizeSets.TileCountX;
 		TileCountZ = mapSizeSets.TileCountZ;
 	}

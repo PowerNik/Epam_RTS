@@ -12,6 +12,7 @@ public class MapCreator
 
 	private MapSizeSettings mapSizeSets;
 	private BasePointSettings basePointSets;
+	private MapLayers mapLayers;
 
 	private int tileCountX;
 	private int tileCountZ;
@@ -26,12 +27,12 @@ public class MapCreator
 	{
 		mapSizeSets = mapSettings.GetMapSizeSettings();
 		basePointSets = mapSettings.GetBasePointSettings();
+		mapLayers = mapSettings.GetMapLayers();
 
-		//TODO Убрать генерацию слоя в другое место
-		layerGen = new LayerGenerator(mapSettings.GetMapSizeSettings(), new GeneratorSettings());
-		tileCountX = layerGen.TileCountX;
-		tileCountZ = layerGen.TileCountZ;
+		tileCountX = mapSizeSets.TileCountX;
+		tileCountZ = mapSizeSets.TileCountZ;
 
+		layerGen = new LayerGenerator(tileCountX, tileCountZ);
 		Creating();
 	}
 
@@ -46,40 +47,39 @@ public class MapCreator
 	/// </summary>
 	private void CreateLayers()
 	{
-		SetLayer(MapLayerType.LayerGround);
-		SetLayer(MapLayerType.LayerWater);
-		SetLayer(MapLayerType.LayerMountain);
+		CreateLayerGround();
+		SetLayer(MapLayerType.LayerWater, mapLayers.waterGenSets);
+		SetLayer(MapLayerType.LayerMountain, mapLayers.mountainGenSets);
+	}
+
+	private void CreateLayerGround()
+	{
+		layerGrid = new MapLayerType[tileCountX, tileCountZ];
+
+		for (int x = 0; x < tileCountX; x++)
+		{
+			for (int z = 0; z < tileCountZ; z++)
+			{
+				layerGrid[x, z] = MapLayerType.LayerGround;
+			}
+		}
 	}
 
 	/// <summary>
 	/// Рандомно генерирует и устанавливает слой layerType поверх всех предыдущих
 	/// </summary>
 	/// <param name="layerType"></param>
-	private void SetLayer(MapLayerType layerType)
+	private void SetLayer(MapLayerType layerType, GeneratorSettings genSets)
 	{
-		bool isFirstLayer = false;
-		if (layerGrid == null)
-		{
-			layerGrid = new MapLayerType[tileCountX, tileCountZ];
-			isFirstLayer = true;
-		}
-
-		int[,] grid = layerGen.Generate(true);
+		int[,] grid = layerGen.Generate(genSets);
 
 		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				if (isFirstLayer)
+				if (grid[x, z] == 1)
 				{
 					layerGrid[x, z] = layerType;
-				}
-				else
-				{
-					if (grid[x, z] == 1)
-					{
-						layerGrid[x, z] = layerType;
-					}
 				}
 			}
 		}
@@ -192,7 +192,7 @@ public class MapCreator
 		int[] res;
 		if (sectorsCount % 2 == 1)
 		{
-			 res = new int[] { (sectorsCount - 1) / 2 };
+			res = new int[] { (sectorsCount - 1) / 2 };
 		}
 		else
 		{
@@ -319,7 +319,9 @@ public class MapCreator
 		{
 			for (int z = -areaSize; z < areaSize; z++)
 			{
-				layerGrid[posX + x, posZ + z] = MapLayerType.LayerGround;
+				if (0 < posX + x && posX + x < tileCountX - 1)
+					if (0 < posZ + z && posZ + z < tileCountZ - 1)
+						layerGrid[posX + x, posZ + z] = MapLayerType.LayerGround;
 			}
 		}
 	}

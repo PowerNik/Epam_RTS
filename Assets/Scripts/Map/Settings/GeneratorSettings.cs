@@ -13,4 +13,7 @@ public class GeneratorSettings
 	[Tooltip("Максимальный процент заполнения генерируемыми объектами")]
 	[Range(0, 100)]
 	public int fillPercent = 44;
+
+	[Range(0, 100)]
+	public int smoothCount = 1;
 }

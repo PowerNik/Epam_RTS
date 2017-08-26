@@ -6,45 +6,49 @@ using UnityEngine;
 public class LayerGenerator
 {
 	private int callCount = 0;
-	public int TileCountX { get; private set; }
-	public int TileCountZ { get; private set; }
+
+	private int tileCountX;
+	private int tileCountZ;
 
 	private string seed;
-	private bool isRandomSeed;
-	private int randomFillPercent;
+	private bool isRandom;
+	private int fillPercent;
 
-
-	private int smoothCount = 5;
 	private int surroundWallCount = 4;
 
 	private int[,] map;
 
-	public LayerGenerator(MapSizeSettings mapSizeSets, GeneratorSettings genSets)
-	{
-		TileCountX = mapSizeSets.TileCountX;
-		TileCountZ = mapSizeSets.TileCountZ;
 
+	public LayerGenerator(int tileCountX, int tileCountZ)
+	{
+		this.tileCountX = tileCountX;
+		this.tileCountZ = tileCountZ;
+	}
+
+	private void SetGeneratingParams(GeneratorSettings genSets)
+	{
 		seed = genSets.seed;
-		isRandomSeed = genSets.isRandom;
-		randomFillPercent = genSets.fillPercent;
+		isRandom = genSets.isRandom;
+		fillPercent = genSets.fillPercent;
 	}
 
 	/// <summary>
 	/// Генерирует случайно заполненный массив из 0 и 1.
 	/// </summary>
-	/// <param name="isSmooth">Соединять близкие 1 в одну область?</param>
 	/// <returns></returns>
-	public int[,] Generate(bool isSmooth)
+	public int[,] Generate(GeneratorSettings genSets)
 	{
-		map = new int[TileCountX, TileCountZ];
+		if (genSets != null)
+		{
+			SetGeneratingParams(genSets);
+		}
+
+		map = new int[tileCountX, tileCountZ];
 		RandomFillMap();
 
-		if (isSmooth)
+		for (int i = 0; i < genSets.smoothCount; i++)
 		{
-			for (int i = 0; i < smoothCount; i++)
-			{
-				SmoothMap();
-			}
+			SmoothMap();
 		}
 
 		return map;
@@ -52,7 +56,7 @@ public class LayerGenerator
 
 	private void RandomFillMap()
 	{
-		if (isRandomSeed)
+		if (isRandom)
 		{
 			seed = Time.time.ToString();
 		}
@@ -62,18 +66,18 @@ public class LayerGenerator
 
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		for (int x = 0; x < TileCountX; x++)
+		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int y = 0; y < TileCountZ; y++)
+			for (int y = 0; y < tileCountZ; y++)
 			{
 				// Граница карты непроходима
-				if (x == 0 || x == TileCountX - 1 || y == 0 || y == TileCountZ - 1)
+				if (x == 0 || x == tileCountX - 1 || y == 0 || y == tileCountZ - 1)
 				{
-					map[x, y] = 1;
+					//map[x, y] = 1;
 				}
 				else
 				{
-					map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? 1 : 0;
+					map[x, y] = (pseudoRandom.Next(0, 100) < fillPercent) ? 1 : 0;
 				}
 			}
 		}
@@ -84,9 +88,9 @@ public class LayerGenerator
 	/// </summary>
 	private void SmoothMap()
 	{
-		for (int x = 0; x < TileCountX; x++)
+		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int y = 0; y < TileCountZ; y++)
+			for (int y = 0; y < tileCountZ; y++)
 			{
 				int neighbourWallTiles = GetSurroundWallCount(x, y);
 
@@ -126,7 +130,7 @@ public class LayerGenerator
 				}
 
 				// Вне карты только непроходимые места
-				if (neighbourX < 0 || neighbourX >= TileCountX || neighbourY < 0 || neighbourY >= TileCountZ)
+				if (neighbourX < 0 || neighbourX >= tileCountX || neighbourY < 0 || neighbourY >= tileCountZ)
 				{
 					wallCount++;
 				}
