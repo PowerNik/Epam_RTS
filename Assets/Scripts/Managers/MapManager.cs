@@ -21,14 +21,14 @@ public class MapManager : MonoBehaviour
 	private MapCreator mapCreator;
 	private MapSizeSettings mapSizeSets;
 
-	private BuildAreaSelecter tileSelecter;
+	private BuildAreaSelecter buildAreaSelecter;
 
 	private void Awake()
 	{
 		SetParams();
 		CreateMap();
 
-		tileSelecter = gameObject.AddComponent<BuildAreaSelecter>();
+		buildAreaSelecter = gameObject.AddComponent<BuildAreaSelecter>();
 	}
 
 	private void SetParams()
@@ -63,7 +63,7 @@ public class MapManager : MonoBehaviour
 
 		LocalNavMeshBuilder lnmb = mapNavMesh.AddComponent<LocalNavMeshBuilder>();
 		lnmb.transform.position += new Vector3(MapWidth / 2, 0, MapLength / 2);
-		lnmb.m_Size = new Vector3(MapWidth, 10, MapLength);
+		lnmb.m_Size = new Vector3(MapWidth, 20, MapLength);
 	}
 
 	#region FOR TEST selecting buildArea
@@ -87,7 +87,7 @@ public class MapManager : MonoBehaviour
 
 	public void DeselectArea()
 	{
-		tileSelecter.DeselectBuildArea();
+		buildAreaSelecter.DeselectBuildArea();
 	}
 	#endregion
 
@@ -103,7 +103,7 @@ public class MapManager : MonoBehaviour
 
 	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ)
 	{
-		return tileSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ);
+		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ);
 	}
 
 	private void OnDrawGizmos()

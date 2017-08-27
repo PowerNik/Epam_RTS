@@ -217,7 +217,7 @@ public class BasePointsGenerator
 			{
 				if (0 < posX + x && posX + x < tileCountX - 1)
 					if (0 < posZ + z && posZ + z < tileCountZ - 1)
-						LayerGrid[posX + x, posZ + z] = MapLayerType.LayerGround;
+						LayerGrid[posX + x, posZ + z] = MapLayerType.Ground;
 			}
 		}
 	}

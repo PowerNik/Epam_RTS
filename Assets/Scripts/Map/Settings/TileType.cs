@@ -2,11 +2,12 @@
 {
 	Ground = 0,
 
+	/// <summary>
+	/// Подножие гор
+	/// </summary>
+	Foothill = 1,
+	WaterSide = 2,
+
 	Mountain = 10,
-	HighMountain = 11,
-
-	Obstacle = 20,
-
-	Water = 30,
-	Wind = 31
+	Water = 20,
 }

@@ -1,6 +1,6 @@
 ﻿public enum MapLayerType
 {
-	LayerGround,
-	LayerMountain,
-	LayerWater
+	Ground,
+	Mountain,
+	Water
 }

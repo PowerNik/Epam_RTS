@@ -20,21 +20,22 @@ public class MapLayers
 	public TileType mountainTileType = TileType.Mountain;
 	public GeneratorSettings mountainGenSets;
 	public MeshSettings mountainMeshSets;
+	public int mountainBorderWidth = 1;
 
 	public TileType GetTileType(MapLayerType layerType)
 	{
 		TileType res = groundTileType;
 		switch (layerType)
 		{
-			case MapLayerType.LayerGround:
+			case MapLayerType.Ground:
 				res = groundTileType;
 				break;
 
-			case MapLayerType.LayerWater:
+			case MapLayerType.Water:
 				res = waterTileType;
 				break;
 
-			case MapLayerType.LayerMountain:
+			case MapLayerType.Mountain:
 				res = mountainTileType;
 				break;
 		}
@@ -47,15 +48,15 @@ public class MapLayers
 		MeshSettings res = groundMeshSets;
 		switch (layerType)
 		{
-			case MapLayerType.LayerGround:
+			case MapLayerType.Ground:
 				res = groundMeshSets;
 				break;
 
-			case MapLayerType.LayerWater:
+			case MapLayerType.Water:
 				res = waterMeshSets;
 				break;
 
-			case MapLayerType.LayerMountain:
+			case MapLayerType.Mountain:
 				res = mountainMeshSets;
 				break;
 		}
@@ -68,11 +69,11 @@ public class MapLayers
 		GeneratorSettings res = waterGenSets;
 		switch (layerType)
 		{
-			case MapLayerType.LayerWater:
+			case MapLayerType.Water:
 				res = waterGenSets;
 				break;
 
-			case MapLayerType.LayerMountain:
+			case MapLayerType.Mountain:
 				res = mountainGenSets;
 				break;
 		}
