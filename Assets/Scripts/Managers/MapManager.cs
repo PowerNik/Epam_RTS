@@ -52,7 +52,7 @@ public class MapManager : MonoBehaviour
 		mapGO.name = "Map";
 
 		CreateNavMesh(mapGO);
-		mapCreator.CreateMeshes(mapGO);
+		mapCreator.CreateMapMesh(mapGO);
 	}
 
 	private void CreateNavMesh(GameObject mapGO)
