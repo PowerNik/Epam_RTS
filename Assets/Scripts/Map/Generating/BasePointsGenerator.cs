@@ -8,7 +8,7 @@ public class BasePointsGenerator
 	public Vector3[] FermerBasePoints { get; private set; }
 
 	private BasePointSettings basePointSets;
-	private MapLayerType[,] layerGrid;
+	public MapLayerType[,] LayerGrid { get; private set; }
 
 	private int tileCountX;
 	private int tileCountZ;
@@ -24,9 +24,9 @@ public class BasePointsGenerator
 		tileSize = mapSizeSets.tileSize;
 	}
 
-	public MapLayerType[,] CreateBasePoints(MapLayerType[,] layerGrid)
+	public void CreateBasePoints(MapLayerType[,] layerGrid)
 	{
-		this.layerGrid = layerGrid;
+		LayerGrid = layerGrid;
 
 		int[,] sectors = new int[basePointSets.sectorsAtX, basePointSets.sectorsAtZ];
 
@@ -36,8 +36,6 @@ public class BasePointsGenerator
 		PlaceCitizenBasePointOnMap(sectors);
 		PlaceFermerBasePointsOnMap(sectors);
 		SetBasePointsArea();
-
-		return this.layerGrid;
 	}
 
 	private int[,] SectoringCitizenBasePoint(int[,] sectors)
@@ -219,7 +217,7 @@ public class BasePointsGenerator
 			{
 				if (0 < posX + x && posX + x < tileCountX - 1)
 					if (0 < posZ + z && posZ + z < tileCountZ - 1)
-						layerGrid[posX + x, posZ + z] = MapLayerType.LayerGround;
+						LayerGrid[posX + x, posZ + z] = MapLayerType.LayerGround;
 			}
 		}
 	}

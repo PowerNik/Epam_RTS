@@ -10,8 +10,6 @@ namespace MapGenerate
 		{
 			int nodeCountX = map.GetLength(0);
 			int nodeCountY = map.GetLength(1);
-			float mapWidth = nodeCountX * squareSize;
-			float mapHeight = nodeCountY * squareSize;
 
 			float lifting = meshSets.lifting;
 			float height = meshSets.noiseHeight;

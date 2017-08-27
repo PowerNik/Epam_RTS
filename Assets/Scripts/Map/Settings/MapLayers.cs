@@ -62,4 +62,21 @@ public class MapLayers
 
 		return res;
 	}
+
+	public GeneratorSettings GetGeneratorSettings(MapLayerType layerType)
+	{
+		GeneratorSettings res = waterGenSets;
+		switch (layerType)
+		{
+			case MapLayerType.LayerWater:
+				res = waterGenSets;
+				break;
+
+			case MapLayerType.LayerMountain:
+				res = mountainGenSets;
+				break;
+		}
+
+		return res;
+	}
 }
