@@ -15,11 +15,13 @@ public class MapLayers
 	public TileType waterTileType = TileType.Water;
 	public GeneratorSettings waterGenSets;
 	public MeshSettings waterMeshSets;
+	public AreaSettings waterAreaSets;
 
 	[Space(5)]
 	public TileType mountainTileType = TileType.Mountain;
 	public GeneratorSettings mountainGenSets;
 	public MeshSettings mountainMeshSets;
+	public AreaSettings mountainAreaSets;
 	public int mountainBorderWidth = 1;
 
 	public TileType GetTileType(MapLayerType layerType)
@@ -43,30 +45,9 @@ public class MapLayers
 		return res;
 	}
 
-	public MeshSettings GetMeshSettings(MapLayerType layerType)
-	{
-		MeshSettings res = groundMeshSets;
-		switch (layerType)
-		{
-			case MapLayerType.Ground:
-				res = groundMeshSets;
-				break;
-
-			case MapLayerType.Water:
-				res = waterMeshSets;
-				break;
-
-			case MapLayerType.Mountain:
-				res = mountainMeshSets;
-				break;
-		}
-
-		return res;
-	}
-
 	public GeneratorSettings GetGeneratorSettings(MapLayerType layerType)
 	{
-		GeneratorSettings res = waterGenSets;
+		GeneratorSettings res;
 		switch (layerType)
 		{
 			case MapLayerType.Water:
@@ -75,6 +56,55 @@ public class MapLayers
 
 			case MapLayerType.Mountain:
 				res = mountainGenSets;
+				break;
+
+			case MapLayerType.Ground:
+			default:
+				res = new GeneratorSettings();
+				break;
+		}
+
+		return res;
+	}
+
+	public MeshSettings GetMeshSettings(MapLayerType layerType)
+	{
+		MeshSettings res;
+		switch (layerType)
+		{
+			case MapLayerType.Water:
+				res = waterMeshSets;
+				break;
+
+			case MapLayerType.Mountain:
+				res = mountainMeshSets;
+				break;
+
+			case MapLayerType.Ground:
+			default:
+				res = groundMeshSets;
+				break;
+		}
+
+		return res;
+	}
+
+	public AreaSettings GetAreaSettings(MapLayerType layerType)
+	{
+		AreaSettings res;
+		switch (layerType)
+		{
+			case MapLayerType.Water:
+				res = waterAreaSets;
+				break;
+
+			case MapLayerType.Mountain:
+				res = mountainAreaSets;
+				break;
+
+			case MapLayerType.Ground:
+			default:
+				res = new AreaSettings();
 				break;
 		}
 

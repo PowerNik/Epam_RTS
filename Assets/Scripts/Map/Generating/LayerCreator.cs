@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,32 +25,27 @@ public class LayerCreator
 
 	public void CreateLayers()
 	{
-		CreateLayerGround();
-		SetLayer(MapLayerType.LayerWater);
-		SetLayer(MapLayerType.LayerMountain);
-	}
-
-	private void CreateLayerGround()
-	{
 		LayerGrid = new MapLayerType[tileCountX, tileCountZ];
 
-		for (int x = 0; x < tileCountX; x++)
-		{
-			for (int z = 0; z < tileCountZ; z++)
-			{
-				LayerGrid[x, z] = MapLayerType.LayerGround;
-			}
-		}
+		CreateLayer(MapLayerType.Ground);
+		CreateLayer(MapLayerType.Water);
+
+		int border = mapLayers.mountainBorderWidth;
+		CreateLayer(MapLayerType.Mountain, border);
 	}
 
-	/// <summary>
-	/// Рандомно генерирует и устанавливает слой layerType поверх всех предыдущих
-	/// </summary>
-	/// <param name="layerType"></param>
-	private void SetLayer(MapLayerType layerType)
+	public void CorrectLayers(MapLayerType[,] layerGrid)
+	{
+		LayerGrid = layerGrid;
+
+		CorrectAreas(MapLayerType.Water);
+		CorrectAreas(MapLayerType.Mountain);
+	}
+
+	private void CreateLayer(MapLayerType layerType, int border = 0)
 	{
 		GeneratorSettings genSets = mapLayers.GetGeneratorSettings(layerType);
-		int[,] grid = layerGen.Generate(genSets);
+		int[,] grid = layerGen.Generate(genSets, border);
 
 		for (int x = 0; x < tileCountX; x++)
 		{
@@ -64,9 +60,161 @@ public class LayerCreator
 	}
 
 	/// <summary>
+	/// Удаляет маленькие области слоя layerType
+	/// и ограничивает число оставшихся областей
+	/// </summary>
+	/// <param name="layerType"></param>
+	private void CorrectAreas(MapLayerType layerType)
+	{
+		var list = GetAllAreas(layerType);
+
+		list = RemoveSmallAreas(list, layerType);
+		LimitingAreaCount(list, layerType);
+	}
+
+	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, MapLayerType layerType)
+	{
+		AreaSettings areaSets = mapLayers.GetAreaSettings(layerType);
+
+		for (int i = 0; i < list.Count; i++)
+		{
+			if (list[i].Count < areaSets.minTileSize)
+			{
+				foreach (int[] point in list[i])
+				{
+					LayerGrid[point[0], point[1]] = MapLayerType.Ground;
+				}
+				list.RemoveAt(i);
+				i--;
+			}
+		}
+
+		return list;
+	}
+
+	private void LimitingAreaCount(List<List<int[]>> list, MapLayerType layerType)
+	{
+		GeneratorSettings genSets = mapLayers.GetGeneratorSettings(layerType);
+
+		int seedHash = genSets.seed.GetHashCode();
+		System.Random pseudoRandom = new System.Random(seedHash);
+
+		AreaSettings areaSets = mapLayers.GetAreaSettings(layerType);
+
+		while (list.Count > areaSets.maxAreaCount)
+		{
+			int index = pseudoRandom.Next(0, list.Count);
+
+			foreach (int[] point in list[index])
+			{
+				LayerGrid[point[0], point[1]] = MapLayerType.Ground;
+			}
+			list.RemoveAt(index);
+		}
+	}
+
+	/// <summary>
+	/// Список всех связанных областей слоя layerType
+	/// </summary>
+	/// <param name="layerType"></param>
+	/// <returns></returns>
+	private List<List<int[]>> GetAllAreas(MapLayerType layerType)
+	{
+		int[,] layerMap = GetLayerMap(layerType);
+		var allAreasList = new List<List<int[]>>();
+
+		for (int x = 0; x < tileCountX; x++)
+		{
+			for (int z = 0; z < tileCountZ; z++)
+			{
+				// Равносильно LayerGrid[x, z] == layerType
+				if (layerMap[x, z] == 1)
+				{
+					var areaList = GetArea(x, z, ref layerMap);
+					allAreasList.Add(areaList);
+				}
+			}
+		}
+
+		return allAreasList;
+	}
+
+	/// <summary>
+	/// Список координат тайлов, которые образуют связную область
+	/// </summary>
+	/// <param name="startX"></param>
+	/// <param name="startZ"></param>
+	/// <param name="layerMap"></param>
+	/// <returns></returns>
+	private List<int[]> GetArea(int startX, int startZ, ref int[,] layerMap)
+	{
+		var areaList = new List<int[]>();
+
+		var curentPointsList = new List<int[]>();
+		curentPointsList.Add(new int[] { startX, startZ });
+
+		// Пометили точку как рассмотренную
+		layerMap[startX, startZ] = 0;
+
+		// Волновой алгоритм, он же поиск в ширину
+		while (true)
+		{
+			areaList.AddRange(curentPointsList);
+
+			var nextPointsList = StepBFS(curentPointsList, ref layerMap);
+			if (nextPointsList.Count == 0)
+			{
+				break;
+			}
+
+			curentPointsList = nextPointsList;
+		}
+
+		return areaList;
+	}
+
+	/// <summary>
+	/// Один шаг поиска в ширину
+	/// </summary>
+	/// <param name="curentPointsList"></param>
+	/// <param name="layerMap"></param>
+	/// <returns></returns>
+	private List<int[]> StepBFS(List<int[]> curentPointsList, ref int[,] layerMap)
+	{
+		int[] dX = { 1, 0, -1, 0 };// Сдвиги к соседним клеткам
+		int[] dZ = { 0, 1, 0, -1 };
+
+		var nextPointsList = new List<int[]>();
+
+		foreach (int[] item in curentPointsList)
+		{
+			for (int i = 0; i < dX.Length; i++)
+			{
+				int x = item[0] + dX[i];
+				int z = item[1] + dZ[i];
+
+				if (x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
+				{
+					continue;
+				}
+
+				// Нашли нерассмотренную точку
+				if (layerMap[x, z] == 1)
+				{
+					// Пометили ее как рассмотренную
+					layerMap[x, z] = 0;
+					nextPointsList.Add(new int[] { x, z });
+				}
+			}
+		}
+
+		return nextPointsList;
+	}
+
+	/// <summary>
 	/// Возвращает карту расположения слоя layerType
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>1 - тайл занят слоем layerType, 0 - другим слоем</returns>
 	public int[,] GetLayerMap(MapLayerType layerType)
 	{
 		int[,] mas = new int[tileCountX, tileCountZ];

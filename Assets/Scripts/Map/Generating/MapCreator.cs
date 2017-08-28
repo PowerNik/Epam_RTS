@@ -42,8 +42,9 @@ public class MapCreator
 	{
 		layerCreator.CreateLayers();
 		basePointsGen.CreateBasePoints(layerCreator.LayerGrid);
+		layerCreator.CorrectLayers(basePointsGen.LayerGrid);
 
-		LayerGrid = basePointsGen.LayerGrid;	
+		LayerGrid = layerCreator.LayerGrid;	
 		CitizenBasePoint = basePointsGen.CitizenBasePoint;
 		FermerBasePoints = basePointsGen.FermerBasePoints;
 	}

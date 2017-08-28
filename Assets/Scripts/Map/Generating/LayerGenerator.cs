@@ -10,8 +10,7 @@ public class LayerGenerator
 	private int tileCountX;
 	private int tileCountZ;
 
-	private string seed;
-	private bool isRandom;
+	private int seedHash;
 	private int fillPercent;
 
 	private int surroundWallCount = 4;
@@ -27,16 +26,27 @@ public class LayerGenerator
 
 	private void SetGeneratingParams(GeneratorSettings genSets)
 	{
-		seed = genSets.seed;
-		isRandom = genSets.isRandom;
+		if (genSets.isRandom)
+		{
+			seedHash = Time.time.ToString().GetHashCode() + callCount;
+			callCount++;
+		}
+		else
+		{
+			seedHash = genSets.seed.GetHashCode() + callCount;
+			callCount++;
+		}
+
 		fillPercent = genSets.fillPercent;
 	}
 
 	/// <summary>
 	/// Генерирует случайно заполненный массив из 0 и 1.
 	/// </summary>
+	/// <param name="genSets"></param>
+	/// <param name="border">Ширина границ массива, заполненных 1</param>
 	/// <returns></returns>
-	public int[,] Generate(GeneratorSettings genSets)
+	public int[,] Generate(GeneratorSettings genSets, int border = 0)
 	{
 		if (genSets != null)
 		{
@@ -44,7 +54,7 @@ public class LayerGenerator
 		}
 
 		map = new int[tileCountX, tileCountZ];
-		RandomFillMap();
+		RandomFillMap(border);
 
 		for (int i = 0; i < genSets.smoothCount; i++)
 		{
@@ -54,30 +64,34 @@ public class LayerGenerator
 		return map;
 	}
 
-	private void RandomFillMap()
+	private void RandomFillMap(int border)
 	{
-		if (isRandom)
+		// Не костыль, а фича :)
+		// Заполнение массива на 100% не является рандомной генерацией
+		// Так что за вызов рандомогенератора не считается
+		if(fillPercent == 100)
 		{
-			seed = Time.time.ToString();
+			callCount--;
 		}
-
-		int seedHash = seed.GetHashCode() + callCount;
-		callCount++;
 
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int y = 0; y < tileCountZ; y++)
+			for (int z = 0; z < tileCountZ; z++)
 			{
-				// Граница карты непроходима
-				if (x == 0 || x == tileCountX - 1 || y == 0 || y == tileCountZ - 1)
+				// 0 <= x < b  <=>  -b <= x - b < 0
+				// maxX - b <= x < maxX  <=>  maxX <= x + b < maxX + b
+				bool isBorderX = x - border < 0 || tileCountX <= x + border;
+				bool isBorderZ = z - border < 0 || tileCountZ <= z + border;
+
+				if (isBorderX || isBorderZ)
 				{
-					//map[x, y] = 1;
+					map[x, z] = 1;
 				}
 				else
 				{
-					map[x, y] = (pseudoRandom.Next(0, 100) < fillPercent) ? 1 : 0;
+					map[x, z] = (pseudoRandom.Next(0, 100) < fillPercent) ? 1 : 0;
 				}
 			}
 		}
@@ -90,20 +104,20 @@ public class LayerGenerator
 	{
 		for (int x = 0; x < tileCountX; x++)
 		{
-			for (int y = 0; y < tileCountZ; y++)
+			for (int z = 0; z < tileCountZ; z++)
 			{
-				int neighbourWallTiles = GetSurroundWallCount(x, y);
+				int neighbourWallTiles = GetSurroundWallCount(x, z);
 
 				if (neighbourWallTiles > surroundWallCount)
 				{
-					map[x, y] = 1;
+					map[x, z] = 1;
 				}
 				else
 				{
 					// Можно поставить <= или -1 справа
 					if (neighbourWallTiles < surroundWallCount)
 					{
-						map[x, y] = 0;
+						map[x, z] = 0;
 					}
 				}
 
@@ -114,29 +128,29 @@ public class LayerGenerator
 	/// <summary>
 	/// Число стен вокруг клетки [gridX, gridY]
 	/// </summary>
-	private int GetSurroundWallCount(int gridX, int gridY)
+	private int GetSurroundWallCount(int gridX, int gridZ)
 	{
 		int wallCount = 0;
 
 		// Зона, в которой ищутся стены - [gridX -+ 1, gridY -+ 1]
 		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
 		{
-			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
+			for (int neighbourZ = gridZ - 1; neighbourZ <= gridZ + 1; neighbourZ++)
 			{
 				// Считаются точки только в соседних клетках
-				if (neighbourX == gridX && neighbourY == gridY)
+				if (neighbourX == gridX && neighbourZ == gridZ)
 				{
 					continue;
 				}
 
 				// Вне карты только непроходимые места
-				if (neighbourX < 0 || neighbourX >= tileCountX || neighbourY < 0 || neighbourY >= tileCountZ)
+				if (neighbourX < 0 || neighbourX >= tileCountX || neighbourZ < 0 || neighbourZ >= tileCountZ)
 				{
 					wallCount++;
 				}
 				else
 				{
-					wallCount += map[neighbourX, neighbourY];
+					wallCount += map[neighbourX, neighbourZ];
 				}
 			}
 		}
