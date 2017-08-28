@@ -98,6 +98,7 @@ public class Attack : MonoBehaviour
         }
         if (isAttacking)
         {
+            GetComponent<Unit>().currentAction = Unit.CurrentAction.Attacking;
             if (GetComponent<NavMeshAgent>() != null)
             {
                 GetComponent<NavMeshAgent>().isStopped = true;
@@ -107,6 +108,7 @@ public class Attack : MonoBehaviour
             if (enemy.Health <= 0)
             {
                 isAttacking = false;
+                GetComponent<Unit>().currentAction = Unit.CurrentAction.DoingNothing;
                 return;
             }
             switch (attackType)
@@ -117,17 +119,12 @@ public class Attack : MonoBehaviour
 
                     if (timeWaited >= 1f)
                     { 
-                        GetComponentInChildren<LineRenderer>().enabled = true;
-                        GetComponentInChildren<LineRenderer>().SetPosition(0, GetComponentInChildren<LineRenderer>().transform.position);
-                        GetComponentInChildren<LineRenderer>().SetPosition(1, enemy.transform.position);
                         print(attackType.ToString());
                         enemy.Health -= CurrentDPS;
                         timeWaited = 0;
                     }
                     else
                         timeWaited += Time.deltaTime;
-                    if (timeWaited > 0.2f)
-                        GetComponentInChildren<LineRenderer>().enabled = false;
 
                     break;
 
@@ -158,8 +155,6 @@ public class Attack : MonoBehaviour
             GetComponent<Animator>().SetBool(attackType.ToString(), false);
             if (GetComponentInChildren<Flamethrower>() != null)
                 DisableFlameThrower();
-            if (GetComponentInChildren<LineRenderer>() != null)
-                GetComponentInChildren<LineRenderer>().enabled = false;
         }
     }
     void EnableFlameThrower()

@@ -9,7 +9,7 @@ public class UnitSettings {
     [SerializeField]
     private UnitType type;
     [SerializeField]
-    private float health;
+    private float maxHealth;
     [SerializeField]
     private float cost;
     [SerializeField]
@@ -19,7 +19,7 @@ public class UnitSettings {
     [SerializeField]
     private Sprite icon;
     [SerializeField]
-    private string name;
+    private string unitName;
     [SerializeField]
     private GameObject prefab;
 
@@ -42,11 +42,11 @@ public class UnitSettings {
         }
     }
 
-    public float Health
+    public float MaxHealth
     {
         get
         {
-            return health;
+            return maxHealth;
         }
     }
 
@@ -86,7 +86,7 @@ public class UnitSettings {
     {
         get
         {
-            return name;
+            return unitName;
         }
     }
 

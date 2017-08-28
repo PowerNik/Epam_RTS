@@ -14,10 +14,16 @@ public class Unit : MonoBehaviour {
     private Fraction fraction;
     private bool isLoadable;
     private Sprite icon;
-    private string name;
+    private string unitName;
 
+    public enum CurrentAction
+    {
+        Attacking, MovingToTarget, DoingNothing, Building
+    }
+    public CurrentAction currentAction;
     //public List<UnityAction> AvaliableActions = new List<UnityAction>();
 
+    public Queue<UnityAction> ActionsQueue = new Queue<UnityAction>();
     [SerializeField]                        //убрать
     bool isEnemy;                           //убрать
     public bool IsEnemy { get { return isEnemy; } }
@@ -37,6 +43,19 @@ public class Unit : MonoBehaviour {
         set
         {
             health = value;
+        }
+    }
+
+    public float MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+
+        set
+        {
+            maxHealth = value;
         }
     }
 
@@ -96,22 +115,22 @@ public class Unit : MonoBehaviour {
     {
         get
         {
-            return name;
+            return unitName;
         }
 
         set
         {
-            name = value;
+            unitName = value;
         }
     }
 
-
-
-    // Use this for initialization
     protected void Start () {
         if(GetComponent<Animator>()!=null)
             unitAnimator = GetComponent<Animator>();
+
+        currentAction = CurrentAction.DoingNothing;
 	}
+
     protected void Update()
     {
         if (health<=0)
@@ -128,13 +147,29 @@ public class Unit : MonoBehaviour {
             }
             Destroy(gameObject, 3f);
         }
-    }
 
+        if (ActionsQueue.Count > 0)
+        {
+            switch (currentAction)
+            {
+                case CurrentAction.Attacking:
+                    ActionsQueue.Peek();
+                    break;
+                case CurrentAction.DoingNothing:
+                    ActionsQueue.Dequeue().Invoke();
+                    break;
+                case CurrentAction.Building:
+                    break;
+                case CurrentAction.MovingToTarget:
+                    break;
+            }
+        }
+
+    }
     private void OnDestroy()
     {
+        GetComponent<Selectable>().Deselect();
     }
-
-
 }
 
 

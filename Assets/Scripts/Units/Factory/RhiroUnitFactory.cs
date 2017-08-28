@@ -10,12 +10,13 @@ public class RhiroUnitFactory : UnitFactory
         UnitSettings settings = GameManager.getUnitSettings(UnitType.Rhiro);
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
-        unit.Health = settings.Health;
+        unit.MaxHealth = settings.MaxHealth;
+        unit.Health = settings.MaxHealth;
         unit.Cost = settings.Cost;
         unit.Fraction = settings.Fraction;
         unit.IsLoadable = settings.IsLoadable;
         unit.Icon = settings.Icon;
-        unit.name = settings.Name;
+        unit.Name = settings.Name;
         return unit;
     }
 }
