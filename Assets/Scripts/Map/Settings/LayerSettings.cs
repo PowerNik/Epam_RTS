@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Связывает тайлы и префабы со слоем, на котором они будут применяться
-/// </summary>
 [System.Serializable]
-public class MapLayers
+public class LayerSettings
 {
 	public BasicTileSettingsSO basicTileSets;
 
@@ -24,18 +21,18 @@ public class MapLayers
 	public AreaSettings mountainAreaSets;
 	public int mountainBorderWidth = 1;
 
-	public BasicTile GetBasicTile(MapLayerType layerType)
+	public BasicTile GetBasicTile(LayerType layerType)
 	{
 		var dict = basicTileSets.GetBasicTileDictionary();
 		BasicTile res = dict[BasicTileType.Ground];
 
 		switch (layerType)
 		{
-			case MapLayerType.Water:
+			case LayerType.Water:
 				res = dict[BasicTileType.Water];
 				break;
 
-			case MapLayerType.Mountain:
+			case LayerType.Mountain:
 				res = dict[BasicTileType.Mountain];
 				break;
 		}
@@ -48,20 +45,20 @@ public class MapLayers
 		return basicTileSets.GetBasicTiles();
 	}
 
-	public GeneratorSettings GetGeneratorSettings(MapLayerType layerType)
+	public GeneratorSettings GetGeneratorSettings(LayerType layerType)
 	{
 		GeneratorSettings res;
 		switch (layerType)
 		{
-			case MapLayerType.Water:
+			case LayerType.Water:
 				res = waterGenSets;
 				break;
 
-			case MapLayerType.Mountain:
+			case LayerType.Mountain:
 				res = mountainGenSets;
 				break;
 
-			case MapLayerType.Ground:
+			case LayerType.Ground:
 			default:
 				res = new GeneratorSettings();
 				break;
@@ -70,20 +67,20 @@ public class MapLayers
 		return res;
 	}
 
-	public MeshSettings GetMeshSettings(MapLayerType layerType)
+	public MeshSettings GetMeshSettings(LayerType layerType)
 	{
 		MeshSettings res;
 		switch (layerType)
 		{
-			case MapLayerType.Water:
+			case LayerType.Water:
 				res = waterMeshSets;
 				break;
 
-			case MapLayerType.Mountain:
+			case LayerType.Mountain:
 				res = mountainMeshSets;
 				break;
 
-			case MapLayerType.Ground:
+			case LayerType.Ground:
 			default:
 				res = groundMeshSets;
 				break;
@@ -92,20 +89,20 @@ public class MapLayers
 		return res;
 	}
 
-	public AreaSettings GetAreaSettings(MapLayerType layerType)
+	public AreaSettings GetAreaSettings(LayerType layerType)
 	{
 		AreaSettings res;
 		switch (layerType)
 		{
-			case MapLayerType.Water:
+			case LayerType.Water:
 				res = waterAreaSets;
 				break;
 
-			case MapLayerType.Mountain:
+			case LayerType.Mountain:
 				res = mountainAreaSets;
 				break;
 
-			case MapLayerType.Ground:
+			case LayerType.Ground:
 			default:
 				res = new AreaSettings();
 				break;

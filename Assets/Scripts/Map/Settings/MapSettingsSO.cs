@@ -9,7 +9,7 @@ public class MapSettingsSO : ScriptableObject
 
 	[Space(10)]
 	[SerializeField]
-	private MapLayers mapLayers;
+	private LayerSettings layerSets;
 
 	[Space(10)]
 	[SerializeField]
@@ -20,9 +20,9 @@ public class MapSettingsSO : ScriptableObject
 		return mapSizeSetting;
 	}
 
-	public MapLayers GetMapLayers()
+	public LayerSettings GetLayerSettings()
 	{
-		return mapLayers;
+		return layerSets;
 	}
 
 	public BasePointSettings GetBasePointSettings()

@@ -11,8 +11,8 @@ public class MapCreator
 	private LayerCreator layerCreator;
 	private BasePointsGenerator basePointsGen;
 
-	private MapLayers mapLayers;
-	public MapLayerType[,] LayerGrid { get; private set; }
+	private LayerSettings layerSets;
+	public LayerType[,] LayerGrid { get; private set; }
 
 	private float tileSize;
 
@@ -25,7 +25,7 @@ public class MapCreator
 
 	private void SetParams(MapSettingsSO mapSettings)
 	{
-		mapLayers = mapSettings.GetMapLayers();
+		layerSets = mapSettings.GetLayerSettings();
 
 		MapSizeSettings mapSizeSets = mapSettings.GetMapSizeSettings();
 		tileSize = mapSizeSets.tileSize;
@@ -47,22 +47,22 @@ public class MapCreator
 
 	public void CreateMapMesh(GameObject map)
 	{
-		CreateMeshForLayer(map, MapLayerType.Ground);
-		CreateMeshForLayer(map, MapLayerType.Water);
-		CreateMeshForLayer(map, MapLayerType.Mountain);
+		CreateMeshForLayer(map, LayerType.Ground);
+		CreateMeshForLayer(map, LayerType.Water);
+		CreateMeshForLayer(map, LayerType.Mountain);
 	}
 
-	private void CreateMeshForLayer(GameObject map, MapLayerType layerType)
+	private void CreateMeshForLayer(GameObject map, LayerType layerType)
 	{
 		int[,] mas = layerCreator.GetLayerMap(layerType);
-		MeshSettings meshSets = mapLayers.GetMeshSettings(layerType);
+		MeshSettings meshSets = layerSets.GetMeshSettings(layerType);
 
 		GameObject layerGO = new GameObject();
 		layerGO.transform.parent = map.transform;
 		layerGO.AddComponent<MeshCollider>();
 		layerGO.AddComponent<MeshFilter>();
 
-		Material mat = mapLayers.GetBasicTile(layerType).material;
+		Material mat = layerSets.GetBasicTile(layerType).material;
 		layerGO.AddComponent<MeshRenderer>().material = mat;
 
 		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();

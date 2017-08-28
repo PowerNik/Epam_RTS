@@ -38,22 +38,22 @@ public class GridManager
 		return new Vector3(x, pos.y, z);
 	}
 
-	public void SetLayersMap(MapLayerType[,] map, MapLayers mapLayers)
+	public void SetLayerMap(LayerType[,] map, LayerSettings layerSets)
 	{
 		for(int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				MapLayerType layerType = map[x, z];
-				BasicTile tile = mapLayers.GetBasicTile(layerType);
+				LayerType layerType = map[x, z];
+				BasicTile tile = layerSets.GetBasicTile(layerType);
 				tileGrid[x, z] = tile.TileType;
 			}
 		}
 
-		SetTiles(mapLayers.GetBasicTiles());
+		AddSeparativeTiles(layerSets.GetBasicTiles());
 	}
 
-	private void SetTiles(BasicTile[] tileMas)
+	private void AddSeparativeTiles(BasicTile[] tileMas)
 	{
 		for (int i = 0; i < tileMas.Length; i++)
 		{

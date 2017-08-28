@@ -8,8 +8,8 @@ public class LayerCreator
 	private int tileCountX;
 	private int tileCountZ;
 
-	public MapLayerType[,] LayerGrid { get; private set; }
-	private MapLayers mapLayers;
+	public LayerType[,] LayerGrid { get; private set; }
+	private LayerSettings layerSets;
 	private LayerGenerator layerGen;
 
 	public LayerCreator(MapSettingsSO mapSettings)
@@ -20,31 +20,31 @@ public class LayerCreator
 
 		layerGen = new LayerGenerator(tileCountX, tileCountZ);
 
-		mapLayers = mapSettings.GetMapLayers();
+		layerSets = mapSettings.GetLayerSettings();
 	}
 
 	public void CreateLayers()
 	{
-		LayerGrid = new MapLayerType[tileCountX, tileCountZ];
+		LayerGrid = new LayerType[tileCountX, tileCountZ];
 
-		CreateLayer(MapLayerType.Ground);
-		CreateLayer(MapLayerType.Water);
+		CreateLayer(LayerType.Ground);
+		CreateLayer(LayerType.Water);
 
-		int border = mapLayers.mountainBorderWidth;
-		CreateLayer(MapLayerType.Mountain, border);
+		int border = layerSets.mountainBorderWidth;
+		CreateLayer(LayerType.Mountain, border);
 	}
 
-	public void CorrectLayers(MapLayerType[,] layerGrid)
+	public void CorrectLayers(LayerType[,] layerGrid)
 	{
 		LayerGrid = layerGrid;
 
-		CorrectAreas(MapLayerType.Water);
-		CorrectAreas(MapLayerType.Mountain);
+		CorrectAreas(LayerType.Water);
+		CorrectAreas(LayerType.Mountain);
 	}
 
-	private void CreateLayer(MapLayerType layerType, int border = 0)
+	private void CreateLayer(LayerType layerType, int border = 0)
 	{
-		GeneratorSettings genSets = mapLayers.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 		int[,] grid = layerGen.Generate(genSets, border);
 
 		for (int x = 0; x < tileCountX; x++)
@@ -64,7 +64,7 @@ public class LayerCreator
 	/// и ограничивает число оставшихся областей
 	/// </summary>
 	/// <param name="layerType"></param>
-	private void CorrectAreas(MapLayerType layerType)
+	private void CorrectAreas(LayerType layerType)
 	{
 		var list = GetAllAreas(layerType);
 
@@ -72,9 +72,9 @@ public class LayerCreator
 		LimitingAreaCount(list, layerType);
 	}
 
-	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, MapLayerType layerType)
+	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, LayerType layerType)
 	{
-		AreaSettings areaSets = mapLayers.GetAreaSettings(layerType);
+		AreaSettings areaSets = layerSets.GetAreaSettings(layerType);
 
 		for (int i = 0; i < list.Count; i++)
 		{
@@ -82,7 +82,7 @@ public class LayerCreator
 			{
 				foreach (int[] point in list[i])
 				{
-					LayerGrid[point[0], point[1]] = MapLayerType.Ground;
+					LayerGrid[point[0], point[1]] = LayerType.Ground;
 				}
 				list.RemoveAt(i);
 				i--;
@@ -92,14 +92,14 @@ public class LayerCreator
 		return list;
 	}
 
-	private void LimitingAreaCount(List<List<int[]>> list, MapLayerType layerType)
+	private void LimitingAreaCount(List<List<int[]>> list, LayerType layerType)
 	{
-		GeneratorSettings genSets = mapLayers.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 
 		int seedHash = genSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		AreaSettings areaSets = mapLayers.GetAreaSettings(layerType);
+		AreaSettings areaSets = layerSets.GetAreaSettings(layerType);
 
 		while (list.Count > areaSets.maxAreaCount)
 		{
@@ -107,7 +107,7 @@ public class LayerCreator
 
 			foreach (int[] point in list[index])
 			{
-				LayerGrid[point[0], point[1]] = MapLayerType.Ground;
+				LayerGrid[point[0], point[1]] = LayerType.Ground;
 			}
 			list.RemoveAt(index);
 		}
@@ -118,7 +118,7 @@ public class LayerCreator
 	/// </summary>
 	/// <param name="layerType"></param>
 	/// <returns></returns>
-	private List<List<int[]>> GetAllAreas(MapLayerType layerType)
+	private List<List<int[]>> GetAllAreas(LayerType layerType)
 	{
 		int[,] layerMap = GetLayerMap(layerType);
 		var allAreasList = new List<List<int[]>>();
@@ -215,7 +215,7 @@ public class LayerCreator
 	/// Возвращает карту расположения слоя layerType
 	/// </summary>
 	/// <returns>1 - тайл занят слоем layerType, 0 - другим слоем</returns>
-	public int[,] GetLayerMap(MapLayerType layerType)
+	public int[,] GetLayerMap(LayerType layerType)
 	{
 		int[,] mas = new int[tileCountX, tileCountZ];
 		for (int x = 0; x < tileCountX; x++)

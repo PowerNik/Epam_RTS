@@ -8,7 +8,7 @@ public class BasePointsGenerator
 	public Vector3[] FermerBasePoints { get; private set; }
 
 	private BasePointSettings basePointSets;
-	public MapLayerType[,] LayerGrid { get; private set; }
+	public LayerType[,] LayerGrid { get; private set; }
 
 	private int tileCountX;
 	private int tileCountZ;
@@ -24,7 +24,7 @@ public class BasePointsGenerator
 		tileSize = mapSizeSets.tileSize;
 	}
 
-	public void CreateBasePoints(MapLayerType[,] layerGrid)
+	public void CreateBasePoints(LayerType[,] layerGrid)
 	{
 		LayerGrid = layerGrid;
 
@@ -217,7 +217,7 @@ public class BasePointsGenerator
 			{
 				if (0 < posX + x && posX + x < tileCountX - 1)
 					if (0 < posZ + z && posZ + z < tileCountZ - 1)
-						LayerGrid[posX + x, posZ + z] = MapLayerType.Ground;
+						LayerGrid[posX + x, posZ + z] = LayerType.Ground;
 			}
 		}
 	}

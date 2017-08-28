@@ -1,4 +1,4 @@
-﻿public enum MapLayerType
+﻿public enum LayerType
 {
 	Ground,
 	Mountain,
