@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Tile
+public class BasicTile
 {
-	public string TileName = "Ground";
-	public TileType TileType = TileType.Ground;
-
+	public BasicTileType TileType = BasicTileType.Ground;
 	public Material material;
 
 	public bool isAllowBuild = true;

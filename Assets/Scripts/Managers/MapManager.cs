@@ -12,9 +12,6 @@ public class MapManager : MonoBehaviour
 	public float TileSize { get; private set; }
 
 	[SerializeField]
-	private TileSettingsSO tileSettings;
-
-	[SerializeField]
 	private MapSettingsSO mapSettings;
 
 	private GridManager gridManager;
@@ -44,8 +41,8 @@ public class MapManager : MonoBehaviour
 
 	private void CreateMap()
 	{
-		mapCreator = new MapCreator(mapSettings, tileSettings.GetTileDictionary());
-		gridManager = new GridManager(mapSizeSets, tileSettings.GetTiles());
+		mapCreator = new MapCreator(mapSettings);
+		gridManager = new GridManager(mapSizeSets);
 		gridManager.SetLayersMap(mapCreator.LayerGrid, mapSettings.GetMapLayers());
 
 		GameObject mapGO = new GameObject();

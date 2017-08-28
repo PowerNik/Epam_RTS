@@ -8,41 +8,44 @@ using UnityEngine;
 [System.Serializable]
 public class MapLayers
 {
-	public TileType groundTileType = TileType.Ground;
+	public BasicTileSettingsSO basicTileSets;
+
+	[Space(10)]
 	public MeshSettings groundMeshSets;
 
 	[Space(5)]
-	public TileType waterTileType = TileType.Water;
 	public GeneratorSettings waterGenSets;
 	public MeshSettings waterMeshSets;
 	public AreaSettings waterAreaSets;
 
 	[Space(5)]
-	public TileType mountainTileType = TileType.Mountain;
 	public GeneratorSettings mountainGenSets;
 	public MeshSettings mountainMeshSets;
 	public AreaSettings mountainAreaSets;
 	public int mountainBorderWidth = 1;
 
-	public TileType GetTileType(MapLayerType layerType)
+	public BasicTile GetBasicTile(MapLayerType layerType)
 	{
-		TileType res = groundTileType;
+		var dict = basicTileSets.GetBasicTileDictionary();
+		BasicTile res = dict[BasicTileType.Ground];
+
 		switch (layerType)
 		{
-			case MapLayerType.Ground:
-				res = groundTileType;
-				break;
-
 			case MapLayerType.Water:
-				res = waterTileType;
+				res = dict[BasicTileType.Water];
 				break;
 
 			case MapLayerType.Mountain:
-				res = mountainTileType;
+				res = dict[BasicTileType.Mountain];
 				break;
 		}
 
 		return res;
+	}
+
+	public BasicTile[] GetBasicTiles()
+	{
+		return basicTileSets.GetBasicTiles();
 	}
 
 	public GeneratorSettings GetGeneratorSettings(MapLayerType layerType)

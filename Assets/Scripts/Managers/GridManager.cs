@@ -11,25 +11,15 @@ public class GridManager
 
 	private TileGrid tileGrid;
 
-	private Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+	private Dictionary<BasicTileType, BasicTile> tileDict = new Dictionary<BasicTileType, BasicTile>();
 
-	public GridManager(MapSizeSettings mapSizeSets, Tile[] tileMas)
+	public GridManager(MapSizeSettings mapSizeSets)
 	{
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileGrid = new TileGrid(tileCountX, tileCountZ);
 
 		tileSize = mapSizeSets.tileSize;
-
-		SetTiles(tileMas);
-	}
-
-	private void SetTiles(Tile[] tileMas)
-	{
-		for(int i = 0; i < tileMas.Length; i++)
-		{
-			tileDict.Add(tileMas[i].TileType, tileMas[i]);
-		}
 	}
 
 	public Vector3 GetTilePos(Vector3 pos)
@@ -54,9 +44,26 @@ public class GridManager
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				tileGrid[x, z] = mapLayers.GetTileType(map[x, z]);
+				MapLayerType layerType = map[x, z];
+				BasicTile tile = mapLayers.GetBasicTile(layerType);
+				tileGrid[x, z] = tile.TileType;
 			}
 		}
+
+		SetTiles(mapLayers.GetBasicTiles());
+	}
+
+	private void SetTiles(BasicTile[] tileMas)
+	{
+		for (int i = 0; i < tileMas.Length; i++)
+		{
+			tileDict.Add(tileMas[i].TileType, tileMas[i]);
+		}
+	}
+
+	// TODO создание прибрежных и предгорных тайлов
+	private void SetTiles()
+	{
 	}
 
 	public bool IsBuildableTile(Vector3 position)
@@ -69,7 +76,7 @@ public class GridManager
 			return false;
 		}
 
-		TileType type = tileGrid[x, z];
+		BasicTileType type = tileGrid[x, z];
 		return tileDict[type].isAllowBuild;
 	}
 }

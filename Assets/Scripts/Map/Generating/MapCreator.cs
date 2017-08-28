@@ -12,27 +12,23 @@ public class MapCreator
 	private BasePointsGenerator basePointsGen;
 
 	private MapLayers mapLayers;
-	private Dictionary<TileType, Tile> tileDict;
-
 	public MapLayerType[,] LayerGrid { get; private set; }
 
 	private float tileSize;
 
 
-	public MapCreator(MapSettingsSO mapSettings, Dictionary<TileType, Tile> tileDict)
+	public MapCreator(MapSettingsSO mapSettings)
 	{
-		SetParams(mapSettings, tileDict);
+		SetParams(mapSettings);
 		MapCreating();
 	}
 
-	private void SetParams(MapSettingsSO mapSettings, Dictionary<TileType, Tile> tileDict)
+	private void SetParams(MapSettingsSO mapSettings)
 	{
 		mapLayers = mapSettings.GetMapLayers();
 
 		MapSizeSettings mapSizeSets = mapSettings.GetMapSizeSettings();
 		tileSize = mapSizeSets.tileSize;
-
-		this.tileDict = tileDict;
 
 		layerCreator = new LayerCreator(mapSettings);
 		basePointsGen = new BasePointsGenerator(mapSettings);
@@ -66,8 +62,7 @@ public class MapCreator
 		layerGO.AddComponent<MeshCollider>();
 		layerGO.AddComponent<MeshFilter>();
 
-		TileType tileType = mapLayers.GetTileType(layerType);
-		Material mat = tileDict[tileType].material;
+		Material mat = mapLayers.GetBasicTile(layerType).material;
 		layerGO.AddComponent<MeshRenderer>().material = mat;
 
 		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();

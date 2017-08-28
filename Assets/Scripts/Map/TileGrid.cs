@@ -8,9 +8,9 @@ public class TileGrid
 
 	public int countZ { get; private set; }
 
-	public TileType[,] Grid { get; private set; }
+	public BasicTileType[,] Grid { get; private set; }
 
-	public TileType this[int x, int z]
+	public BasicTileType this[int x, int z]
 	{
 		get
 		{
@@ -33,13 +33,13 @@ public class TileGrid
 
 	private void CreateGrid()
 	{
-		Grid = new TileType[countX, countZ];
+		Grid = new BasicTileType[countX, countZ];
 
 		for (int x = 0; x < countX; x++)
 		{
 			for (int z = 0; z < countZ; z++)
 			{
-				Grid[x, z] = TileType.Ground;
+				Grid[x, z] = BasicTileType.Ground;
 			}
 		}
 	}
