@@ -21,7 +21,7 @@ public class LayerSettings
 	public AreaSettings mountainAreaSets;
 	public int mountainBorderWidth = 1;
 
-	public BasicTile GetBasicTile(LayerType layerType)
+	public BasicTile GetLayerBasicTile(LayerType layerType)
 	{
 		var dict = basicTileSets.GetBasicTileDictionary();
 		BasicTile res = dict[BasicTileType.Ground];
@@ -40,14 +40,23 @@ public class LayerSettings
 		return res;
 	}
 
-	public BasicTile[] GetBasicTiles()
+	public Dictionary<BasicTileType, BasicTile> GetBasicTileDictionary()
 	{
-		return basicTileSets.GetBasicTiles();
+		return basicTileSets.GetBasicTileDictionary();
+	}
+
+	/// <summary>
+	/// Возвращает пары типа (layerType, framingTile)
+	/// </summary>
+	/// <returns></returns>
+	public Dictionary<BasicTileType, BasicTileType> GetFramingTilePairs()
+	{
+		return basicTileSets.GetFramingTilePairs();
 	}
 
 	public GeneratorSettings GetGeneratorSettings(LayerType layerType)
 	{
-		GeneratorSettings res;
+		GeneratorSettings res = new GeneratorSettings();
 		switch (layerType)
 		{
 			case LayerType.Water:
@@ -57,11 +66,6 @@ public class LayerSettings
 			case LayerType.Mountain:
 				res = mountainGenSets;
 				break;
-
-			case LayerType.Ground:
-			default:
-				res = new GeneratorSettings();
-				break;
 		}
 
 		return res;
@@ -69,7 +73,7 @@ public class LayerSettings
 
 	public MeshSettings GetMeshSettings(LayerType layerType)
 	{
-		MeshSettings res;
+		MeshSettings res = groundMeshSets;
 		switch (layerType)
 		{
 			case LayerType.Water:
@@ -79,11 +83,6 @@ public class LayerSettings
 			case LayerType.Mountain:
 				res = mountainMeshSets;
 				break;
-
-			case LayerType.Ground:
-			default:
-				res = groundMeshSets;
-				break;
 		}
 
 		return res;
@@ -91,7 +90,7 @@ public class LayerSettings
 
 	public AreaSettings GetAreaSettings(LayerType layerType)
 	{
-		AreaSettings res;
+		AreaSettings res = new AreaSettings();
 		switch (layerType)
 		{
 			case LayerType.Water:
@@ -100,11 +99,6 @@ public class LayerSettings
 
 			case LayerType.Mountain:
 				res = mountainAreaSets;
-				break;
-
-			case LayerType.Ground:
-			default:
-				res = new AreaSettings();
 				break;
 		}
 

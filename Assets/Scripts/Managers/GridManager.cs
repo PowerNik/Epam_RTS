@@ -45,25 +45,65 @@ public class GridManager
 			for (int z = 0; z < tileCountZ; z++)
 			{
 				LayerType layerType = map[x, z];
-				BasicTile tile = layerSets.GetBasicTile(layerType);
-				tileGrid[x, z] = tile.TileType;
+				BasicTile tile = layerSets.GetLayerBasicTile(layerType);
+				tileGrid[x, z] = tile.tileType;
 			}
 		}
 
-		AddSeparativeTiles(layerSets.GetBasicTiles());
+		tileDict = layerSets.GetBasicTileDictionary();
+		SetAllFramingTiles(layerSets.GetFramingTilePairs());
 	}
 
-	private void AddSeparativeTiles(BasicTile[] tileMas)
+	private void SetAllFramingTiles(Dictionary<BasicTileType, BasicTileType> framingTileDict)
 	{
-		for (int i = 0; i < tileMas.Length; i++)
+		foreach(var pair in framingTileDict)
 		{
-			tileDict.Add(tileMas[i].TileType, tileMas[i]);
+			SetFramingTilesAroundArea(pair.Key, pair.Value);
 		}
 	}
 
-	// TODO создание прибрежных и предгорных тайлов
-	private void SetTiles()
+	/// <summary>
+	/// Обрамляет область типа areaType тайлами типа framingTile
+	/// </summary>
+	/// <param name="areaType"></param>
+	/// <param name="framingTile"></param>
+	private void SetFramingTilesAroundArea(BasicTileType areaType, BasicTileType framingTile)
 	{
+		for (int x = 0; x < tileCountX; x++)
+		{
+			for (int z = 0; z < tileCountZ; z++)
+			{
+				// Обрамление происходит только на земле
+				if (tileGrid[x, z] == BasicTileType.Ground)
+				{
+					if (IsNearestTilesHasType(x, z, areaType))
+					{
+						tileGrid[x, z] = framingTile;
+					}
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Есть ли вокруг тайла (curX, curZ) тайлы типа type
+	/// </summary>
+	/// <param name="type"></param>
+	/// <returns></returns>
+	private bool IsNearestTilesHasType(int curX, int curZ, BasicTileType type)
+	{
+		int[] dX = { 1, 0, -1, 0, 1, 1, -1, -1 };// Сдвиги к соседним клеткам
+		int[] dZ = { 0, 1, 0, -1, 1, -1, 1, -1 };
+
+		for(int i = 0; i < dX.Length; i++)
+		{
+			if(tileGrid[curX + dX[i], curZ + dZ[i]] == type)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public bool IsBuildableTile(Vector3 position)

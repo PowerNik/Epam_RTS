@@ -5,7 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class BasicTile
 {
-	public BasicTileType TileType = BasicTileType.Ground;
+	public BasicTile(BasicTileType type = BasicTileType.Ground)
+	{
+		tileType = type;
+	}
+
+	[HideInInspector]
+	public BasicTileType tileType = BasicTileType.Ground;
 	public Material material;
 
 	public bool isAllowBuild = true;
