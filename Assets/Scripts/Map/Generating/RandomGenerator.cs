@@ -3,28 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LayerGenerator
+public static class RandomGenerator
 {
-	private int callCount = 0;
+	static private int callCount = 0;
 
-	private int tileCountX;
-	private int tileCountZ;
+	static private int tileCountX;
+	static private int tileCountZ;
 
-	private int seedHash;
-	private int fillPercent;
+	static private int seedHash;
+	static private int fillPercent;
 
-	private int surroundWallCount = 4;
+	static private int surroundWallCount = 4;
 
-	private int[,] map;
+	static private int[,] map;
 
 
-	public LayerGenerator(int tileCountX, int tileCountZ)
+	public static void SetTileMapSize(int tileCountX, int tileCountZ)
 	{
-		this.tileCountX = tileCountX;
-		this.tileCountZ = tileCountZ;
+		RandomGenerator.tileCountX = tileCountX;
+		RandomGenerator.tileCountZ = tileCountZ;
 	}
 
-	private void SetGeneratingParams(GeneratorSettings genSets)
+	private static void SetGeneratingParams(GeneratorSettings genSets)
 	{
 		if (genSets.isRandom)
 		{
@@ -46,7 +46,7 @@ public class LayerGenerator
 	/// <param name="genSets"></param>
 	/// <param name="border">Ширина границ массива, заполненных 1</param>
 	/// <returns></returns>
-	public int[,] Generate(GeneratorSettings genSets, int border = 0)
+	public static int[,] Generate(GeneratorSettings genSets, int border = 0)
 	{
 		if (genSets != null)
 		{
@@ -64,7 +64,7 @@ public class LayerGenerator
 		return map;
 	}
 
-	private void RandomFillMap(int border)
+	private static void RandomFillMap(int border)
 	{
 		// Не костыль, а фича :)
 		// Заполнение массива на 100% не является рандомной генерацией
@@ -100,7 +100,7 @@ public class LayerGenerator
 	/// <summary>
 	/// Соединяет близкие непроходимые/непроходимые области в одну большую
 	/// </summary>
-	private void SmoothMap()
+	private static void SmoothMap()
 	{
 		for (int x = 0; x < tileCountX; x++)
 		{
@@ -128,7 +128,7 @@ public class LayerGenerator
 	/// <summary>
 	/// Число стен вокруг клетки [gridX, gridY]
 	/// </summary>
-	private int GetSurroundWallCount(int gridX, int gridZ)
+	private static int GetSurroundWallCount(int gridX, int gridZ)
 	{
 		int wallCount = 0;
 

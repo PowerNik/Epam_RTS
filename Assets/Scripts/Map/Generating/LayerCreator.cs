@@ -10,7 +10,6 @@ public class LayerCreator
 
 	public LayerType[,] LayerGrid { get; private set; }
 	private LayerSettings layerSets;
-	private LayerGenerator layerGen;
 
 	public LayerCreator(MapSettingsSO mapSettings)
 	{
@@ -18,7 +17,7 @@ public class LayerCreator
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 
-		layerGen = new LayerGenerator(tileCountX, tileCountZ);
+		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
 
 		layerSets = mapSettings.GetLayerSettings();
 	}
@@ -45,7 +44,7 @@ public class LayerCreator
 	private void CreateLayer(LayerType layerType, int border = 0)
 	{
 		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
-		int[,] grid = layerGen.Generate(genSets, border);
+		int[,] grid = RandomGenerator.Generate(genSets, border);
 
 		for (int x = 0; x < tileCountX; x++)
 		{
