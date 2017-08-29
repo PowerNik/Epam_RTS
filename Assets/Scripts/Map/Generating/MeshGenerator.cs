@@ -20,19 +20,26 @@ public class MeshGenerator : MonoBehaviour
 		triangles = new List<int>();
 
 		int nodeCountX = squareGrid.squares.GetLength(0);
-		int nodeCountY = squareGrid.squares.GetLength(1);
+		int nodeCountZ = squareGrid.squares.GetLength(1);
 
 		for (int x = 0; x < nodeCountX; x++)
 		{
-			for (int y = 0; y < nodeCountY; y++)
+			for (int z = 0; z < nodeCountZ; z++)
 			{
-				TriangulateSquare(squareGrid.squares[x, y]);
+				TriangulateSquare(squareGrid.squares[x, z]);
 			}
+		}
+
+		Vector2[] uv = new Vector2[vertices.Count];
+		for (int i = 0; i < vertices.Count; i++)
+		{
+			uv[i] = new Vector2(vertices[i].x / nodeCountX, vertices[i].z / nodeCountZ);
 		}
 
 		Mesh mesh = new Mesh();
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = triangles.ToArray();
+		mesh.uv = uv;
 		mesh.RecalculateNormals();
 
 		GetComponent<MeshFilter>().mesh = mesh;
@@ -59,7 +66,7 @@ public class MeshGenerator : MonoBehaviour
 				MeshFromPoints(sq.centreTop, sq.centreRight, sq.wallCentreRight, sq.wallCentreTop);
 				break;
 			case SquareConfiguration.OnePoint_8:
-				MeshFromPoints(sq.topLeft, sq.centreTop, sq.centreLeft); 
+				MeshFromPoints(sq.topLeft, sq.centreTop, sq.centreLeft);
 				MeshFromPoints(sq.centreLeft, sq.centreTop, sq.wallCentreTop, sq.wallCentreLeft);
 				break;
 
@@ -121,7 +128,7 @@ public class MeshGenerator : MonoBehaviour
 		// Чем больше длина массива, тем больше вершин, не лежащих на прямой,
 		// тем больше треугольников нужно создать.
 
-		if(points.Length >= 3)
+		if (points.Length >= 3)
 		{
 			CreateTriangle(points[0], points[1], points[2]);
 		}
@@ -144,9 +151,9 @@ public class MeshGenerator : MonoBehaviour
 
 	private void AssignVertices(Node[] points)
 	{
-		for(int i = 0; i < points.Length; i++)
+		for (int i = 0; i < points.Length; i++)
 		{
-			if(points[i].vertexIndex == -1)
+			if (points[i].vertexIndex == -1)
 			{
 				points[i].vertexIndex = vertices.Count;
 				vertices.Add(points[i].position);
