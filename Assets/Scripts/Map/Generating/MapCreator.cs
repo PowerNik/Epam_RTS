@@ -17,21 +17,21 @@ public class MapCreator
 	private float tileSize;
 
 
-	public MapCreator(MapSettingsSO mapSettings)
+	public MapCreator(MapSettingsManagerSO mapSetsManager)
 	{
-		SetParams(mapSettings);
+		SetParams(mapSetsManager);
 		MapCreating();
 	}
 
-	private void SetParams(MapSettingsSO mapSettings)
+	private void SetParams(MapSettingsManagerSO mapSetsManager)
 	{
-		layerSets = mapSettings.GetLayerSettings();
+		layerSets = mapSetsManager.GetLayerSettings();
 
-		MapSizeSettings mapSizeSets = mapSettings.GetMapSizeSettings();
+		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		tileSize = mapSizeSets.tileSize;
 
-		layerCreator = new LayerCreator(mapSettings);
-		basePointsGen = new BasePointsGenerator(mapSettings);
+		layerCreator = new LayerCreator(mapSetsManager);
+		basePointsGen = new BasePointsGenerator(mapSetsManager);
 	}
 
 	private void MapCreating()

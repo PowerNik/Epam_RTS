@@ -14,11 +14,11 @@ public class BasePointsGenerator
 	private int tileCountZ;
 	private float tileSize;
 
-	public BasePointsGenerator(MapSettingsSO mapSettings)
+	public BasePointsGenerator(MapSettingsManagerSO mapSetsManager)
 	{
-		basePointSets = mapSettings.GetBasePointSettings();
+		basePointSets = mapSetsManager.GetBasePointsSettings();
 
-		MapSizeSettings mapSizeSets = mapSettings.GetMapSizeSettings();
+		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileSize = mapSizeSets.tileSize;

@@ -12,7 +12,7 @@ public class MapManager : MonoBehaviour
 	public float TileSize { get; private set; }
 
 	[SerializeField]
-	private MapSettingsSO mapSettings;
+	private MapSettingsManagerSO mapSetsManager;
 
 	private GridManager gridManager;
 	private MapCreator mapCreator;
@@ -30,7 +30,7 @@ public class MapManager : MonoBehaviour
 
 	private void SetParams()
 	{
-		mapSizeSets = mapSettings.GetMapSizeSettings();
+		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 
 		MapWidth = mapSizeSets.width;
 		MapLength = mapSizeSets.length;
@@ -41,9 +41,9 @@ public class MapManager : MonoBehaviour
 
 	private void CreateMap()
 	{
-		mapCreator = new MapCreator(mapSettings);
+		mapCreator = new MapCreator(mapSetsManager);
 		gridManager = new GridManager(mapSizeSets);
-		gridManager.SetLayerMap(mapCreator.LayerGrid, mapSettings.GetLayerSettings());
+		gridManager.SetLayerMap(mapCreator.LayerGrid, mapSetsManager.GetLayerSettings());
 
 		GameObject mapGO = new GameObject();
 		mapGO.name = "Map";

@@ -1,13 +1,11 @@
 fileFormatVersion: 2
 guid: 816e3aa0fd7759a41af01a757251086a
-timeCreated: 1503940161
+timeCreated: 1504085689
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - basicTileSettings: {fileID: 11400000, guid: 05d6d6e705dd1bc4bbbdb7d65ee844c2,
-      type: 2}
-  - mapSettings: {fileID: 11400000, guid: 648aeaca0090d084d8b3c0e2af05ed8f, type: 2}
+  - mapSetsManager: {fileID: 11400000, guid: 7266e57f94b289045ba6c79b6280f1ed, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

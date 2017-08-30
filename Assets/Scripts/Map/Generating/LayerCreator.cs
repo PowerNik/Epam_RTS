@@ -11,15 +11,15 @@ public class LayerCreator
 	public LayerType[,] LayerGrid { get; private set; }
 	private LayerSettings layerSets;
 
-	public LayerCreator(MapSettingsSO mapSettings)
+	public LayerCreator(MapSettingsManagerSO mapSetsManager)
 	{
-		MapSizeSettings mapSizeSets = mapSettings.GetMapSizeSettings();
+		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 
 		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
 
-		layerSets = mapSettings.GetLayerSettings();
+		layerSets = mapSetsManager.GetLayerSettings();
 	}
 
 	public void CreateLayers()
