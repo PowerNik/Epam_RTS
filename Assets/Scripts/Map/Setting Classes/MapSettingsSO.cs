@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "MapSettings", menuName = "Map/Map Settings", order = 0)]
+[CreateAssetMenu(fileName = "MapSettings", menuName = "Map/Map Settings", order = 20)]
 public class MapSettingsSO : ScriptableObject
 {
 	[SerializeField]
@@ -13,7 +13,7 @@ public class MapSettingsSO : ScriptableObject
 
 	[Space(10)]
 	[SerializeField]
-	private BasePointSettings basePointSettings;
+	private BasePointsSettings basePointSettings;
 
 	public MapSizeSettings GetMapSizeSettings()
 	{
@@ -25,7 +25,7 @@ public class MapSettingsSO : ScriptableObject
 		return layerSets;
 	}
 
-	public BasePointSettings GetBasePointSettings()
+	public BasePointsSettings GetBasePointSettings()
 	{
 		return basePointSettings;
 	}

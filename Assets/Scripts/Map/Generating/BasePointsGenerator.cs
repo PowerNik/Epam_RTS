@@ -7,7 +7,7 @@ public class BasePointsGenerator
 	public Vector3 CitizenBasePoint { get; private set; }
 	public Vector3[] FermerBasePoints { get; private set; }
 
-	private BasePointSettings basePointSets;
+	private BasePointsSettings basePointSets;
 	public LayerType[,] LayerGrid { get; private set; }
 
 	private int tileCountX;

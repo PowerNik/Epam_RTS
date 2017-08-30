@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BasePointSettings
+public class BasePointsSettings
 {
 	[Tooltip("Размер базы горожан")]
 	public int citizenBaseSize = 20;
