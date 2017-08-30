@@ -11,15 +11,24 @@ public class GridManager
 
 	private TileGrid tileGrid;
 
-	private Dictionary<BasicTileType, BasicTile> tileDict = new Dictionary<BasicTileType, BasicTile>();
+	private Dictionary<LayerTileType, LayerTile> layerTileDict = 
+		new Dictionary<LayerTileType, LayerTile>();
 
-	public GridManager(MapSizeSettings mapSizeSets)
+	private Dictionary<FramingTileType, FramingTile> framingTileDict = 
+		new Dictionary<FramingTileType, FramingTile>();
+
+	public GridManager(MapSettingsManagerSO mapSetsManager)
 	{
+		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
+
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
+		tileSize = mapSizeSets.tileSize;
+
 		tileGrid = new TileGrid(tileCountX, tileCountZ);
 
-		tileSize = mapSizeSets.tileSize;
+		layerTileDict = mapSetsManager.GetLayerTileSettings().GetLayerTileDictionary();
+		framingTileDict = mapSetsManager.GetFramingTileSettings().GetFramingTileDictionary();
 	}
 
 	public Vector3 GetTilePos(Vector3 pos)
@@ -40,21 +49,18 @@ public class GridManager
 
 	public void SetLayerMap(LayerType[,] map, LayerSettings layerSets)
 	{
-		for(int x = 0; x < tileCountX; x++)
+		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
 				LayerType layerType = map[x, z];
-				BasicTile tile = layerSets.GetLayerBasicTile(layerType);
+				LayerTile tile = layerSets.GetLayerLayerTile(layerType);
 				tileGrid[x, z] = tile.tileType;
 			}
 		}
-
-		tileDict = layerSets.GetBasicTileDictionary();
-		SetAllFramingTiles(layerSets.GetFramingTilePairs());
 	}
-
-	private void SetAllFramingTiles(Dictionary<BasicTileType, BasicTileType> framingTileDict)
+	
+	public void SetAllFramingTiles(Dictionary<FramingTileType, LayerTileType> framingTileDict)
 	{
 		foreach(var pair in framingTileDict)
 		{
@@ -67,18 +73,21 @@ public class GridManager
 	/// </summary>
 	/// <param name="areaType"></param>
 	/// <param name="framingTile"></param>
-	private void SetFramingTilesAroundArea(BasicTileType areaType, BasicTileType framingTile)
+	private void SetFramingTilesAroundArea(FramingTileType framingTile, LayerTileType areaType)
 	{
 		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
 				// Обрамление происходит только на земле
-				if (tileGrid[x, z] == BasicTileType.Ground)
+				if (tileGrid[x, z] == LayerTileType.Ground)
 				{
 					if (IsNearestTilesHasType(x, z, areaType))
 					{
-						tileGrid[x, z] = framingTile;
+						//TODO 1 tileGrid должен хранить все типы тайлов:
+						// layerTileType, framingTileType, 
+						//TODO 2 resourceTileType, citizenTileType
+						//tileGrid[x, z] = framingTile;
 					}
 				}
 			}
@@ -90,7 +99,7 @@ public class GridManager
 	/// </summary>
 	/// <param name="type"></param>
 	/// <returns></returns>
-	private bool IsNearestTilesHasType(int curX, int curZ, BasicTileType type)
+	private bool IsNearestTilesHasType(int curX, int curZ, LayerTileType type)
 	{
 		int[] dX = { 1, 0, -1, 0, 1, 1, -1, -1 };// Сдвиги к соседним клеткам
 		int[] dZ = { 0, 1, 0, -1, 1, -1, 1, -1 };
@@ -116,8 +125,8 @@ public class GridManager
 			return false;
 		}
 
-		BasicTileType type = tileGrid[x, z];
-		return tileDict[type].isAllowBuild;
+		LayerTileType type = tileGrid[x, z];
+		return layerTileDict[type].isAllowBuild;
 	}
 }
 

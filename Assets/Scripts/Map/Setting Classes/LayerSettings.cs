@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class LayerSettings
 {
-	public BasicTileSettingsSO basicTileSets;
+	public LayerTileSettingsSO layerTileSets;
 
 	[Space(10)]
 	public MeshSettings groundMeshSets;
@@ -21,37 +21,23 @@ public class LayerSettings
 	public AreaSettings mountainAreaSets;
 	public int mountainBorderWidth = 1;
 
-	public BasicTile GetLayerBasicTile(LayerType layerType)
+	public LayerTile GetLayerLayerTile(LayerType layerType)
 	{
-		var dict = basicTileSets.GetBasicTileDictionary();
-		BasicTile res = dict[BasicTileType.Ground];
+		var dict = layerTileSets.GetLayerTileDictionary();
+		LayerTile res = dict[LayerTileType.Ground];
 
 		switch (layerType)
 		{
 			case LayerType.Water:
-				res = dict[BasicTileType.Water];
+				res = dict[LayerTileType.Water];
 				break;
 
 			case LayerType.Mountain:
-				res = dict[BasicTileType.Mountain];
+				res = dict[LayerTileType.Mountain];
 				break;
 		}
 
 		return res;
-	}
-
-	public Dictionary<BasicTileType, BasicTile> GetBasicTileDictionary()
-	{
-		return basicTileSets.GetBasicTileDictionary();
-	}
-
-	/// <summary>
-	/// Возвращает пары типа (layerType, framingTile)
-	/// </summary>
-	/// <returns></returns>
-	public Dictionary<BasicTileType, BasicTileType> GetFramingTilePairs()
-	{
-		return basicTileSets.GetFramingTilePairs();
 	}
 
 	public GeneratorSettings GetGeneratorSettings(LayerType layerType)

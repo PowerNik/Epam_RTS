@@ -12,4 +12,9 @@ public class FramingTileSettingsSO : ScriptableObject
 	{
 		return framingTileSettings;
 	}
+
+	public Dictionary<FramingTileType, FramingTile> GetFramingTileDictionary()
+	{
+		return framingTileSettings.GetFramingTileDictionary();
+	}
 }

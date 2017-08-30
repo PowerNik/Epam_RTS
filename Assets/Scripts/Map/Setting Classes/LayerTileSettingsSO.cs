@@ -12,4 +12,9 @@ public class LayerTileSettingsSO : ScriptableObject
 	{
 		return layerTileSettings;
 	}
+
+	public Dictionary<LayerTileType, LayerTile> GetLayerTileDictionary()
+	{
+		return layerTileSettings.GetLayerTileDictionary();
+	}
 }

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BasicTile
+public class LayerTile
 {
-	public BasicTile(BasicTileType type = BasicTileType.Ground)
+	public LayerTile(LayerTileType type = LayerTileType.Ground)
 	{
 		tileType = type;
 	}
 
 	[HideInInspector]
-	public BasicTileType tileType = BasicTileType.Ground;
+	public LayerTileType tileType = LayerTileType.Ground;
 	public Material material;
 
 	public bool isAllowBuild = true;
