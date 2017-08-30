@@ -44,7 +44,7 @@ public class MapManager : MonoBehaviour
 		mapCreator = new MapCreator(mapSetsManager);
 		gridManager = new GridManager(mapSetsManager);
 		gridManager.SetLayerMap(mapCreator.LayerGrid, mapSetsManager.GetLayerSettings());
-		gridManager.SetAllFramingTiles(mapSetsManager.GetFramingTileSettings().GetFramingTilePairs());
+	//	gridManager.SetAllFramingTiles(mapSetsManager.GetFramingTileSettings().GetFramingTilePairs());
 
 		GameObject mapGO = new GameObject();
 		mapGO.name = "Map";

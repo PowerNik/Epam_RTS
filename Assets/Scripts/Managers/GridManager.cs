@@ -11,8 +11,8 @@ public class GridManager
 
 	private TileGrid tileGrid;
 
-	private Dictionary<LayerTileType, LayerTile> layerTileDict = 
-		new Dictionary<LayerTileType, LayerTile>();
+	private Dictionary<LayerType, LayerTile> layerTileDict = 
+		new Dictionary<LayerType, LayerTile>();
 
 	private Dictionary<FramingTileType, FramingTile> framingTileDict = 
 		new Dictionary<FramingTileType, FramingTile>();
@@ -55,12 +55,12 @@ public class GridManager
 			{
 				LayerType layerType = map[x, z];
 				LayerTile tile = layerSets.GetLayerLayerTile(layerType);
-				tileGrid[x, z] = tile.tileType;
+				tileGrid[x, z] = tile.GetLayerType();
 			}
 		}
 	}
 	
-	public void SetAllFramingTiles(Dictionary<FramingTileType, LayerTileType> framingTileDict)
+	public void SetAllFramingTiles(Dictionary<FramingTileType, LayerType> framingTileDict)
 	{
 		foreach(var pair in framingTileDict)
 		{
@@ -73,14 +73,14 @@ public class GridManager
 	/// </summary>
 	/// <param name="areaType"></param>
 	/// <param name="framingTile"></param>
-	private void SetFramingTilesAroundArea(FramingTileType framingTile, LayerTileType areaType)
+	private void SetFramingTilesAroundArea(FramingTileType framingTile, LayerType areaType)
 	{
 		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
 				// Обрамление происходит только на земле
-				if (tileGrid[x, z] == LayerTileType.Ground)
+				if (tileGrid[x, z] == LayerType.Ground)
 				{
 					if (IsNearestTilesHasType(x, z, areaType))
 					{
@@ -99,7 +99,7 @@ public class GridManager
 	/// </summary>
 	/// <param name="type"></param>
 	/// <returns></returns>
-	private bool IsNearestTilesHasType(int curX, int curZ, LayerTileType type)
+	private bool IsNearestTilesHasType(int curX, int curZ, LayerType type)
 	{
 		int[] dX = { 1, 0, -1, 0, 1, 1, -1, -1 };// Сдвиги к соседним клеткам
 		int[] dZ = { 0, 1, 0, -1, 1, -1, 1, -1 };
@@ -125,8 +125,10 @@ public class GridManager
 			return false;
 		}
 
-		LayerTileType type = tileGrid[x, z];
-		return layerTileDict[type].isAllowBuild;
+		LayerType type = tileGrid[x, z];
+		//TODO
+		//return layerTileDict[type].IsAllowBuild;
+		return false;
 	}
 }
 

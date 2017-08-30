@@ -5,23 +5,15 @@ using UnityEngine;
 [System.Serializable]
 public class FramingTile
 {
-	public FramingTile(FramingTileType tileType, LayerTileType layerTileType)
+	public Tile tile;
+
+	public FramingTile(LayerType layerTileType)
 	{
-		this.tileType = tileType;
+		tile = new Tile(LayerType.Ground, AllowsSettings.Framing);
 		this.layerTileType = layerTileType;
 	}
 
 	[HideInInspector]
-	public FramingTileType tileType = FramingTileType.WaterSide;
+	public LayerType layerTileType = LayerType.Water;
 
-	[HideInInspector]
-	public LayerTileType layerTileType = LayerTileType.Water;
-
-	public Material material;
-
-	public bool isAllowBuild = false;
-	public bool isAllowMove = true;
-	public bool isAllowFly = true;
-
-	public float moveSpeed = 1;
 }

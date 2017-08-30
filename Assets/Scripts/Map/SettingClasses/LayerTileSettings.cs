@@ -5,17 +5,17 @@ using UnityEngine;
 [System.Serializable]
 public class LayerTileSettings
 {
-	public LayerTile groundTile = new LayerTile(LayerTileType.Ground);
-	public LayerTile waterTile = new LayerTile(LayerTileType.Water);
-	public LayerTile mountainTile = new LayerTile(LayerTileType.Mountain);
+	public LayerTile groundTile = new LayerTile(LayerType.Ground, AllowsSettings.LayerGround);
+	public LayerTile waterTile = new LayerTile(LayerType.Water, AllowsSettings.LayerNoGround);
+	public LayerTile mountainTile = new LayerTile(LayerType.Mountain, AllowsSettings.LayerNoGround);
 
-	public Dictionary<LayerTileType, LayerTile> GetLayerTileDictionary()
+	public Dictionary<LayerType, LayerTile> GetLayerTileDictionary()
 	{
-		Dictionary<LayerTileType, LayerTile> tileDict = new Dictionary<LayerTileType, LayerTile>();
+		Dictionary<LayerType, LayerTile> tileDict = new Dictionary<LayerType, LayerTile>();
 
-		tileDict.Add(LayerTileType.Ground, groundTile);
-		tileDict.Add(LayerTileType.Water, waterTile);
-		tileDict.Add(LayerTileType.Mountain, mountainTile);
+		tileDict.Add(groundTile.GetLayerType(), groundTile);
+		tileDict.Add(waterTile.GetLayerType(), waterTile);
+		tileDict.Add(mountainTile.GetLayerType(), mountainTile);
 
 		return tileDict;
 	}

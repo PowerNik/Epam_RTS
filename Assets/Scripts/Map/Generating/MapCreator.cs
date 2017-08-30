@@ -62,7 +62,7 @@ public class MapCreator
 		layerGO.AddComponent<MeshCollider>();
 		layerGO.AddComponent<MeshFilter>();
 
-		Material mat = layerSets.GetLayerLayerTile(layerType).material;
+		Material mat = layerSets.GetLayerLayerTile(layerType).tile.GetMaterial();
 		layerGO.AddComponent<MeshRenderer>().material = mat;
 
 		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();

@@ -5,18 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class LayerTile
 {
-	public LayerTile(LayerTileType type = LayerTileType.Ground)
+	public Tile tile;
+
+	public LayerTile(LayerType type, Allows allows)
 	{
-		tileType = type;
+		tile = new Tile(type, allows);
 	}
 
-	[HideInInspector]
-	public LayerTileType tileType = LayerTileType.Ground;
-	public Material material;
+	public LayerType GetLayerType()
+	{
+		return tile.GetLayerType();
+	}
 
-	public bool isAllowBuild = true;
-	public bool isAllowMove = true;
-	public bool isAllowFly = true;
+	public GeneratorSettings genSets;
+	public MeshSettings meshSets;
 
-	public float moveSpeed = 1;
+	public LandscapeArea landscapeArea;
 }

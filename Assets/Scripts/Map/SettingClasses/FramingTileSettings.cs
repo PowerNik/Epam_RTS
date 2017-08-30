@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class FramingTileSettings
 {
-	public FramingTile waterSideTile = new FramingTile(FramingTileType.WaterSide, LayerTileType.Water);
-	public FramingTile foothillTile = new FramingTile(FramingTileType.Foothill, LayerTileType.Mountain);
+	public FramingTile waterSideTile = new FramingTile(LayerType.Water);
+	public FramingTile foothillTile = new FramingTile(LayerType.Mountain);
 
 	public Dictionary<FramingTileType, FramingTile> GetFramingTileDictionary()
 	{
@@ -22,12 +22,12 @@ public class FramingTileSettings
 	/// Возвращает пары (обрамляющий тип тайла, обрамляемый тип тайла)
 	/// </summary>
 	/// <returns></returns>
-	public Dictionary<FramingTileType, LayerTileType> GetFramingTilePairs()
+	public Dictionary<FramingTileType, LayerType> GetFramingTilePairs()
 	{
-		Dictionary<FramingTileType, LayerTileType> dict = new Dictionary<FramingTileType, LayerTileType>();
+		Dictionary<FramingTileType, LayerType> dict = new Dictionary<FramingTileType, LayerType>();
 
-		dict.Add(waterSideTile.tileType, waterSideTile.layerTileType);
-		dict.Add(foothillTile.tileType, foothillTile.layerTileType);
+	/*	dict.Add(waterSideTile.tileType, waterSideTile.layerTileType);
+		dict.Add(foothillTile.tileType, foothillTile.layerTileType);*/
 
 		return dict;
 	}

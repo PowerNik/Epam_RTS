@@ -24,16 +24,16 @@ public class LayerSettings
 	public LayerTile GetLayerLayerTile(LayerType layerType)
 	{
 		var dict = layerTileSets.GetLayerTileDictionary();
-		LayerTile res = dict[LayerTileType.Ground];
+		LayerTile res = dict[LayerType.Ground];
 
 		switch (layerType)
 		{
 			case LayerType.Water:
-				res = dict[LayerTileType.Water];
+				res = dict[LayerType.Water];
 				break;
 
 			case LayerType.Mountain:
-				res = dict[LayerTileType.Mountain];
+				res = dict[LayerType.Mountain];
 				break;
 		}
 

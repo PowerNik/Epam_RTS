@@ -6,14 +6,14 @@ using UnityEngine;
 public class LayerTileSettingsSO : ScriptableObject
 {
 	[SerializeField]
-	private LayerTileSettings layerTileSettings;
+	private LayerTileSettings layerTileSettings = new LayerTileSettings();
 
 	public LayerTileSettings GetLayerTileSettings()
 	{
 		return layerTileSettings;
 	}
 
-	public Dictionary<LayerTileType, LayerTile> GetLayerTileDictionary()
+	public Dictionary<LayerType, LayerTile> GetLayerTileDictionary()
 	{
 		return layerTileSettings.GetLayerTileDictionary();
 	}
