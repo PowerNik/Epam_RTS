@@ -12,9 +12,6 @@ public class MapSettingsManagerSO : ScriptableObject
 	private HeightMapSettingsSO heightMapSettings;
 
 	[SerializeField]
-	private LayerSettingsSO layerSettings;
-
-	[SerializeField]
 	private BasePointsSettingsSO basePointsSettings;
 
 	[SerializeField]
@@ -41,11 +38,6 @@ public class MapSettingsManagerSO : ScriptableObject
 	public HeightMapSettings GetHeightMapSettings()
 	{
 		return heightMapSettings.GetHeightMapSettings();
-	}
-
-	public LayerSettings GetLayerSettings()
-	{
-		return layerSettings.GetLayerSettings();
 	}
 
 	public BasePointsSettings GetBasePointsSettings()

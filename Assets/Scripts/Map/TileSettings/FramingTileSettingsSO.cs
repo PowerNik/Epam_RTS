@@ -6,15 +6,10 @@ using UnityEngine;
 public class FramingTileSettingsSO : ScriptableObject
 {
 	[SerializeField]
-	private FramingTileSettings framingTileSettings;
+	private FramingTileSettings framingTileSettings = new FramingTileSettings();
 
 	public FramingTileSettings GetFramingTileSettings()
 	{
 		return framingTileSettings;
-	}
-
-	public Dictionary<FramingTileType, FramingTile> GetFramingTileDictionary()
-	{
-		return framingTileSettings.GetFramingTileDictionary();
 	}
 }

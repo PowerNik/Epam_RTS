@@ -9,7 +9,7 @@ public class LayerCreator
 	private int tileCountZ;
 
 	public LayerType[,] LayerGrid { get; private set; }
-	private LayerSettings layerSets;
+	private LayerTileSettings layerTileSets;
 
 	public LayerCreator(MapSettingsManagerSO mapSetsManager)
 	{
@@ -19,7 +19,7 @@ public class LayerCreator
 
 		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
 
-		layerSets = mapSetsManager.GetLayerSettings();
+		layerTileSets = mapSetsManager.GetLayerTileSettings();
 	}
 
 	public void CreateLayers()
@@ -29,7 +29,8 @@ public class LayerCreator
 		CreateLayer(LayerType.Ground);
 		CreateLayer(LayerType.Water);
 
-		int border = layerSets.mountainBorderWidth;
+		//TODO
+		int border = 2;//layerTileSets.mountainBorderWidth;
 		CreateLayer(LayerType.Mountain, border);
 	}
 
@@ -43,7 +44,7 @@ public class LayerCreator
 
 	private void CreateLayer(LayerType layerType, int border = 0)
 	{
-		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
 		int[,] grid = RandomGenerator.Generate(genSets, border);
 
 		for (int x = 0; x < tileCountX; x++)
@@ -73,11 +74,16 @@ public class LayerCreator
 
 	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, LayerType layerType)
 	{
-		AreaSettings areaSets = layerSets.GetAreaSettings(layerType);
+		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
+
+		if(landscapeSets.minSize == -1)
+		{
+			return list;
+		}
 
 		for (int i = 0; i < list.Count; i++)
 		{
-			if (list[i].Count < areaSets.minTileSize)
+			if (list[i].Count < landscapeSets.minSize)
 			{
 				foreach (int[] point in list[i])
 				{
@@ -93,14 +99,18 @@ public class LayerCreator
 
 	private void LimitingAreaCount(List<List<int[]>> list, LayerType layerType)
 	{
-		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
 
 		int seedHash = genSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		AreaSettings areaSets = layerSets.GetAreaSettings(layerType);
+		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
+		if(landscapeSets.maxCount == -1)
+		{
+			return;
+		}
 
-		while (list.Count > areaSets.maxAreaCount)
+		while (list.Count > landscapeSets.maxCount)
 		{
 			int index = pseudoRandom.Next(0, list.Count);
 
