@@ -104,22 +104,6 @@ public class MapManager : MonoBehaviour
 		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ);
 	}
 
-	private void OnDrawGizmos()
-	{
-		if (mapCreator == null)
-		{
-			return;
-		}
-
-		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(mapCreator.CitizenBasePoint, 5);
-
-		Gizmos.color = Color.green;
-		Gizmos.DrawSphere(mapCreator.FermerBasePoints[0], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoints[1], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoints[2], 5);
-	}
-
 	public Vector3 GetCitizenBasePoint()
 	{
 		return mapCreator.CitizenBasePoint;
