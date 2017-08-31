@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RoverUnitFactory : UnitFactory
 {
+    public RoverUnitFactory(PlayerManager player) : base(player){}
     public override Unit CreateUnit(Vector3 spawnPosition)
     {
         UnitSettings settings = GameManager.getUnitSettings(UnitType.Rover);

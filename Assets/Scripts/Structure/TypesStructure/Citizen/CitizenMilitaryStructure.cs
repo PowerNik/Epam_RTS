@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseStructure : Structure
+public class CitizenMilitaryStructure : Structure
 {
 
 }

@@ -16,6 +16,9 @@ public class Unit : MonoBehaviour {
     private Sprite icon;
     private string name;
 
+
+    public PlayerManager playerOwner { get; set; }
+
     //public List<UnityAction> AvaliableActions = new List<UnityAction>();
 
     [SerializeField]                        //убрать
@@ -147,5 +150,7 @@ public enum UnitType
     FootSoldier_Basic = 0,
     FootSoldier_Flamer = 1,
     Rover = 2,
-    Rhiro = 3
+    Rhiro = 3,
+    CitizenBuilder = 4,
+    FermerBuilder = 5
 }

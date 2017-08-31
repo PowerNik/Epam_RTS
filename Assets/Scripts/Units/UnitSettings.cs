@@ -7,6 +7,8 @@ public class UnitSettings {
 
     // Игровые переменные
     [SerializeField]
+    private string name;
+    [SerializeField]
     private UnitType type;
     [SerializeField]
     private float health;
@@ -18,8 +20,7 @@ public class UnitSettings {
     private bool isLoadable;
     [SerializeField]
     private Sprite icon;
-    [SerializeField]
-    private string name;
+    
     [SerializeField]
     private GameObject prefab;
 

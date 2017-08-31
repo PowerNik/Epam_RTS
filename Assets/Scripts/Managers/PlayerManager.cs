@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum Race
 {
@@ -11,10 +12,14 @@ public enum Race
     Nature = 3
 }
 
+#region Resource
+public struct GameResources
+{
+}
+#endregion
 
 public class PlayerManager : MonoBehaviour
 {
-    #region ResourceRegion
     private int foodResource,
         equipResource,
         specialResource;
@@ -60,7 +65,6 @@ public class PlayerManager : MonoBehaviour
     public delegate void ResourceChangeDelegate(int AddFood);
 
     public ResourceChangeDelegate foodResChange, equipResChange, specialResChange;
-    #endregion
 
     public Race playerRace { get; set; }
 
@@ -73,8 +77,10 @@ public class PlayerManager : MonoBehaviour
     //Color for minimap
     private Color playerColor;
     
-    public static GameObject StructuresPlaceHolder { get; private set; }
-    public static GameObject UnitsPlaceHolder { get; private set; }
+    public GameObject StructuresPlaceHolder { get; private set; }
+    public GameObject UnitsPlaceHolder { get; private set; }
+
+    public Vector3[] startPoints { get; set; }
 
     #region MonoBehaviour
     void Awake()
@@ -86,7 +92,6 @@ public class PlayerManager : MonoBehaviour
         UnitsPlaceHolder = new GameObject("Units");
         UnitsPlaceHolder.transform.SetParent(transform);
     }
-    #endregion
 
     void Start()
     {
@@ -98,5 +103,80 @@ public class PlayerManager : MonoBehaviour
         SpecialResource = 500;
 
         #endregion
+
+        #region RegionForTestingSpawnUnityWithFactory
+        RhiroUnitFactory ruf = new RhiroUnitFactory(this);
+        playerUnits.Add(ruf.CreateUnit(new Vector3(10, 0, 27)));
+        RoverUnitFactory rovuf = new RoverUnitFactory(this);
+        playerUnits.Add(rovuf.CreateUnit(new Vector3(18, 0, 27)));
+        FootSoldierUnitFactory fsuf = new FootSoldierUnitFactory(this);
+        playerUnits.Add(fsuf.CreateUnit(new Vector3(14, 0, 27)));
+        FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
+        playerUnits.Add(flameruf.CreateUnit(new Vector3(12, 0, 29)));
+
+        CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
+        playerUnits.Add(citizenBuilderFactory.CreateUnit(new Vector3(20, 0, 30)));
+        #endregion
     }
+    #endregion
+
+
+    //TODO.Better to create subclass FermerManager and CitizenManager to resolve ugly if desicion.
+    #region Init
+    public void Init()
+    {
+        switch (playerRace)
+        {
+            case Race.Citizen:
+                InitCitizen();
+                break;
+            case Race.Fermer:
+                InitFermer();
+                break;
+            default:
+                Debug.Log("Not supported");
+                break;
+        }
+    }
+
+    private void InitCitizen()
+    {
+        //playerFactory.SpawnBaseStructure(startPoints[0]);
+        CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
+        playerUnits.Add(citizenBuilderFactory.CreateUnit(startPoints[0]));
+        playerUnits.Last().transform.SetParent(UnitsPlaceHolder.transform);
+    }
+
+    private void InitFermer()
+    {
+        //foreach (Vector3 point in startPoints)
+        //{
+        //    playerFactory.SpawnBaseStructure(point);
+        //}
+        FermerBuilderUnitFactory fermerBuilderFactory = new FermerBuilderUnitFactory(this);
+        foreach (Vector3 point in startPoints)
+        {
+            playerUnits.Add(fermerBuilderFactory.CreateUnit(point));
+            playerUnits.Last().transform.SetParent(UnitsPlaceHolder.transform);
+        }
+    }
+    #endregion
+
+    #region SpawnStructures
+    public void SpawnStructure(StructuresTypes type,Vector3 position)
+    {
+        switch (type)
+        {
+            case StructuresTypes.BaseStructure:
+                playerStructures.Add(playerFactory.SpawnBaseStructure(position));
+                break;
+            case StructuresTypes.ExtractStucture:
+                break;
+            case StructuresTypes.ScientificStructure:
+                break;
+            case StructuresTypes.MilitaryStructure:
+                break;
+        }
+    }
+    #endregion
 }

@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CitizenBaseStructure : BaseStructure {
-
-    public CitizenBaseStructure(Vector3 SpawnPoint)
+public class CitizenBaseStructure : StructureSettings
+{
+    public Structure Build(Vector3 SpawnPoint, Transform placeHolder)
     {
-        //this.StructureGameObject = GameObject.Instantiate<GameObject>(settings.PrefubStructure, SpawnPoint, settings.PrefubStructure.transform.rotation);
-        //this.StructureGameObject.transform.parent = GameManager.StructuresPlaceHolder.transform;
-        //GameManager.AddStructure(this);
-        //TODO.Rewrite Add structure to PlayerManager
+        this.Init(GameManager.getStructureSettings(StructuresTypes.BaseStructure, Race.Citizen));
+        Debug.Log("Spawn Base Structure");
+        GameObject spawnedStructure = GameObject.Instantiate<GameObject>(this.StructureGameObject, SpawnPoint, this.StructureGameObject.transform.rotation);
+        Structure spawnedStructureMB = spawnedStructure.AddComponent<Structure>();
+        spawnedStructureMB.Init(this);
+        spawnedStructure.transform.SetParent(placeHolder);
+        return spawnedStructureMB;
     }
 }

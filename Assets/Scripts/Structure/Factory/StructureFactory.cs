@@ -4,8 +4,13 @@ using UnityEngine;
 
 public abstract class StructureFactory
 {
-    public abstract BaseStructure SpawnBaseStructure(Vector3 SpawnPosition);
-    public abstract MilitaryStructure SpawnMilitaryStructure(Vector3 SpawnPosition);
-    public abstract ScientificStructure SpawnScientificStructure(Vector3 SpawnPosition);
-    public abstract ExtractStructure SpawnExtractStructure(Vector3 SpawnPosition);
+    public StructureFactory(PlayerManager playerManagerRef)
+    {
+        playerManager = playerManagerRef;
+    }
+    protected PlayerManager playerManager { get; set; }
+    public abstract Structure SpawnBaseStructure(Vector3 SpawnPosition);
+    public abstract Structure SpawnMilitaryStructure(Vector3 SpawnPosition);
+    public abstract Structure SpawnScientificStructure(Vector3 SpawnPosition);
+    public abstract Structure SpawnExtractStructure(Vector3 SpawnPosition);
 }

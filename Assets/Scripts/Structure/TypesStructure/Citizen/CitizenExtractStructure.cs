@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CitizenExtractStructure : ExtractStructure
+public class CitizenExtractStructure : Structure
 {
 
 }

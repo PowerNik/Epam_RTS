@@ -1,164 +1,202 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
 
+//TODO.Rename class after merge
 public class GameManager : MonoBehaviour
 {
+    private static GameManager instance = null;
 
-    private static GameManager s_Instance = null;
-    public static GameManager Instance
-    {
-        get
-        {
-            if (s_Instance == null) {
+    public float GameClock { get; private set; }
 
-                s_Instance =  FindObjectOfType(typeof (GameManager)) as GameManager;
-            }
-            if (s_Instance == null) {
-                GameObject obj = new GameObject("GameManager");
-                s_Instance = obj.AddComponent(typeof (GameManager)) as GameManager;
-            }
-            return s_Instance;
-        }
-    }
+    private List<PlayerManager> players;
 
-    private static GameObject structuresPlaceHolder;
-    public static GameObject StructuresPlaceHolder
-    {
-        get
-        {
-            return structuresPlaceHolder;
-        }
-    }
+    [SerializeField]
+    PlayerManager playerPrefab;
 
+    [SerializeField]
+    MapManager mapManagerPrefab;
+
+    #region ScriptableObjects
     [SerializeField]
     private StructureScriptableObject sso;
     [SerializeField]
     private UnitScriptableObject uso;
-    [SerializeField]
-    private List<Structure> structures;
 
-    //TODELETE
-    #region RegionForTestingSpawnUnity
-    [SerializeField]
-    GameObject unit1;
-    [SerializeField]
-    GameObject unit2;
-    [SerializeField]
-    GameObject unit3;
-    [SerializeField]
-    GameObject unit4;
-    #endregion
-
-
-
-//    public static StructureSettings getStructureSettings(StructureSettingsType type)
-//    {
-//        List<StructureSettings> settings = Instance.sso.structureSettings;
-//        for (int i = 0; i < settings.Count; i++)
-//        {
-//            if (settings[i].Type == type)
-//                return Instance.sso.structureSettings[i];
-//        }
-//        return null;
-//    }
-    public static UnitSettings getUnitSettings(UnitType type)
+    public static StructureSettings getStructureSettings(StructuresTypes type,Race race)
     {
-        List<UnitSettings> settings = Instance.uso.unitSettings;
+        List<StructureSettings> settings = instance.sso.structures;
         for (int i = 0; i < settings.Count; i++)
         {
-            if (settings[i].Type == type)
-                return Instance.uso.unitSettings[i];
+            if (settings[i].structureType == type && settings[i].structureRace == race)
+            {
+                return settings[i];
+            }
         }
         return null;
     }
 
-    public static void AddStructure(Structure structure)
+    public static UnitSettings getUnitSettings(UnitType type)
     {
-        Instance.structures.Add(structure);
+        List<UnitSettings> settings = instance.uso.unitSettings;
+        for (int i = 0; i < settings.Count; i++)
+        {
+            if (settings[i].Type == type)
+                return instance.uso.unitSettings[i];
+        }
+        return null;
     }
+    #endregion
 
-    public void Awake()
+    public MapManager MapManagerInstance { get; private set; }
+
+    delegate void InitGameDelegate();
+    private InitGameDelegate initGame;
+
+    delegate void GameClockDelegate(float TimeUpdate);
+    private GameClockDelegate updateClock;
+
+    #region Init
+    void Awake()
     {
-        s_Instance = Instance;
-        structures = new List<Structure>();
-        structuresPlaceHolder = new GameObject("Structures");
+        if (instance == null)
+        {
+            instance = this;
+            players = new List<PlayerManager>();
+        }else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
 
-        #region RegionForTestingSpawnUnityWithFactory
-        RhiroUnitFactory ruf = new RhiroUnitFactory();
-        ruf.CreateUnit(new Vector3(10, 0, 27));
-        RoverUnitFactory rovuf = new RoverUnitFactory();
-        rovuf.CreateUnit(new Vector3(18, 0, 27));
-        FootSoldierUnitFactory fsuf = new FootSoldierUnitFactory();
-        fsuf.CreateUnit(new Vector3(14, 0, 27));
-        FlamerUnitFactory flameruf = new FlamerUnitFactory();
-        flameruf.CreateUnit(new Vector3(12,0,29));
+        //TODO.Delete test block of code
+        #region TestInit_TODELETE
+        StartGame(1);
         #endregion
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown("b"))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000))
-            {
-//                CitizenStructureFactory csf = new CitizenStructureFactory();
-//                csf.SpawnBaseStructure(StructureSettingsType.CitizenBaseStructure_level1, hit.point);
-            }
-        }
-        //TODELETE
-        #region RegionForTestingSpawnUnity
-        if (Input.GetKeyDown("["))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000))
-            {
-                RoverUnitFactory rover = new RoverUnitFactory();
-                rover.CreateUnit(hit.point);
-            }
-        }
-        if (Input.GetKeyDown("i"))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000))
-            {
-                RhiroUnitFactory rhino = new RhiroUnitFactory();
-                rhino.CreateUnit(hit.point);
-            }
-        }
-        if (Input.GetKeyDown("o"))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000))
-            {
+    #endregion
 
-                FootSoldierUnitFactory FS_Basic = new FootSoldierUnitFactory();
-                FS_Basic.CreateUnit(hit.point);
-            }
-        }
-        if (Input.GetKeyDown("p"))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000))
-            {
-                FlamerUnitFactory FS_Flamer = new FlamerUnitFactory();
-                FS_Flamer.CreateUnit(hit.point);
-            }
-        }
-        #endregion
+    public static GameManager GetGameManager()
+    {
+        return instance;
     }
 
-    // public void Start()
-    // {
-    // }
+    public void StartGame(int raceId)
+    {
+        //SceneManager.LoadScene("MainScene");
+        initGame += InstantiateMapManager;
+        if ((Race)raceId == Race.Citizen)
+        {
+            initGame += InitCitizenPlayer;
+        }else{
+            initGame += InitFermerPlayer;
+        }
+        initGame += InitResourceBoard;
+        updateClock = UpdateGameClock;
+    }
+    
+
+    #region SceneManagment
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name != "Menu"){
+            initGame.Invoke();
+        }
+    }
+    #endregion
+
+    void InstantiateMapManager()
+    {
+        MapManagerInstance = Instantiate(mapManagerPrefab, Vector3.zero, transform.rotation);
+    }
+
+    #region Player
+
+    void InstantiatePlayerManager()
+    {
+        players.Add(
+            Instantiate(playerPrefab, Vector3.zero, transform.rotation)
+        );
+    }
+
+    void InitCitizenPlayer()
+    {
+        InstantiatePlayerManager();
+        players.Last().playerRace = Race.Citizen;
+        players.Last().playerFactory = new CitizenStructureFactory(players.Last());
+        players.Last().startPoints = MapManagerInstance.getPlayerStart(players.Last().playerRace);
+    }
+
+    void InitFermerPlayer()
+    {
+        InstantiatePlayerManager();
+        players.Last().playerRace = Race.Fermer;
+        players.Last().playerFactory = new FermersStructureFactory(players.Last());
+        players.Last().startPoints = MapManagerInstance.getPlayerStart(players.Last().playerRace);
+    }
+
+    #endregion
 
 
+    #region MonoBehaviour
+    void Update()
+    {
+        if (updateClock != null)
+        {
+            updateClock.Invoke(Time.deltaTime);
+        }
+    }
+    #endregion
 
+    private void UpdateGameClock(float timeUpdate)
+    {
+        GameClock += timeUpdate;
+    }
 
+    #region Camera
+
+    void InitCamera()
+    {
+    }
+    
+
+    #endregion
+
+    #region HUD
+    //TODO.Rewrite hardcode setting player.Will works only when playing local with bots.
+    void InitResourceBoard()
+    {
+        
+        Transform ResourceHUDTransform = GameObject.FindGameObjectWithTag("HUD").transform;
+        GameObject ResHUD;
+        if (players[0].playerRace == Race.Citizen)
+        {
+            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceCitizenHUD"), ResourceHUDTransform);
+        }
+        else
+        {
+            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceFermerHUD"), ResourceHUDTransform);
+        }
+        ResourceHUD[] resources = ResHUD.GetComponentsInChildren<ResourceHUD>();
+        for (int it = 0; it < resources.Length; it++)
+        {
+            resources[it].SetPlayer(players[0]);
+        }
+        //Instantiate(ResourceBoard, Vector3.zero, transform.rotation);
+    }
+
+    #endregion
 }

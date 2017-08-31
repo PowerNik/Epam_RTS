@@ -44,7 +44,7 @@ public class TileGrid
 	private void ReceiveMapManager()
 	{
         //TODO.Rename class
-	    mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
+	    mapManager = GameManager.GetGameManager().MapManagerInstance;
 	}
 
 	private void CreateGrid(TileType tileType)

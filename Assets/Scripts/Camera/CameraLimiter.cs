@@ -27,9 +27,9 @@ public class CameraLimiter : MonoBehaviour
 	{
 		camera = GetComponent<Camera>();
         
-		limitRight = (float)GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapWidth / 2;
+		limitRight = (float)GameManager.GetGameManager().MapManagerInstance.MapWidth / 2;
 		limitLeft = -limitRight;
-		limitTop = (float)GameManagerBeforeMerge.GetGameManager().MapManagerInstance.MapLength / 2;
+		limitTop = (float)GameManager.GetGameManager().MapManagerInstance.MapLength / 2;
 		limitBot = -limitTop;
 	}
 

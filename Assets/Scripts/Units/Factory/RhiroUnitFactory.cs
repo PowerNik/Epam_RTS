@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RhiroUnitFactory : UnitFactory
 {
+    public RhiroUnitFactory(PlayerManager player) : base(player){ }
     public override Unit CreateUnit(Vector3 spawnPosition)
     {
         UnitSettings settings = GameManager.getUnitSettings(UnitType.Rhiro);

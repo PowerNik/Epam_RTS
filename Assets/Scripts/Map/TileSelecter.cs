@@ -17,7 +17,7 @@ public class TileSelecter : MonoBehaviour
 
 	void Start()
 	{
-		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
+		mapManager = GameManager.GetGameManager().MapManagerInstance;
 		tileSize = mapManager.TileSize;
 
 		selectedTile = Instantiate(selectedTilePrefab).transform;

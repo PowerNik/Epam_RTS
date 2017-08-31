@@ -53,9 +53,10 @@ public class MapManager : MonoBehaviour
 		lnmb.m_Size = new Vector3(200, 200, 200);
 
 		mapCreator = new MapCreator(mapSettings, go);
-		gridManager = GameManager.Instance.GetComponent<GridManager>();
+		//gridManager = GameManager.Instance.GetComponent<GridManager>();
+        gridManager = GameManager.GetGameManager().GetComponent<GridManager>();
 
-		TileGrid tileGrid = mapCreator.TileGrid;
+        TileGrid tileGrid = mapCreator.TileGrid;
 		gridManager.SetTileGrid(tileGrid);
 
 		TileCountX = tileGrid.countX;
@@ -71,6 +72,22 @@ public class MapManager : MonoBehaviour
 	{
 		return gridManager.IsBuildableTile(position);
 	}
+
+    public Vector3[] getPlayerStart(Race race)
+    {
+        Vector3[] citizenArray = new Vector3[1];
+        switch (race)
+        {
+            case Race.Citizen:
+                citizenArray[0] = mapCreator.CitizenBasePoint;
+                return citizenArray;
+            case Race.Fermer:
+                return mapCreator.FermerBasePoint;
+            default:
+                citizenArray[0] = Vector3.zero;
+                return citizenArray;
+        }
+    }
 
 	private void OnDrawGizmos()
 	{

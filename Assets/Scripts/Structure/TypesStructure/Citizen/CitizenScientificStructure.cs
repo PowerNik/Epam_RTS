@@ -3,6 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CitizenScientificStructure : ScientificStructure
+public class CitizenScientificStructure : Structure
 {
 }

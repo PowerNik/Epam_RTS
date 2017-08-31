@@ -9,8 +9,10 @@ public class BuildMainStructureAction : ActionBehaviour
     {
         return delegate ()
         {
-            //GetComponent<UnitContainer>().UnloadUnits();
-            //Get Player
+            Debug.Log("Button clicked");
+            PlayerManager playerOwner = GetComponent<Unit>().playerOwner;
+            playerOwner.SpawnStructure(StructuresTypes.BaseStructure, GetComponent<Unit>().gameObject.transform.position);
+            //playerOwner.playerFactory.SpawnBaseStructure(GetComponent<Unit>().gameObject.transform.position);
         };
     }
 }

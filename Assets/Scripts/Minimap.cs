@@ -16,9 +16,9 @@ public class Minimap : MonoBehaviour, IPointerClickHandler
         minimapCamera = GameObject.FindGameObjectWithTag("MinimapCamera").GetComponent<Camera>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         minimapImage = GetComponent<RawImage>();
-        Debug.Log(minimapImage.mainTexture.height);
-        Debug.Log(minimapImage.mainTexture.width);
-        Debug.Log("Camera height: " + minimapCamera.orthographicSize * 2);
+        //Debug.Log(minimapImage.mainTexture.height);
+        //Debug.Log(minimapImage.mainTexture.width);
+        //Debug.Log("Camera height: " + minimapCamera.orthographicSize * 2);
     }
 
     public void OnPointerClick(PointerEventData eventData)

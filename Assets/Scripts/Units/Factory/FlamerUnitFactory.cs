@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FlamerUnitFactory : UnitFactory {
+    public FlamerUnitFactory(PlayerManager player) : base(player){ }
     public override Unit CreateUnit(Vector3 spawnPosition)
     {
         UnitSettings settings = GameManager.getUnitSettings(UnitType.FootSoldier_Flamer);

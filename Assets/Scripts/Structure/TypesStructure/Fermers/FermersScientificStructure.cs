@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FermersScientificStructure : ScientificStructure
+public class FermersScientificStructure : Structure
 {
 
 }

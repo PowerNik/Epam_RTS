@@ -14,7 +14,7 @@ public class GridManager : MonoBehaviour
 
 	void Start()
 	{
-		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
+		mapManager = GameManager.GetGameManager().MapManagerInstance;
 		tileSize = mapManager.TileSize;
 	}
 

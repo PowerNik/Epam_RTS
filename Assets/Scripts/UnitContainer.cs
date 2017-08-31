@@ -11,10 +11,10 @@ public class UnitContainer : MonoBehaviour {
     void Start () {
 		
 	}
-
-    // Update is called once per frame
+    
     void Update()
     {
+        //TODO.Remove hardcode buttons
         if (Input.GetKeyDown(KeyCode.U) && GetComponent<Selectable>().Selected)
         {
             UnloadUnits();
