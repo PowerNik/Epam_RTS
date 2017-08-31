@@ -61,9 +61,9 @@ public class InfoPanel : MonoBehaviour {
         SelectedUnit = unit;
         GroupSelection.gameObject.SetActive(false);
         SingleSelection.gameObject.SetActive(true);
-        SingleSelection.Icon.sprite = unit.Icon;
-        SingleSelection.Name.text = unit.Name;
-        SingleSelection.Fraction.text = unit.Fraction.ToString();
+        SingleSelection.Icon.sprite = unit.Settings.Icon;
+        SingleSelection.Name.text = unit.Settings.Name;
+        SingleSelection.Fraction.text = unit.Settings.Fraction.ToString();
         SingleSelection.Health.text = unit.Health.ToString();
         SingleSelection.CurrentAction.text = unit.currentAction.ToString();
         foreach (var b in SingleSelection.ContainerPanel.GetComponentsInChildren<Button>())
@@ -75,8 +75,8 @@ public class InfoPanel : MonoBehaviour {
             foreach (var u in unit.GetComponent<UnitContainer>().UnitsInside)
             {
                 var go = Instantiate(UnitInGroupSelectionPrefab, SingleSelection.ContainerPanel.transform);
-                go.image.sprite = u.Icon;
-                go.GetComponentInChildren<Slider>().maxValue = u.MaxHealth;
+                go.image.sprite = u.Settings.Icon;
+                go.GetComponentInChildren<Slider>().maxValue = u.Settings.MaxHealth;
                 go.GetComponentInChildren<Slider>().value = u.Health;
                 go.onClick.AddListener(delegate ()
                 {
@@ -97,8 +97,8 @@ public class InfoPanel : MonoBehaviour {
         SingleSelection.gameObject.SetActive(false);
 
         var go = Instantiate(UnitInGroupSelectionPrefab, GroupSelection.transform);
-        go.image.sprite = unit.Icon;
-        go.GetComponentInChildren<Slider>().maxValue = unit.MaxHealth;
+        go.image.sprite = unit.Settings.Icon;
+        go.GetComponentInChildren<Slider>().maxValue = unit.Settings.MaxHealth;
         go.GetComponentInChildren<Slider>().value = unit.Health;
         go.onClick.AddListener(delegate ()
        {

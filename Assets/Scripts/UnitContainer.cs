@@ -11,7 +11,7 @@ public class UnitContainer : MonoBehaviour {
 
     public void LoadUnit(Unit unit)
     {
-        if (!unit.IsLoadable)
+        if (!unit.Settings.IsLoadable)
             return;
         if (UnitsInside.Count < capacity)
         {

@@ -22,6 +22,9 @@ public class UnitSettings {
     private string unitName;
     [SerializeField]
     private GameObject prefab;
+    [SerializeField]
+    private string[] AvaliableActions;
+
 
     //public List<UnityAction> AvaliableActions = new List<UnityAction>();
 

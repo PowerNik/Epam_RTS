@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -155,9 +156,9 @@ public class MouseManager : MonoBehaviour
                 holder.y = Screen.height - holder.y;
                 if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemy) && (u.GetComponent<Movable>() != null))
                 {
-                    if (selectedObjects.Contains(u))
-                        return;
-                    else
+        //            if (selectedObjects.Contains(u))
+        //                return;
+       //             else
                     {
                         selectedObjects.Add(u);
                         u.Select();
@@ -170,8 +171,7 @@ public class MouseManager : MonoBehaviour
     }
     private void OnGUI()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
+ //  
 
         var texture = new Texture2D(1, 1);
         texture.SetPixel(0, 0, new Color(0, 0, 0, 0.25f));
@@ -179,6 +179,8 @@ public class MouseManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             startPosX = Input.mousePosition.x;
             startPosY = Screen.height - Input.mousePosition.y;
             drawing = true;
