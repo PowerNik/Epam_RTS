@@ -12,7 +12,7 @@ public class Selectable : MonoBehaviour {
     {
         highlight = GetComponentInChildren<SpriteRenderer>();
     }
-
+     
     public void Select()
     {
         selected = true;

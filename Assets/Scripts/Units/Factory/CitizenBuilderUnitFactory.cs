@@ -10,16 +10,12 @@ public class CitizenBuilderUnitFactory : UnitFactory
         UnitSettings settings = GameManager.getUnitSettings(UnitType.CitizenBuilder);
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
-        unit.Health = settings.Health;
-        unit.Cost = settings.Cost;
-        unit.Fraction = settings.Fraction;
-        unit.IsLoadable = settings.IsLoadable;
-        unit.Icon = settings.Icon;
-        unit.name = settings.Name;
+        unit.Settings = settings;
         //Add actions
         newUnit.AddComponent<BuildMainStructureAction>();
 
         unit.playerOwner = this.playerOwner;
+        
         return unit;
     }
 }

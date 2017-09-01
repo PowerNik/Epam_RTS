@@ -8,28 +8,17 @@ public class UnitContainer : MonoBehaviour {
     int capacity;
     public int Capacity { get { return capacity; } set { capacity = value; } }
     public List<Unit> UnitsInside = new List<Unit>();
-    void Start () {
-		
-	}
-    
-    void Update()
-    {
-        //TODO.Remove hardcode buttons
-        if (Input.GetKeyDown(KeyCode.U) && GetComponent<Selectable>().Selected)
-        {
-            UnloadUnits();
-            print("units unloaded");
-        }
-    }
 
     public void LoadUnit(Unit unit)
     {
-        if (!unit.IsLoadable)
+        if (!unit.Settings.IsLoadable)
             return;
         if (UnitsInside.Count < capacity)
         {
             UnitsInside.Add(unit);
             unit.gameObject.SetActive(false);
+            unit.GetComponent<Selectable>().Deselect();
+            MouseManager.Current.SelectedObjects.Remove(unit.GetComponent<Selectable>());
         }
     }
 
@@ -41,5 +30,12 @@ public class UnitContainer : MonoBehaviour {
             unit.gameObject.SetActive(true);
         }
         UnitsInside.Clear();
+    }
+
+    public void UnloadUnit(Unit unit)
+    {
+        unit.transform.position = transform.position + new Vector3(Random.Range(0, 2f), 0, Random.Range(0, 2f));
+        unit.gameObject.SetActive(true);
+        UnitsInside.Remove(unit);
     }
 }

@@ -18,13 +18,11 @@ public class Movable : MonoBehaviour {
 
     float StoppingDistance = 1f;
 
-    // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = Speed;
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
         if (GetComponent<Unit>()!=null)
         GetComponent<Unit>().UnitAnimator.SetFloat("Speed", agent.velocity.magnitude);
@@ -32,6 +30,7 @@ public class Movable : MonoBehaviour {
         {
             agent.isStopped = true;
             isMoving = false;
+            GetComponent<Unit>().currentAction = Unit.CurrentAction.DoingNothing;
         }
 
         if (ApproachingContainer && Vector3.Distance(Container.transform.position, transform.position) < 2)
@@ -49,6 +48,7 @@ public class Movable : MonoBehaviour {
         agent.isStopped = false;
         agent.SetDestination(target);
         isMoving = true;
+        GetComponent<Unit>().currentAction = Unit.CurrentAction.MovingToTarget;
     }
 
     public void ApproachContainer(UnitContainer container)

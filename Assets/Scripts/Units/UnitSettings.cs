@@ -7,11 +7,11 @@ public class UnitSettings {
 
     // Игровые переменные
     [SerializeField]
-    private string name;
+    private string unitName;
     [SerializeField]
     private UnitType type;
     [SerializeField]
-    private float health;
+    private float maxHealth;
     [SerializeField]
     private float cost;
     [SerializeField]
@@ -23,6 +23,9 @@ public class UnitSettings {
     
     [SerializeField]
     private GameObject prefab;
+    [SerializeField]
+    private string[] AvaliableActions;
+
 
     //public List<UnityAction> AvaliableActions = new List<UnityAction>();
 
@@ -43,11 +46,11 @@ public class UnitSettings {
         }
     }
 
-    public float Health
+    public float MaxHealth
     {
         get
         {
-            return health;
+            return maxHealth;
         }
     }
 
@@ -87,7 +90,7 @@ public class UnitSettings {
     {
         get
         {
-            return name;
+            return unitName;
         }
     }
 
