@@ -27,7 +27,7 @@ public class InfoPanel : MonoBehaviour {
         {
             if (timeWaited >= 0.5f)
             {
-				if (SelectedUnit != null)
+				if (SelectedUnit)
 				{
 					SingleSelection.Health.text = SelectedUnit.Health.ToString();
 					SingleSelection.CurrentAction.text = SelectedUnit.currentAction.ToString();
@@ -119,11 +119,13 @@ public class InfoPanel : MonoBehaviour {
 
     public void RemoveUnitFromGroupSelection(Unit unit)
     {
-        GroupSelection.gameObject.SetActive(true);
-        SingleSelection.gameObject.SetActive(false);
+		if(GroupSelection)
+			GroupSelection.gameObject.SetActive(true);
+		if (SingleSelection)
+			SingleSelection.gameObject.SetActive(false);
         Button b;
         GroupSelection.SelectedUnits.TryGetValue(unit, out b);
-		if(b != null)
+		if(b)
 			Destroy(b.gameObject);
         GroupSelection.SelectedUnits.Remove(unit);
     }
@@ -134,13 +136,13 @@ public class InfoPanel : MonoBehaviour {
         {
             Button b;
             GroupSelection.SelectedUnits.TryGetValue(pair.Key, out b);
-			if(b != null)
+			if(b)
                 Destroy(b.gameObject);
         }
         GroupSelection.SelectedUnits.Clear();
-		if(GroupSelection != null)
+		if(GroupSelection)
 			GroupSelection.gameObject.SetActive(false);
-		if (SingleSelection != null)
+		if (SingleSelection)
 			SingleSelection.gameObject.SetActive(false);
 
     }
