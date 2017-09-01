@@ -79,7 +79,7 @@ public class MapManager : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit))
 		{
-			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 5, 3);
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, Race.Fermer);
 		}
 	}
 
@@ -94,14 +94,17 @@ public class MapManager : MonoBehaviour
 		return gridManager.GetTilePos(position);
 	}
 
-	public bool IsBuildableTile(Vector3 position)
+	public bool IsBuildableTile(Vector3 position, Race race)
 	{
-		return gridManager.IsBuildableTile(position);
+		return gridManager.IsBuildableTile(position, race);
 	}
 
-	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ)
+	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ);
+		// TODO Nik Cнять заглушку
+		// 01.09.17. Сейчас недопилена постройка для горожан
+		// Поэтому стоит заглушка
+		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, Race.Fermer);
 	}
 
 	public Vector3 GetCitizenBasePoint()

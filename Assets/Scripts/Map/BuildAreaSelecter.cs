@@ -7,86 +7,95 @@ public class BuildAreaSelecter : MonoBehaviour
 	public Material unbuildableTileMat;
 	public GameObject selectedTilePrefab;
 
-	private Transform buildingArea;
+	private Transform buildArea;
 	private Vector3 defaultPosition = new Vector3(0, -100, 0);
 
 	private MapManager mapManager;
 	private float tileSize;
 
 	// Число тайлов под макет здания
-	private int selectedAreaCountX;
-	private int selectAreaCountZ;
+	private int tileCountX;
+	private int tileCountZ;
 
 	void Start()
 	{
 		mapManager = GameManagerBeforeMerge.GetGameManager().MapManagerInstance;
 		tileSize = mapManager.TileSize;
 
-		buildingArea = new GameObject().transform;
-		buildingArea.name = "BuildingArea";
-		buildingArea.position = defaultPosition;
+		buildArea = new GameObject().transform;
+		buildArea.name = "BuildingArea";
+		buildArea.position = defaultPosition;
 	}
 
-	public bool SelectBuildArea(Vector3 pos, float areaSizeX, float areaSizeZ)
+	public bool SelectBuildArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		if (buildingArea.position == defaultPosition)
+		if (buildArea.position == defaultPosition)
 		{
-			CreateBuildArea(areaSizeX, areaSizeZ);
-			PlaceBuildArea();
+			CreateTiles(areaSizeX, areaSizeZ);
+			PlaceTilesOnBuildArea();
 		}
 
-		buildingArea.position = pos;
-		return AreaRevision();
+		buildArea.position = pos;
+		return BuildAreaRevision(race);
 	}
 
-	private void CreateBuildArea(float xSize, float zSize)
+	private void CreateTiles(float xSize, float zSize)
 	{
-		selectedAreaCountX = (int)(xSize / tileSize) + 1;
-		selectAreaCountZ = (int)(zSize / tileSize) + 1;
+		tileCountX = CalculateTileCount(xSize);
+		tileCountZ = CalculateTileCount(zSize);
 
-		if (selectedAreaCountX % 2 == 0)
-		{
-			buildingArea.position -= Vector3.left * tileSize / 2f;
-		}
-
-		if (selectAreaCountZ % 2 == 0)
-		{
-			buildingArea.position += Vector3.forward * tileSize / 2f;
-		}
-
-		for (int i = 0; i < selectedAreaCountX * selectAreaCountZ; i++)
+		for (int i = 0; i < tileCountX * tileCountZ; i++)
 		{
 			GameObject go = Instantiate(selectedTilePrefab);
-			go.transform.parent = buildingArea.transform;
+			go.transform.parent = buildArea.transform;
 			go.transform.localScale *= tileSize;
 		}
 	}
 
-	private void PlaceBuildArea()
+	private int CalculateTileCount(float size)
 	{
-		for (int x = 0; x < selectedAreaCountX; x++)
-		{
-			for (int z = 0; z < selectAreaCountZ; z++)
-			{
-				Vector3 parentPos = buildingArea.position;
-				Vector3 dX = x * Vector3.left * tileSize;
-				Vector3 dZ = z * Vector3.forward * tileSize;
+		int count = (int)(size / tileSize);
 
-				buildingArea.GetChild(x * selectAreaCountZ + z).transform.position = parentPos - dX + dZ;
+		if (size % tileSize != 0)
+		{
+			count++;
+		}
+
+		if (count % 2 == 0)
+		{
+			count++;
+		}
+
+		return count;
+	}
+
+	private void PlaceTilesOnBuildArea()
+	{
+		for (int x = 0; x < tileCountX; x++)
+		{
+			for (int z = 0; z < tileCountZ; z++)
+			{
+				Vector3 parentPos = buildArea.position;
+				Vector3 dX = (x - tileCountX / 2) * Vector3.left * tileSize;
+				Vector3 dZ = (z - tileCountZ / 2) * Vector3.forward * tileSize;
+
+				buildArea.GetChild(x * tileCountZ + z).transform.position = parentPos - dX + dZ;
 			}
 		}
 	}
 
-	private bool AreaRevision()
+	private bool BuildAreaRevision(Race race)
 	{
 		bool isBuildableArea = true;
 
-		for (int i = 0; i < buildingArea.childCount; i++)
+		// TODO Nik
+		// Читать из mapManager массив тайлов/булов нужного размера
+		for (int i = 0; i < buildArea.childCount; i++)
 		{
-			Renderer rend = buildingArea.GetChild(i).gameObject.GetComponent<Renderer>();
+			Renderer rend = buildArea.GetChild(i).gameObject.GetComponent<Renderer>();
 			rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
 
-			if (!mapManager.IsBuildableTile(buildingArea.GetChild(i).transform.position))
+			if (!mapManager.IsBuildableTile(buildArea.GetChild(i).transform.position, race))
 			{
 				rend.sharedMaterial = unbuildableTileMat;
 				isBuildableArea = false;
@@ -98,14 +107,14 @@ public class BuildAreaSelecter : MonoBehaviour
 
 	public void DeselectBuildArea()
 	{
-		if (buildingArea.transform.childCount > 0)
+		if (buildArea.transform.childCount > 0)
 		{
-			foreach (Transform child in buildingArea.transform)
+			foreach (Transform child in buildArea.transform)
 			{
 				Destroy(child.gameObject);
 			}
 		}
 
-		buildingArea.position = defaultPosition;
+		buildArea.position = defaultPosition;
 	}
 }

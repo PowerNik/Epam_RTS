@@ -116,7 +116,7 @@ public class GridManager
 		return false;
 	}
 
-	public bool IsBuildableTile(Vector3 position)
+	public bool IsBuildableTile(Vector3 position, Race race)
 	{
 		int x = (int)((position.x - position.x % tileSize) / tileSize);
 		int z = (int)((position.z - position.z % tileSize) / tileSize);
@@ -126,7 +126,7 @@ public class GridManager
 			return false;
 		}
 
-		return allTileDict[tileGrid[x, z]].IsAllowBuild(Race.Fermer);
+		return allTileDict[tileGrid[x, z]].IsAllowBuild(race);
 	}
 }
 
