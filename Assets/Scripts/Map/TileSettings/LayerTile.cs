@@ -18,9 +18,9 @@ public class LayerTile
 	private LandscapeSettings landscapeSets;
 
 
-	public LayerTile(TileType tileType, LayerType LayerType, Allows allows)
+	public LayerTile(TileType tileType, LayerType layerType = LayerType.Ground)
 	{
-		tile = new Tile(tileType, LayerType, allows);
+		tile = new Tile(tileType, layerType);
 	}
 
 	public LayerType GetLayerType()

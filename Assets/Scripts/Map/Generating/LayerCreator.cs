@@ -29,7 +29,7 @@ public class LayerCreator
 		CreateLayer(LayerType.Ground);
 		CreateLayer(LayerType.Water);
 
-		//TODO
+		//TODO Nik
 		int border = 2;//layerTileSets.mountainBorderWidth;
 		CreateLayer(LayerType.Mountain, border);
 	}

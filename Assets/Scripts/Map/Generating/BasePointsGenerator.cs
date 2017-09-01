@@ -7,7 +7,8 @@ public class BasePointsGenerator
 	public Vector3 CitizenBasePoint { get; private set; }
 	public Vector3[] FermerBasePoints { get; private set; }
 
-	private BasePointsSettings basePointSets;
+	private BasePointSettings basePointSets;
+	private SectorSettings sectorSets;
 	public LayerType[,] LayerGrid { get; private set; }
 
 	private int tileCountX;
@@ -16,7 +17,8 @@ public class BasePointsGenerator
 
 	public BasePointsGenerator(MapSettingsManagerSO mapSetsManager)
 	{
-		basePointSets = mapSetsManager.GetBasePointsSettings();
+		basePointSets = mapSetsManager.GetMainPointsSettings().GetBasePointSettings();
+		sectorSets = mapSetsManager.GetMainPointsSettings().GetBaseSectorSettings();
 
 		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		tileCountX = mapSizeSets.TileCountX;
@@ -28,7 +30,7 @@ public class BasePointsGenerator
 	{
 		LayerGrid = layerGrid;
 
-		int[,] sectors = new int[basePointSets.sectorsAtX, basePointSets.sectorsAtZ];
+		int[,] sectors = new int[sectorSets.countX, sectorSets.countZ];
 
 		sectors = SectoringCitizenBasePoint(sectors);
 		sectors = SectoringFermerBasePoints(sectors);
@@ -40,13 +42,13 @@ public class BasePointsGenerator
 
 	private int[,] SectoringCitizenBasePoint(int[,] sectors)
 	{
-		int seedHash = basePointSets.seed.GetHashCode();
+		int seedHash = sectorSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int xCoord;
 		int zCoord;
 
-		if (basePointSets.isCitizenAtCenter)
+		if (basePointSets.GetIsCenter())
 		{
 			List<KeyValuePair<int, int>> centerCoordXZ = CalculateCenterSectors();
 			int centerIndex = pseudoRandom.Next(0, centerCoordXZ.Count);
@@ -56,8 +58,8 @@ public class BasePointsGenerator
 		}
 		else
 		{
-			xCoord = pseudoRandom.Next(0, basePointSets.sectorsAtX);
-			zCoord = pseudoRandom.Next(0, basePointSets.sectorsAtZ);
+			xCoord = pseudoRandom.Next(0, sectorSets.countX);
+			zCoord = pseudoRandom.Next(0, sectorSets.countZ);
 		}
 
 		sectors[xCoord, zCoord] = 1;
@@ -67,8 +69,8 @@ public class BasePointsGenerator
 	private List<KeyValuePair<int, int>> CalculateCenterSectors()
 	{
 		// Диапазон номеров секторов для баз горожан
-		int[] xIndices = CalculateCenter(basePointSets.sectorsAtX);
-		int[] zIndices = CalculateCenter(basePointSets.sectorsAtZ);
+		int[] xIndices = CalculateCenter(sectorSets.countX);
+		int[] zIndices = CalculateCenter(sectorSets.countZ);
 
 		List<KeyValuePair<int, int>> coordValuePairs = new List<KeyValuePair<int, int>>();
 		for (int x = 0; x < xIndices.Length; x++)
@@ -103,21 +105,21 @@ public class BasePointsGenerator
 
 	private int[,] SectoringFermerBasePoints(int[,] sectors)
 	{
-		int seedHash = basePointSets.seed.GetHashCode();
+		int seedHash = sectorSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int xCoord;
 		int zCoord;
 
-		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
+		for (int i = 0; i < basePointSets.GetBasePoints(Race.Fermer).Length; i++)
 		{
 			while (true)
 			{
-				int val = pseudoRandom.Next(0, basePointSets.sectorsAtX * basePointSets.sectorsAtZ * 10);
-				val = val % (basePointSets.sectorsAtX * basePointSets.sectorsAtZ);
+				int val = pseudoRandom.Next(0, sectorSets.countX * sectorSets.countZ * 10);
+				val = val % (sectorSets.countX * sectorSets.countZ);
 
-				xCoord = val / basePointSets.sectorsAtZ;
-				zCoord = val % basePointSets.sectorsAtZ;
+				xCoord = val / sectorSets.countZ;
+				zCoord = val % sectorSets.countZ;
 
 				if (sectors[xCoord, zCoord] == 0)
 				{
@@ -131,19 +133,19 @@ public class BasePointsGenerator
 
 	private void PlaceCitizenBasePointOnMap(int[,] sectors)
 	{
-		int seedHash = basePointSets.seed.GetHashCode();
+		int seedHash = sectorSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = tileCountX / basePointSets.sectorsAtX;
-		int sectorLength = tileCountZ / basePointSets.sectorsAtZ;
+		int sectorWidth = tileCountX / sectorSets.countX;
+		int sectorLength = tileCountZ / sectorSets.countZ;
 
 		// Размещение в центре сектора + сдвиг
 		int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
 		int zCoord = sectorLength / 2 + pseudoRandom.Next(-sectorLength / 4, sectorLength / 4);
 
-		for (int x = 0; x < basePointSets.sectorsAtX; x++)
+		for (int x = 0; x < sectorSets.countX; x++)
 		{
-			for (int z = 0; z < basePointSets.sectorsAtZ; z++)
+			for (int z = 0; z < sectorSets.countZ; z++)
 			{
 				if (sectors[x, z] == 1)
 				{
@@ -157,21 +159,21 @@ public class BasePointsGenerator
 
 	private void PlaceFermerBasePointsOnMap(int[,] sectors)
 	{
-		int seedHash = basePointSets.seed.GetHashCode();
+		int seedHash = sectorSets.seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = tileCountX / basePointSets.sectorsAtX;
-		int sectorLength = tileCountZ / basePointSets.sectorsAtZ;
+		int sectorWidth = tileCountX / sectorSets.countX;
+		int sectorLength = tileCountZ / sectorSets.countZ;
 
-		FermerBasePoints = new Vector3[basePointSets.fermerBases.Length];
+		FermerBasePoints = new Vector3[basePointSets.GetBasePoints(Race.Fermer).Length];
 		bool isSetBase = false;
 
-		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
+		for (int i = 0; i < FermerBasePoints.Length; i++)
 		{
 			isSetBase = false;
-			for (int x = 0; x < basePointSets.sectorsAtX; x++)
+			for (int x = 0; x < sectorSets.countX; x++)
 			{
-				for (int z = 0; z < basePointSets.sectorsAtZ; z++)
+				for (int z = 0; z < sectorSets.countZ; z++)
 				{
 					if (sectors[x, z] == 2 && isSetBase == false)
 					{
@@ -192,12 +194,12 @@ public class BasePointsGenerator
 
 	private void SetBasePointsArea()
 	{
-		SetAreaParams((int)(basePointSets.citizenBaseSize / tileSize), CitizenBasePoint);
+		SetAreaParams((int)(basePointSets.GetBasePoints(Race.Citizen)[0].GetDomainSettings().mainRadius / tileSize), CitizenBasePoint);
 		CitizenBasePoint *= tileSize;
 
-		for (int i = 0; i < basePointSets.fermerBases.Length; i++)
+		for (int i = 0; i < basePointSets.GetBasePoints(Race.Fermer).Length; i++)
 		{
-			SetAreaParams((int)(basePointSets.fermerBases[i] / tileSize), FermerBasePoints[i]);
+			SetAreaParams((int)(basePointSets.GetBasePoints(Race.Fermer)[i].GetDomainSettings().mainRadius / tileSize), FermerBasePoints[i]);
 			FermerBasePoints[i] *= tileSize;
 		}
 	}

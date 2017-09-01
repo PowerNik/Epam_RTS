@@ -9,10 +9,11 @@ public class MapSettingsManagerSO : ScriptableObject
 	private MapSizeSettingsSO mapSizeSettings;
 
 	[SerializeField]
-	private HeightMapSettingsSO heightMapSettings;
+	private MainPointsSettingsSO mainPointsSettings;
+
 
 	[SerializeField]
-	private BasePointsSettingsSO basePointsSettings;
+	private HeightMapSettingsSO heightMapSettings;
 
 	[SerializeField]
 	private LayerTileSettingsSO layerTileSettings;
@@ -26,23 +27,20 @@ public class MapSettingsManagerSO : ScriptableObject
 	[SerializeField]
 	private DecorationSettingsSO decorationSettings;
 
-	[SerializeField]
-	private ResourceSettingsSO resourceSettings;
-
 
 	public MapSizeSettings GetMapSizeSettings()
 	{
 		return mapSizeSettings.GetMapSizeSettings();
 	}
 
+	public MainPointsSettingsSO GetMainPointsSettings()
+	{
+		return mainPointsSettings;
+	}
+
 	public HeightMapSettings GetHeightMapSettings()
 	{
 		return heightMapSettings.GetHeightMapSettings();
-	}
-
-	public BasePointsSettings GetBasePointsSettings()
-	{
-		return basePointsSettings.GetBasePointsSettings();
 	}
 
 	public LayerTileSettings GetLayerTileSettings()
@@ -63,10 +61,5 @@ public class MapSettingsManagerSO : ScriptableObject
 	public DecorationSettings[] GetDecorationSettings()
 	{
 		return decorationSettings.GetDecorationSettings();
-	}
-
-	public ResourceSettings GetResourceSettings()
-	{
-		return resourceSettings.GetResourceSettings();
 	}
 }

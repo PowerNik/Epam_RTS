@@ -10,6 +10,8 @@ public class Tile
 
 	[SerializeField]
 	private Material defaultMaterial;
+	private Material newMaterial;
+
 	[SerializeField]
 	private GameObject scenery;
 	[SerializeField]
@@ -17,15 +19,15 @@ public class Tile
 
 	private Allows allows;
 
-	private Material newMaterial;
 
-
-	public Tile(TileType tileType, LayerType layerType, Allows allows)
+	public Tile(TileType tileType, LayerType layerType)
 	{
 		this.tileType = tileType;
 		this.layerType = layerType;
-		this.allows = allows;
+		allows = AllowsSettings.GetAllow(tileType);
 	}
+
+
 
 	public LayerType GetLayerType()
 	{
@@ -35,6 +37,22 @@ public class Tile
 	public TileType GetTileType()
 	{
 		return tileType;
+	}
+
+	public void SetDefaultMaterial(Material mat)
+	{
+		if(defaultMaterial == null)
+		{
+			defaultMaterial = mat;
+		}
+	}
+
+	public void SetNewMaterial(Material mat)
+	{
+		if((allows.allowDecorate & AllowDecorateType.Texturing) == AllowDecorateType.Texturing)
+		{
+			newMaterial = mat;
+		}
 	}
 
 	public Material GetMaterial()
@@ -64,10 +82,9 @@ public class Tile
 		return (allows.allowDecorate & AllowDecorateType.Dynamic) == AllowDecorateType.Dynamic;
 	}
 
-	//TODO Nik
-	public bool IsAllowBuild(bool isCitizen)
+	public bool IsAllowBuild(Race race)
 	{
-		if (isCitizen)
+		if (race == Race.Citizen)
 		{
 			return (allows.allowBuild & AllowBuildType.Citizen) == AllowBuildType.Citizen;
 		}
@@ -77,10 +94,9 @@ public class Tile
 		}
 	}
 
-	//TODO Nik
-	public bool IsAllowExtract(bool isCitizen)
+	public bool IsAllowExtract(Race race)
 	{
-		if (isCitizen)
+		if (race == Race.Citizen)
 		{
 			return (allows.allowExtract & AllowExtractType.Citizen) == AllowExtractType.Citizen;
 		}
@@ -106,6 +122,7 @@ public class Tile
 		dynamic = null;
 	}
 
+	//TODO Nik
 	public static Tile operator +(Tile left, Tile right)
 	{
 		if (left.layerType != right.layerType)

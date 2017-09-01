@@ -84,7 +84,7 @@ public class GridManager
 			for (int z = 0; z < tileCountZ; z++)
 			{
 				// Обрамление происходит только на земле
-				if (tileGrid[x, z] == TileType.LayerGround)
+				if (tileGrid[x, z] == TileType.GroundLayer)
 				{
 					if (IsNearestTilesHasType(x, z, areaType))
 					{
@@ -126,7 +126,7 @@ public class GridManager
 			return false;
 		}
 
-		return allTileDict[tileGrid[x, z]].IsAllowBuild(false);
+		return allTileDict[tileGrid[x, z]].IsAllowBuild(Race.Fermer);
 	}
 }
 

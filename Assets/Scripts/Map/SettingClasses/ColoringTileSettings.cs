@@ -5,5 +5,5 @@ using UnityEngine;
 [System.Serializable]
 public class ColoringTileSettings
 {
-	// TODO
+	// TODO Nik
 }

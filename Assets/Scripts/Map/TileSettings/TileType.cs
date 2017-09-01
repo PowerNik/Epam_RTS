@@ -1,18 +1,21 @@
 ﻿
 public enum TileType
 {
-	LayerGround = 0,
-	LayerWater = 1,
-	LayerMountains = 2,
+	GroundLayer = 0,
+	WaterLayer = 1,
+	MountainsLayer = 2,
 
 	FramingWaterSide = 10,
 	FramingFoothill = 11,
 
-	BaseCitizen = 20,
-	BaseFermers = 21,
+	CitizenBasePoint = 20,
+	FermersBasePoint = 21,
 
-	ResourceCitizen = 30,
-	ResoucreFermers = 31,
+	CitizenExtractPoint = 30,
+	FermersExtractPoint = 31,
 
-	SpawnNeuntrals = 40,
+	PeacefulNeuntralsPoint = 40,
+	AggressiveNeuntralsPoint = 41,
+
+	TradePoint = 50,
 }

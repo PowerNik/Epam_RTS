@@ -39,7 +39,7 @@ public class TileGrid
 		{
 			for (int z = 0; z < countZ; z++)
 			{
-				Grid[x, z] = TileType.LayerGround;
+				Grid[x, z] = TileType.GroundLayer;
 			}
 		}
 	}

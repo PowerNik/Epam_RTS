@@ -12,7 +12,7 @@ public class FramingTile
 
 	public FramingTile(TileType tileType, LayerType bandedLayerType)
 	{
-		tile = new Tile(tileType, LayerType.Ground, AllowsSettings.Framing);
+		tile = new Tile(tileType, LayerType.Ground);
 		this.bandedLayerType = bandedLayerType;
 	}
 
