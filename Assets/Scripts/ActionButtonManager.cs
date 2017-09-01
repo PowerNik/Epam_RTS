@@ -16,7 +16,7 @@ public class ActionButtonManager : MonoBehaviour {
     public void ClearButtons()
     {
         foreach (var button in Buttons)
-        
+        if(button != null)
             button.gameObject.SetActive(false);
 
             actionCalls.Clear();
