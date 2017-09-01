@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 430cb8bb77e2492469dde5647b43ec2d
+timeCreated: 1504263450
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - BasePointSettings: {fileID: 11400000, guid: 5a5912ca48f8f884dae3b5e3ad3e0200,
+      type: 2}
+  - ExtractPointSettings: {fileID: 11400000, guid: 7848d748eaaba7b4a9eec776d9c7ba19,
+      type: 2}
+  - NeutralSpawnSettings: {fileID: 11400000, guid: 75c4516aa3497fc44ae0f9d1df159ddd,
+      type: 2}
+  - TradePointSettings: {fileID: 11400000, guid: 22b9bb48b0dfd324d841c18958bc9392,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

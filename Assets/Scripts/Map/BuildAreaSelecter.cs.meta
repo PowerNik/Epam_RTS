@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6f92d3527c178ef4e82877f951fdafb5
+timeCreated: 1503753363
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - unbuildableTileMat: {fileID: 2100000, guid: 3f36c88af3b942f46ac169716c68ec7f,
+      type: 2}
+  - selectedTilePrefab: {fileID: 1276964416665052, guid: 84adf0460efd7ac46b12fb5bf648a785,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

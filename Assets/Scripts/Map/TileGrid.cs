@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class TileGrid
 {
-	/// <summary>
-	/// X count
-	/// </summary>
 	public int countX { get; private set; }
 
-	/// <summary>
-	/// Z count
-	/// </summary>
 	public int countZ { get; private set; }
 
 	public TileType[,] Grid { get; private set; }
@@ -28,46 +22,25 @@ public class TileGrid
 		}
 	}
 
-	private TileType[] tileTypes;
-	private MapManager mapManager;
 
-
-	public TileGrid(int countX, int countZ, TileType defaultTileType = TileType.Ground)
+	public TileGrid(int countX, int countZ)
 	{
 		this.countX = countX;
 		this.countZ = countZ;
 
-		ReceiveMapManager();
-		CreateGrid(defaultTileType);
+		CreateGrid();
 	}
 
-	private void ReceiveMapManager()
+	private void CreateGrid()
 	{
-	    mapManager = GameManager.GetGameManager().MapManagerInstance;
-	}
-
-	private void CreateGrid(TileType tileType)
-	{
-		ReceiveTileTypes();
-
 		Grid = new TileType[countX, countZ];
 
 		for (int x = 0; x < countX; x++)
 		{
 			for (int z = 0; z < countZ; z++)
 			{
-				Grid[x, z] = tileType;
+				Grid[x, z] = TileType.GroundLayer;
 			}
 		}
-	}
-
-	private void ReceiveTileTypes()
-	{
-		tileTypes = mapManager.GetTileTypes();
-	}
-
-	public void SetTileType(int x, int z, TileType type)
-	{
-		Grid[x, z] = type;
 	}
 }

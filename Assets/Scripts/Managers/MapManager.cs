@@ -12,95 +12,108 @@ public class MapManager : MonoBehaviour
 	public float TileSize { get; private set; }
 
 	[SerializeField]
-	private TileSettingsSO tileSettings;
-
-	public TileType[] GetTileTypes()
-	{
-		return tileSettings.GetTileTypes();
-	}
-
-	public Tile[] GetTiles()
-	{
-		return tileSettings.GetAllSettings();
-	}
-
-
-	[SerializeField]
-	private MapSettingsSO mapSettings;
-
-	[SerializeField]
-	private GameObject prefabMap;
+	private MapSettingsManagerSO mapSetsManager;
 
 	private GridManager gridManager;
 	private MapCreator mapCreator;
-	private MapGeneratorSettings genSets;
+	private MapSizeSettings mapSizeSets;
+
+	private BuildAreaSelecter buildAreaSelecter;
 
 	private void Awake()
 	{
-		genSets = mapSettings.GetMapGeneratorSettings();
+		SetParams();
+		CreateMap();
 
-		MapWidth = genSets.width;
-		MapLength = genSets.length;
-		TileSize = genSets.tileSize;
+		buildAreaSelecter = gameObject.AddComponent<BuildAreaSelecter>();
 	}
 
-	private void Start()
+	private void SetParams()
 	{
-		GameObject go = Instantiate(prefabMap);
+		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 
-		go.AddComponent<LocalNavMeshBuilder>();
-		LocalNavMeshBuilder lnmb = go.GetComponent<LocalNavMeshBuilder>();
-		lnmb.m_Size = new Vector3(200, 200, 200);
-
-		mapCreator = new MapCreator(mapSettings, go);
-        gridManager = GameManager.GetGameManager().GetComponent<GridManager>();
-
-        TileGrid tileGrid = mapCreator.TileGrid;
-		gridManager.SetTileGrid(tileGrid);
-
-		TileCountX = tileGrid.countX;
-		TileCountZ = tileGrid.countZ;
+		MapWidth = mapSizeSets.width;
+		MapLength = mapSizeSets.length;
+		TileSize = mapSizeSets.tileSize;
+		TileCountX = mapSizeSets.TileCountX;
+		TileCountZ = mapSizeSets.TileCountZ;
 	}
+
+	private void CreateMap()
+	{
+		mapCreator = new MapCreator(mapSetsManager);
+		gridManager = new GridManager(mapSetsManager);
+		gridManager.SetLayerMap(mapCreator.LayerGrid, mapSetsManager.GetLayerTileSettings());
+		gridManager.SetAllFramingTiles(mapSetsManager.GetFramingTileSettings().GetFramingTilePairs());
+
+		GameObject mapGO = new GameObject();
+		mapGO.name = "Map";
+
+		CreateNavMesh(mapGO);
+		mapCreator.CreateMapMesh(mapGO);
+	}
+
+	private void CreateNavMesh(GameObject mapGO)
+	{
+		GameObject mapNavMesh = new GameObject();
+		mapNavMesh.transform.parent = mapGO.transform;
+		mapNavMesh.name = "LocalNavMeshBuilder";
+
+		LocalNavMeshBuilder lnmb = mapNavMesh.AddComponent<LocalNavMeshBuilder>();
+		lnmb.transform.position += new Vector3(MapWidth / 2, 0, MapLength / 2);
+		lnmb.m_Size = new Vector3(MapWidth, 20, MapLength);
+	}
+
+	#region FOR TEST selecting buildArea
+	private void Update()
+	{
+		if (Input.GetKey(KeyCode.Alpha1))
+			SelectArea();
+		if (Input.GetKeyUp(KeyCode.Alpha1))
+			DeselectArea();
+	}
+
+	public void SelectArea()
+	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit))
+		{
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, Race.Fermer);
+		}
+	}
+
+	public void DeselectArea()
+	{
+		buildAreaSelecter.DeselectBuildArea();
+	}
+	#endregion
 
 	public Vector3 GetTilePos(Vector3 position)
 	{
 		return gridManager.GetTilePos(position);
 	}
 
-	public bool IsBuildableTile(Vector3 position)
+	public bool IsBuildableTile(Vector3 position, Race race)
 	{
-		return gridManager.IsBuildableTile(position);
+		return gridManager.IsBuildableTile(position, race);
 	}
 
-    public Vector3[] getPlayerStart(Race race)
-    {
-        Vector3[] citizenArray = new Vector3[1];
-        switch (race)
-        {
-            case Race.Citizen:
-                citizenArray[0] = mapCreator.CitizenBasePoint;
-                return citizenArray;
-            case Race.Fermer:
-                return mapCreator.FermerBasePoint;
-            default:
-                citizenArray[0] = Vector3.zero;
-                return citizenArray;
-        }
-    }
-
-	private void OnDrawGizmos()
+	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		if(mapCreator == null)
-		{
-			return;
-		}
+		// TODO Nik Cнять заглушку
+		// 01.09.17. Сейчас недопилена постройка для горожан
+		// Поэтому стоит заглушка
+		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, Race.Fermer);
+	}
 
-		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(mapCreator.CitizenBasePoint, 5);
+	public Vector3 GetCitizenBasePoint()
+	{
+		return mapCreator.CitizenBasePoint;
+	}
 
-		Gizmos.color = Color.green;
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[0], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[1], 5);
-		Gizmos.DrawSphere(mapCreator.FermerBasePoint[2], 5);
+	public Vector3[] GetFermerBasePoints()
+	{
+		return mapCreator.FermerBasePoints;
 	}
 }

@@ -137,7 +137,9 @@ public class GameManager : MonoBehaviour
         InstantiatePlayerManager();
         players.Last().playerRace = Race.Citizen;
         players.Last().playerFactory = new CitizenStructureFactory(players.Last());
-        players.Last().startPoints = MapManagerInstance.getPlayerStart(players.Last().playerRace);
+        Vector3[] citizenStartPoint = new Vector3[1];
+        citizenStartPoint[0] = MapManagerInstance.GetCitizenBasePoint();
+        players.Last().startPoints = citizenStartPoint;
     }
 
     void InitFermerPlayer()
@@ -145,7 +147,7 @@ public class GameManager : MonoBehaviour
         InstantiatePlayerManager();
         players.Last().playerRace = Race.Fermer;
         players.Last().playerFactory = new FermersStructureFactory(players.Last());
-        players.Last().startPoints = MapManagerInstance.getPlayerStart(players.Last().playerRace);
+        players.Last().startPoints = MapManagerInstance.GetFermerBasePoints();
     }
 
     #endregion

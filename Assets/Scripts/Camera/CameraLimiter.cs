@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraLimiter : MonoBehaviour
 {
-	private Camera camera;
+	private Camera myCamera;
 
 	private Vector3 worldLeftDown;
 	private Vector3 worldLeftUp;
@@ -25,37 +25,37 @@ public class CameraLimiter : MonoBehaviour
 
 	void Start()
 	{
-		camera = GetComponent<Camera>();
+		myCamera = GetComponent<Camera>();
         
-		limitRight = (float)GameManager.GetGameManager().MapManagerInstance.MapWidth / 2;
-		limitLeft = -limitRight;
-		limitTop = (float)GameManager.GetGameManager().MapManagerInstance.MapLength / 2;
-		limitBot = -limitTop;
+		limitRight = GameManager.GetGameManager().MapManagerInstance.MapWidth;
+		limitLeft = 0;
+		limitTop = GameManager.GetGameManager().MapManagerInstance.MapLength;
+		limitBot = 0;
 	}
 
 	private void GetViewRect()
 	{
 		RaycastHit hit;
 
-		Ray ray = camera.ViewportPointToRay(leftDown);
+		Ray ray = myCamera.ViewportPointToRay(leftDown);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldLeftDown = hit.point;
 		}
 
-		ray = camera.ViewportPointToRay(leftUp);
+		ray = myCamera.ViewportPointToRay(leftUp);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldLeftUp = hit.point;
 		}
 
-		ray = camera.ViewportPointToRay(rightUp);
+		ray = myCamera.ViewportPointToRay(rightUp);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldRightUp = hit.point;
 		}
 
-		ray = camera.ViewportPointToRay(rightDown);
+		ray = myCamera.ViewportPointToRay(rightDown);
 		if (Physics.Raycast(ray, out hit))
 		{
 			worldRightDown = hit.point;
@@ -64,7 +64,7 @@ public class CameraLimiter : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if (camera == null)
+		if (myCamera == null)
 		{
 			return;
 		}
@@ -81,18 +81,18 @@ public class CameraLimiter : MonoBehaviour
 
 	public Vector3 CalculateLimitPosition(Vector3 direction)
 	{
-		Vector3 movePos = camera.transform.position + direction;
+		Vector3 movePos = myCamera.transform.position + direction;
 		float height = movePos.y;
 
-		float camRotate = camera.transform.rotation.eulerAngles.x;
-		float topSideAngle = camRotate - 0.5f * camera.fieldOfView;
-		float botSideAngle = camRotate + 0.5f * camera.fieldOfView;
+		float camRotate = myCamera.transform.rotation.eulerAngles.x;
+		float topSideAngle = camRotate - 0.5f * myCamera.fieldOfView;
+		float botSideAngle = camRotate + 0.5f * myCamera.fieldOfView;
 
 		float zTop = limitTop - 0.9f * height / Mathf.Tan(topSideAngle * Mathf.Deg2Rad);
 		float zBot = limitBot - 0.9f * height / Mathf.Tan(botSideAngle * Mathf.Deg2Rad);
 		float zPos = Mathf.Clamp(movePos.z, zBot, zTop);
 
-		float rectWidth = 0.7f * height * camera.aspect * Mathf.Cos(topSideAngle * Mathf.Deg2Rad);
+		float rectWidth = 0.7f * height * myCamera.aspect * Mathf.Cos(topSideAngle * Mathf.Deg2Rad);
 
 		float xRight = limitRight - rectWidth;
 		float xLeft = limitLeft + rectWidth;
