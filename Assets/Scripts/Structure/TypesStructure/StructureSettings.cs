@@ -33,6 +33,9 @@ public class StructureSettings
     [SerializeField]
     protected GameObject structureGameObject;
 
+    [SerializeField]
+    protected GameObject structureWhileBuilding;
+
     public GameObject StructureGameObject
     {
         get

@@ -43,7 +43,6 @@ public class TileGrid
 
 	private void ReceiveMapManager()
 	{
-        //TODO.Rename class
 	    mapManager = GameManager.GetGameManager().MapManagerInstance;
 	}
 

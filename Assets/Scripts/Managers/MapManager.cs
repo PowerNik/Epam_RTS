@@ -53,7 +53,6 @@ public class MapManager : MonoBehaviour
 		lnmb.m_Size = new Vector3(200, 200, 200);
 
 		mapCreator = new MapCreator(mapSettings, go);
-		//gridManager = GameManager.Instance.GetComponent<GridManager>();
         gridManager = GameManager.GetGameManager().GetComponent<GridManager>();
 
         TileGrid tileGrid = mapCreator.TileGrid;
