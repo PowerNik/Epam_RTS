@@ -23,7 +23,7 @@ public class LayerTile
 
 	public void SetSeed(string seed)
 	{
-		genSets.SetSeed(seed);
+		genSets.SetMainSeed(seed);
 	}
 
 	public GeneratorSettings GetGeneratorSettings()

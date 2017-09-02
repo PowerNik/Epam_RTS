@@ -6,7 +6,8 @@ public class GeneratorSettings
 {
 	[Tooltip("Ключ для генерации")]
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[Tooltip("Рандомно генерировать ключ?")]
 	[SerializeField]
@@ -21,17 +22,21 @@ public class GeneratorSettings
 	[SerializeField]
 	private int smoothCount = 5;
 
-	public void SetSeed(string seed)
+	public void SetMainSeed(string mainSeed)
 	{
-		if (overseed == "")
-		{
-			overseed = seed;
-		};
+		this.mainSeed = mainSeed;
 	}
 
-	public string GetOverseed()
+	public string GetSeed()
 	{
-		return overseed;
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool IsRandom()

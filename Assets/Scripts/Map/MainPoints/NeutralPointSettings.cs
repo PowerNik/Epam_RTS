@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class NeutralPointSettings
+public class NeutralPointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -31,17 +33,22 @@ public class NeutralPointSettings
 	[SerializeField]
 	private DomainSettings peacefulNeuntralPointDomainSets;
 
-	public void SetSeed(string seed)
+
+	public void SetMainSeed(string mainSeed)
 	{
-		if (overseed == "")
-		{
-			overseed = seed;
-		}
+		this.mainSeed = mainSeed;
 	}
 
-	public string GetOverseed()
+	public string GetSeed()
 	{
-		return overseed;
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
@@ -49,7 +56,19 @@ public class NeutralPointSettings
 		return isCenter;
 	}
 
-	public MainPointTile GetNeutralPoint(Race race)
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.AggressiveNeuntralsPoint,
+			new MainPointTile(TileType.AggressiveNeuntralsPoint).GetTile());
+		tileDict.Add(TileType.PeacefulNeuntralsPoint,
+			new MainPointTile(TileType.PeacefulNeuntralsPoint).GetTile());
+
+		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -69,7 +88,7 @@ public class NeutralPointSettings
 		}
 	}
 
-	public int GetNeutralPointCount(Race race)
+	public int GetMainPointCount(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -79,17 +98,5 @@ public class NeutralPointSettings
 		{
 			return peacefulNeuntralPointCount;
 		}
-	}
-
-	public Dictionary<TileType, Tile> GetTileDictionary()
-	{
-		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
-
-		tileDict.Add(TileType.AggressiveNeuntralsPoint,
-			new MainPointTile(TileType.AggressiveNeuntralsPoint).GetTile());
-		tileDict.Add(TileType.PeacefulNeuntralsPoint, 
-			new MainPointTile(TileType.PeacefulNeuntralsPoint).GetTile());
-
-		return tileDict;
 	}
 }

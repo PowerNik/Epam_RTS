@@ -18,9 +18,10 @@ public class MainPointsSettingsSO : ScriptableObject
 	private NeutralPointSettingsSO NeutralPointSettings;
 
 	[Space(10)]
-	[Tooltip("Главный ключ для генерации точек")]
+	[Tooltip("Ключ для генерации точек")]
 	[SerializeField]
-	private string seed = "main";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[Tooltip("Сетка карты для баз")]
 	[SerializeField]
@@ -30,34 +31,44 @@ public class MainPointsSettingsSO : ScriptableObject
 	[Tooltip("Сетка каждого региона для ресурсов, рынков, нейтралов")]
 	private SectorSettings localSectorSettings;
 
-
-	public string GetSeed()
+	public void SetMainSeed(string mainSeed)
 	{
-		return seed;
+		this.mainSeed = mainSeed;
 	}
 
-	public BasePointSettings GetBasePointSettings()
+	public IMainPointSettings GetMainPointSettings(MainPointType type)
 	{
-		BasePointSettings.GetBasePointSettings().SetSeed(seed);
-		return BasePointSettings.GetBasePointSettings();
-	}
+		IMainPointSettings sets;
+		switch (type)
+		{
+			default:
+			case MainPointType.BasePoint:
+				sets = BasePointSettings.GetBasePointSettings();
+				break;
 
-	public ExtractPointSettings GetExtractPointSettings()
-	{
-		ExtractPointSettings.GetExtractPointSettings().SetSeed(seed);
-		return ExtractPointSettings.GetExtractPointSettings();
-	}
+			case MainPointType.ExtractPoint:
+				sets = ExtractPointSettings.GetExtractPointSettings();
+				break;
 
-	public TradePointSettings GetTradePointSettings()
-	{
-		TradePointSettings.GetTradePointSettings().SetSeed(seed);
-		return TradePointSettings.GetTradePointSettings();
-	}
+			case MainPointType.TradePoint:
+				sets = TradePointSettings.GetTradePointSettings();
+				break;
 
-	public NeutralPointSettings GetNeutralSpawnSettings()
-	{
-		NeutralPointSettings.GetNeutralPointSettings().SetSeed(seed);
-		return NeutralPointSettings.GetNeutralPointSettings();
+			case MainPointType.NeutralPoint:
+				sets = NeutralPointSettings.GetNeutralPointSettings();
+				break;
+		}
+
+		if (seed != "")
+		{
+			sets.SetMainSeed(seed);
+		}
+		else
+		{
+			sets.SetMainSeed(mainSeed);
+		}
+
+		return sets;
 	}
 
 	public SectorSettings GetRegionSettings()

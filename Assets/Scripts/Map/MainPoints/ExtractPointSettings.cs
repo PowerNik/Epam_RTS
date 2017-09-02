@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ExtractPointSettings
+public class ExtractPointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -31,17 +33,22 @@ public class ExtractPointSettings
 	[SerializeField]
 	private DomainSettings fermerDomainSets;
 
-	public void SetSeed(string seed)
+
+	public void SetMainSeed(string mainSeed)
 	{
-		if (overseed == "")
-		{
-			overseed = seed;
-		}
+		this.mainSeed = mainSeed;
 	}
 
-	public string GetOverseed()
+	public string GetSeed()
 	{
-		return overseed;
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
@@ -49,7 +56,17 @@ public class ExtractPointSettings
 		return isCenter;
 	}
 
-	public MainPointTile GetExtractPoint(Race race)
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.CitizenExtractPoint, new MainPointTile(TileType.CitizenExtractPoint).GetTile());
+		tileDict.Add(TileType.FermersExtractPoint, new MainPointTile(TileType.FermersExtractPoint).GetTile());
+
+		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -69,7 +86,7 @@ public class ExtractPointSettings
 		}
 	}
 
-	public int GetExtractCount(Race race)
+	public int GetMainPointCount(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -79,15 +96,5 @@ public class ExtractPointSettings
 		{
 			return fermerExtractPointCount;
 		}
-	}
-
-	public Dictionary<TileType, Tile> GetTileDictionary()
-	{
-		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
-
-		tileDict.Add(TileType.CitizenExtractPoint, new MainPointTile(TileType.CitizenExtractPoint).GetTile());
-		tileDict.Add(TileType.FermersExtractPoint, new MainPointTile(TileType.FermersExtractPoint).GetTile());
-
-		return tileDict;
 	}
 }

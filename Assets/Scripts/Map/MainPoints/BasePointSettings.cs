@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BasePointSettings
+public class BasePointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -20,52 +22,35 @@ public class BasePointSettings
 
 	[Space(10)]
 	[SerializeField]
+	private int fermerBaseCount;
+
+	[SerializeField]
 	private Material fermerBasePointMaterial;
 
 	[SerializeField]
-	private DomainSettings[] fermerDomainSets;
+	private DomainSettings fermerDomainSets;
 
 
-	public void SetSeed(string seed)
+	public void SetMainSeed(string mainSeed)
 	{
-		if(overseed == "")
-		{
-			overseed = seed;
-		}
+		this.mainSeed = mainSeed;
 	}
 
-	public string GetOverseed()
+	public string GetSeed()
 	{
-		return overseed;
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
 	{
 		return isCenter;
-	}
-
-	public MainPointTile[] GetBasePoints(Race race)
-	{
-		if (race == Race.Citizen)
-		{
-			MainPointTile tile = new MainPointTile(TileType.CitizenBasePoint);
-			tile.SetMaterial(citizenBasePointMaterial);
-			tile.SetDomainSettings(citizenDomainSets);
-
-			return new MainPointTile[] { tile };
-		}
-		else
-		{
-			MainPointTile[] tiles = new MainPointTile[fermerDomainSets.Length];
-			for(int i = 0; i < tiles.Length; i++)
-			{
-				tiles[i] = new MainPointTile(TileType.FermersBasePoint);
-				tiles[i].SetMaterial(fermerBasePointMaterial);
-				tiles[i].SetDomainSettings(fermerDomainSets[i]);
-			}
-
-			return tiles;
-		}
 	}
 
 	public Dictionary<TileType, Tile> GetTileDictionary()
@@ -81,5 +66,37 @@ public class BasePointSettings
 		tileDict.Add(TileType.FermersBasePoint, tile.GetTile());
 
 		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
+	{
+		if (race == Race.Citizen)
+		{
+			MainPointTile tile = new MainPointTile(TileType.CitizenBasePoint);
+			tile.SetMaterial(citizenBasePointMaterial);
+			tile.SetDomainSettings(citizenDomainSets);
+
+			return tile;
+		}
+		else
+		{
+			MainPointTile tile = new MainPointTile(TileType.FermersBasePoint);
+			tile.SetMaterial(fermerBasePointMaterial);
+			tile.SetDomainSettings(fermerDomainSets);
+
+			return tile;
+		}
+	}
+
+	public int GetMainPointCount(Race race)
+	{
+		if (race == Race.Citizen)
+		{
+			return 1;
+		}
+		else
+		{
+			return fermerBaseCount;
+		}
 	}
 }

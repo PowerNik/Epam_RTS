@@ -5,18 +5,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MapSettingsManager", menuName = "MapSettings/MapSettingsManager", order = 100)]
 public class MapSettingsManagerSO : ScriptableObject
 {
+	private string mainSeed;
+
 	[SerializeField]
 	private MapSizeSettingsSO mapSizeSettings;
 
 	[SerializeField]
 	private MainPointsSettingsSO mainPointsSettings;
 
+	[SerializeField]
+	private LayerSettingsSO layerTileSettings;
+
 
 	[SerializeField]
 	private HeightMapSettingsSO heightMapSettings;
-
-	[SerializeField]
-	private LayerSettingsSO layerTileSettings;
 
 	[SerializeField]
 	private ColoringTileSettingsSO coloringTileSettings;
@@ -24,6 +26,10 @@ public class MapSettingsManagerSO : ScriptableObject
 	[SerializeField]
 	private DecorationSettingsSO decorationSettings;
 
+	private void OnEnable()
+	{
+		mainSeed = mapSizeSettings.GetMapSizeSettings().mainSeed;
+	}
 
 	public MapSizeSettings GetMapSizeSettings()
 	{
@@ -32,17 +38,19 @@ public class MapSettingsManagerSO : ScriptableObject
 
 	public MainPointsSettingsSO GetMainPointsSettings()
 	{
+		mainPointsSettings.SetMainSeed(mainSeed);
 		return mainPointsSettings;
+	}
+
+	public LayerSettings GetLayerTileSettings()
+	{
+		layerTileSettings.GetLayerSettings().SetMainSeed(mainSeed);
+		return layerTileSettings.GetLayerSettings();
 	}
 
 	public HeightMapSettings GetHeightMapSettings()
 	{
 		return heightMapSettings.GetHeightMapSettings();
-	}
-
-	public LayerSettings GetLayerTileSettings()
-	{
-		return layerTileSettings.GetLayerSettings();
 	}
 
 	public ColoringTileSettings GetColoringTileSettings()

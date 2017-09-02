@@ -6,7 +6,8 @@ using UnityEngine;
 public class LayerSettings
 {
 	[SerializeField]
-	private string seed = "main";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[Space(15)]
 	[SerializeField]
@@ -30,9 +31,28 @@ public class LayerSettings
 	[SerializeField]
 	private LayerTile mountainTile;
 
+	public void SetMainSeed(string mainSeed)
+	{
+		this.mainSeed = mainSeed;
+	}
+
+	public string GetSeed()
+	{
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
+	}
+
 	public GeneratorSettings GetGeneratorSettings(TileType layerType)
 	{
-		return GetLayerTileDictionary()[layerType].GetGeneratorSettings();
+		var sets = GetLayerTileDictionary()[layerType].GetGeneratorSettings();
+		sets.SetMainSeed(this.GetSeed());
+		return sets;
 	}
 
 	public MeshSettings GetMeshSettings(TileType layerType)
@@ -56,17 +76,17 @@ public class LayerSettings
 
 		groundTile.SetTileType(TileType.GroundLayer, TileType.GroundLayer);
 		groundTile.SetMaterial(groundMaterial);
-		groundTile.SetSeed(seed);
+		groundTile.SetSeed(GetSeed());
 		tileDict.Add(groundTile.GetLayerType(), groundTile);
 
 		waterTile.SetTileType(TileType.WaterLayer, TileType.WaterLayer);
 		waterTile.SetMaterial(waterMaterial);
-		waterTile.SetSeed(seed);
+		waterTile.SetSeed(GetSeed());
 		tileDict.Add(waterTile.GetLayerType(), waterTile);
 
 		mountainTile.SetTileType(TileType.MountainLayer, TileType.MountainLayer);
 		mountainTile.SetMaterial(mountainMaterial);
-		mountainTile.SetSeed(seed);
+		mountainTile.SetSeed(GetSeed());
 		tileDict.Add(mountainTile.GetLayerType(), mountainTile);
 
 		return tileDict;

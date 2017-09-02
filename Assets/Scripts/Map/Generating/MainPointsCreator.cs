@@ -15,7 +15,7 @@ public class MainPointsCreator
 	private string seed;
 
 	private MainPointsSettingsSO mainPointsSets;
-	private BasePointSettings basePointSets;
+	private IMainPointSettings currentMainPointSets;
 	private SectorSettings regionSets;
 
 	/// <summary>
@@ -39,16 +39,16 @@ public class MainPointsCreator
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileSize = mapSizeSets.tileSize;
 
-		seed = mainPointsSets.GetSeed();
-
-		basePointSets = mainPointsSets.GetBasePointSettings();
 		regionSets = mainPointsSets.GetRegionSettings();
 		regions = new TileType[regionSets.countX, regionSets.countZ];
 	}
 
 	public void CreateMainPoints()
 	{
-		AddTilesToTileGrid(basePointSets.GetTileDictionary());
+		currentMainPointSets = mainPointsSets.GetMainPointSettings(MainPointType.BasePoint);
+		seed = currentMainPointSets.GetSeed();
+
+		AddTilesToTileGrid(currentMainPointSets.GetTileDictionary());
 		CreateBasePoints();
 
 	}
@@ -73,13 +73,13 @@ public class MainPointsCreator
 
 	private void SectoringCitizenBasePoint()
 	{
-		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
+		int seedHash = seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int xCoord;
 		int zCoord;
 
-		if (basePointSets.GetIsCenter())
+		if (currentMainPointSets.GetIsCenter())
 		{
 			List<KeyValuePair<int, int>> centerCoordXZ = CalculateCenterSectors();
 			int centerIndex = pseudoRandom.Next(0, centerCoordXZ.Count);
@@ -135,13 +135,13 @@ public class MainPointsCreator
 
 	private void SectoringFermerBasePoints()
 	{
-		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
+		int seedHash = seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int xCoord;
 		int zCoord;
 
-		for (int i = 0; i < basePointSets.GetBasePoints(Race.Fermer).Length; i++)
+		for (int i = 0; i < currentMainPointSets.GetMainPointCount(Race.Fermer); i++)
 		{
 			while (true)
 			{
@@ -162,7 +162,7 @@ public class MainPointsCreator
 
 	private void PlaceCitizenBasePointOnMap()
 	{
-		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
+		int seedHash = seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int sectorWidth = tileGrid.CountX / regionSets.countX;
@@ -188,13 +188,13 @@ public class MainPointsCreator
 
 	private void PlaceFermerBasePointsOnMap()
 	{
-		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
+		int seedHash = seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		int sectorWidth = tileGrid.CountX / regionSets.countX;
 		int sectorLength = tileGrid.CountZ / regionSets.countZ;
 
-		FermerBasePoints = new Vector3[basePointSets.GetBasePoints(Race.Fermer).Length];
+		FermerBasePoints = new Vector3[currentMainPointSets.GetMainPointCount(Race.Fermer)];
 		bool isSetBase = false;
 
 		for (int i = 0; i < FermerBasePoints.Length; i++)
@@ -223,13 +223,13 @@ public class MainPointsCreator
 
 	private void SetBasePointsArea()
 	{
-		SetAreaParams((int)(basePointSets.GetBasePoints(Race.Citizen)[0].GetDomainSettings().mainRadius / tileSize), 
+		SetAreaParams((int)(currentMainPointSets.GetMainPoint(Race.Citizen).GetDomainSettings().mainRadius / tileSize), 
 			CitizenBasePoint, TileType.CitizenBasePoint);
 		CitizenBasePoint *= tileSize;
 
-		for (int i = 0; i < basePointSets.GetBasePoints(Race.Fermer).Length; i++)
+		for (int i = 0; i < currentMainPointSets.GetMainPointCount(Race.Fermer); i++)
 		{
-			SetAreaParams((int)(basePointSets.GetBasePoints(Race.Fermer)[i].GetDomainSettings().mainRadius / tileSize), 
+			SetAreaParams((int)(currentMainPointSets.GetMainPoint(Race.Fermer).GetDomainSettings().mainRadius / tileSize), 
 				FermerBasePoints[i], TileType.FermersBasePoint);
 			FermerBasePoints[i] *= tileSize;
 		}

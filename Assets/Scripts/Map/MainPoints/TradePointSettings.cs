@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class TradePointSettings
+public class TradePointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -21,36 +23,27 @@ public class TradePointSettings
 	[SerializeField]
 	private DomainSettings tradePointDomainSets;
 
-	public void SetSeed(string seed)
+
+	public void SetMainSeed(string mainSeed)
 	{
-		if (overseed == "")
-		{
-			overseed = seed;
-		}
+		this.mainSeed = mainSeed;
 	}
 
-	public string GetOverseed()
+	public string GetSeed()
 	{
-		return overseed;
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
 	{
 		return isCenter;
-	}
-
-	public MainPointTile GetTradePoint(Race race)
-	{
-		MainPointTile tile = new MainPointTile(TileType.TradePoint);
-		tile.SetMaterial(tradePointMaterial);
-		tile.SetDomainSettings(tradePointDomainSets);
-
-		return tile;
-	}
-
-	public int GetTradePointsCount(Race race)
-	{
-		return tradePointCount;
 	}
 
 	public Dictionary<TileType, Tile> GetTileDictionary()
@@ -60,5 +53,19 @@ public class TradePointSettings
 		tileDict.Add(TileType.TradePoint, new MainPointTile(TileType.TradePoint).GetTile());
 
 		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
+	{
+		MainPointTile tile = new MainPointTile(TileType.TradePoint);
+		tile.SetMaterial(tradePointMaterial);
+		tile.SetDomainSettings(tradePointDomainSets);
+
+		return tile;
+	}
+
+	public int GetMainPointCount(Race race)
+	{
+		return tradePointCount;
 	}
 }

@@ -33,7 +33,7 @@ public static class RandomGenerator
 		}
 		else
 		{
-			seedHash = genSets.GetOverseed().GetHashCode() + callCount;
+			seedHash = genSets.GetSeed().GetHashCode() + callCount;
 			callCount++;
 		}
 

@@ -106,7 +106,7 @@ public class LayerCreator
 	{
 		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 
-		int seedHash = genSets.GetOverseed().GetHashCode();
+		int seedHash = genSets.GetSeed().GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		LandscapeSettings landscapeSets = layerSets.GetLandscapeSettings(layerType);
