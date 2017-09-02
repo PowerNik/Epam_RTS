@@ -11,9 +11,9 @@ public class MainPointTile
 	[SerializeField]
 	private DomainSettings domainSets;
 
-	public MainPointTile(TileType tileType, LayerType LayerType = LayerType.Ground)
+	public MainPointTile(TileType tileType, TileType layerType = TileType.GroundLayer)
 	{
-		tile = new Tile(tileType, LayerType);
+		tile = new Tile(tileType, layerType);
 	}
 
 	public void SetMaterial(Material mat)
@@ -46,7 +46,7 @@ public class MainPointTile
 		return tile.GetTileType();
 	}
 
-	public LayerType GetLayerType()
+	public TileType GetLayerType()
 	{
 		return tile.GetLayerType();
 	}

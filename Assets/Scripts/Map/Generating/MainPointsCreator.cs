@@ -7,7 +7,8 @@ public class MainPointsCreator
 	public Vector3 CitizenBasePoint { get; private set; }
 	public Vector3[] FermerBasePoints { get; private set; }
 
-	public TileType[,] TileGrid { get; private set; }
+	private TileGrid tileGrid;
+
 	private int tileCountX;
 	private int tileCountZ;
 	private float tileSize;
@@ -29,14 +30,14 @@ public class MainPointsCreator
 	/// </summary>
 	private TileType[,] sectors;
 
-	public MainPointsCreator(MapSizeSettings mapSizeSets, MainPointsSettingsSO mainPointsSets)
+	public MainPointsCreator(MapSizeSettings mapSizeSets, MainPointsSettingsSO mainPointsSets, ref TileGrid tileGrid)
 	{
+		this.tileGrid = tileGrid;
 		this.mainPointsSets = mainPointsSets;
 
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileSize = mapSizeSets.tileSize;
-		TileGrid = new TileType[tileCountX, tileCountZ];
 
 		seed = mainPointsSets.GetSeed();
 
@@ -203,7 +204,7 @@ public class MainPointsCreator
 						float zPos = z * sectorLength + zCoord;
 						FermerBasePoints[i] = new Vector3(xPos, 0, zPos);
 
-						sectors[x, z] = 0;
+						regions[x, z] = TileType.None;
 						isSetBase = true;
 					}
 				}
@@ -213,24 +214,26 @@ public class MainPointsCreator
 
 	private void SetBasePointsArea()
 	{
-		SetAreaParams((int)(basePointSets.GetBasePoints(Race.Citizen)[0].GetDomainSettings().mainRadius / tileSize), CitizenBasePoint);
+		SetAreaParams((int)(basePointSets.GetBasePoints(Race.Citizen)[0].GetDomainSettings().mainRadius / tileSize), 
+			CitizenBasePoint, TileType.CitizenBasePoint);
 		CitizenBasePoint *= tileSize;
 
 		for (int i = 0; i < basePointSets.GetBasePoints(Race.Fermer).Length; i++)
 		{
-			SetAreaParams((int)(basePointSets.GetBasePoints(Race.Fermer)[i].GetDomainSettings().mainRadius / tileSize), FermerBasePoints[i]);
+			SetAreaParams((int)(basePointSets.GetBasePoints(Race.Fermer)[i].GetDomainSettings().mainRadius / tileSize), 
+				FermerBasePoints[i], TileType.FermersBasePoint);
 			FermerBasePoints[i] *= tileSize;
 		}
 	}
 
-	private void SetAreaParams(int areaSize, Vector3 pos)
+	private void SetAreaParams(int areaSize, Vector3 pos, TileType type)
 	{
 		int posX = (int)pos.x;
 		int posZ = (int)pos.z;
-		SetArea(areaSize, posX, posZ);
+		SetArea(areaSize, posX, posZ, type);
 	}
 
-	private void SetArea(int areaSize, int posX, int posZ)
+	private void SetArea(int areaSize, int posX, int posZ, TileType type)
 	{
 		for (int x = -areaSize; x < areaSize; x++)
 		{
@@ -238,7 +241,10 @@ public class MainPointsCreator
 			{
 				if (0 < posX + x && posX + x < tileCountX - 1)
 					if (0 < posZ + z && posZ + z < tileCountZ - 1)
-						TileGrid[posX + x, posZ + z] = TileType.GroundLayer;
+					{
+						var tile = mainPointsSets.GetMainPointsDictionary()[type];
+						tileGrid.SetTile(posX + x, posZ + z, tile);
+					}
 			}
 		}
 	}

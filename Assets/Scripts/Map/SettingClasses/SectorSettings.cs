@@ -9,6 +9,4 @@ public class SectorSettings
 	public int countZ = 4;
 
 	public bool isUnique = true;
-
-	public string seed = "main";
 }

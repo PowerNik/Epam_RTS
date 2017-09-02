@@ -8,17 +8,18 @@ public class MapCreator
 	public Vector3 CitizenBasePoint { get; private set; }
 	public Vector3[] FermerBasePoints { get; private set; }
 
-	private LayerCreator layerCreator;
-	private BasePointsGenerator basePointsGen;
-
+	private TileGrid tileGrid;
 	private LayerTileSettings layerTileSets;
-	public LayerType[,] LayerGrid { get; private set; }
+
+	private LayerCreator layerCreator;
+	private MainPointsCreator mainPointsCreator;
 
 	private float tileSize;
 
 
-	public MapCreator(MapSettingsManagerSO mapSetsManager)
+	public MapCreator(MapSettingsManagerSO mapSetsManager, ref TileGrid tileGrid)
 	{
+		this.tileGrid = tileGrid;
 		SetParams(mapSetsManager);
 		MapCreating();
 	}
@@ -30,40 +31,38 @@ public class MapCreator
 		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		tileSize = mapSizeSets.tileSize;
 
-		layerCreator = new LayerCreator(mapSetsManager);
-		basePointsGen = new BasePointsGenerator(mapSetsManager);
+		mainPointsCreator = new MainPointsCreator(mapSizeSets, mapSetsManager.GetMainPointsSettings(), ref tileGrid);
+		layerCreator = new LayerCreator(mapSizeSets, layerTileSets, ref tileGrid);
 	}
 
 	private void MapCreating()
 	{
+		mainPointsCreator.CreateMainPoints();
 		layerCreator.CreateLayers();
-		basePointsGen.CreateBasePoints(layerCreator.LayerGrid);
-		layerCreator.CorrectLayers(basePointsGen.LayerGrid);
 
-		LayerGrid = layerCreator.LayerGrid;	
-		CitizenBasePoint = basePointsGen.CitizenBasePoint;
-		FermerBasePoints = basePointsGen.FermerBasePoints;
+		CitizenBasePoint = mainPointsCreator.CitizenBasePoint;
+		FermerBasePoints = mainPointsCreator.FermerBasePoints;
 	}
 
 	public void CreateMapMesh(GameObject map)
 	{
-		CreateMeshForLayer(map, LayerType.Ground);
-		CreateMeshForLayer(map, LayerType.Water);
-		CreateMeshForLayer(map, LayerType.Mountain);
+		CreateMeshForLayer(map, TileType.GroundLayer);
+		CreateMeshForLayer(map, TileType.WaterLayer);
+		CreateMeshForLayer(map, TileType.MountainsLayer);
 	}
 
-	private void CreateMeshForLayer(GameObject map, LayerType layerType)
+	private void CreateMeshForLayer(GameObject map, TileType tileType)
 	{
-		int[,] mas = layerCreator.GetLayerMap(layerType);
-		MeshSettings meshSets = layerTileSets.GetMeshSettings(layerType);
+		int[,] mas = tileGrid.GetTileTypeMap(tileType);
+		MeshSettings meshSets = layerTileSets.GetMeshSettings(tileType);
 
 		GameObject layerGO = new GameObject();
-		layerGO.name = layerType.ToString();
+		layerGO.name = tileType.ToString();
 		layerGO.transform.parent = map.transform;
 		layerGO.AddComponent<MeshCollider>();
 		layerGO.AddComponent<MeshFilter>();
 
-		LayerTile tile = layerTileSets.GetLayerTile(layerType);
+		LayerTile tile = layerTileSets.GetLayerTile(tileType);
 		layerGO.AddComponent<MeshRenderer>().material = tile.GetMaterial();
 
 		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();

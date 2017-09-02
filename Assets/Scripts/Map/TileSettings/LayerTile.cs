@@ -18,12 +18,12 @@ public class LayerTile
 	private LandscapeSettings landscapeSets;
 
 
-	public LayerTile(TileType tileType, LayerType layerType = LayerType.Ground)
+	public LayerTile(TileType tileType, TileType layerType = TileType.GroundLayer)
 	{
 		tile = new Tile(tileType, layerType);
 	}
 
-	public LayerType GetLayerType()
+	public TileType GetLayerType()
 	{
 		return tile.GetLayerType();
 	}

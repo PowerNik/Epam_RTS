@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class Tile
 {
-	private TileType tileType;
-	private LayerType layerType;
+	private TileType tileType = TileType.GroundLayer;
+	private TileType layerType = TileType.GroundLayer;
 
 	[SerializeField]
 	private Material defaultMaterial;
@@ -20,7 +20,7 @@ public class Tile
 	private Allows allows;
 
 
-	public Tile(TileType tileType, LayerType layerType)
+	public Tile(TileType tileType, TileType layerType)
 	{
 		this.tileType = tileType;
 		this.layerType = layerType;
@@ -29,7 +29,7 @@ public class Tile
 
 
 
-	public LayerType GetLayerType()
+	public TileType GetLayerType()
 	{
 		return layerType;
 	}

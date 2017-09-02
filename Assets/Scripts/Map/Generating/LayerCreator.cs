@@ -8,41 +8,40 @@ public class LayerCreator
 	private int tileCountX;
 	private int tileCountZ;
 
-	public LayerType[,] LayerGrid { get; private set; }
+	private TileGrid tileGrid;
+
 	private LayerTileSettings layerTileSets;
 
-	public LayerCreator(MapSettingsManagerSO mapSetsManager)
+	public LayerCreator(MapSizeSettings mapSizeSets, LayerTileSettings layerTileSets, ref TileGrid tileGrid)
 	{
-		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
+		this.tileGrid = tileGrid;
+
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 
 		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
-
-		layerTileSets = mapSetsManager.GetLayerTileSettings();
+		this.layerTileSets = layerTileSets;
 	}
 
 	public void CreateLayers()
-	{
-		LayerGrid = new LayerType[tileCountX, tileCountZ];
-
-		CreateLayer(LayerType.Ground);
-		CreateLayer(LayerType.Water);
-
+	{		
 		//TODO Nik
-		int border = 2;//layerTileSets.mountainBorderWidth;
-		CreateLayer(LayerType.Mountain, border);
+		int border = 2;
+		CreateLayer(TileType.MountainsLayer, border);
+
+		CreateLayer(TileType.WaterLayer);
+		CreateLayer(TileType.GroundLayer);
+
+		CorrectLayers();
 	}
 
-	public void CorrectLayers(LayerType[,] layerGrid)
+	private void CorrectLayers()
 	{
-		LayerGrid = layerGrid;
-
-		CorrectAreas(LayerType.Water);
-		CorrectAreas(LayerType.Mountain);
+		CorrectAreas(TileType.WaterLayer);
+		CorrectAreas(TileType.MountainsLayer);
 	}
 
-	private void CreateLayer(LayerType layerType, int border = 0)
+	private void CreateLayer(TileType layerType, int border = 0)
 	{
 		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
 		int[,] grid = RandomGenerator.Generate(genSets, border);
@@ -51,9 +50,9 @@ public class LayerCreator
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				if (grid[x, z] == 1)
+				if (grid[x, z] == 1 && tileGrid[x,z] == TileType.None)
 				{
-					LayerGrid[x, z] = layerType;
+					tileGrid.SetTile(x, z, layerTileSets.GetTileDictionary()[layerType]);
 				}
 			}
 		}
@@ -64,7 +63,7 @@ public class LayerCreator
 	/// и ограничивает число оставшихся областей
 	/// </summary>
 	/// <param name="layerType"></param>
-	private void CorrectAreas(LayerType layerType)
+	private void CorrectAreas(TileType layerType)
 	{
 		var list = GetAllAreas(layerType);
 
@@ -72,11 +71,11 @@ public class LayerCreator
 		LimitingAreaCount(list, layerType);
 	}
 
-	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, LayerType layerType)
+	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, TileType layerType)
 	{
 		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
 
-		if(landscapeSets.minSize == -1)
+		if (landscapeSets.minSize == -1)
 		{
 			return list;
 		}
@@ -87,7 +86,7 @@ public class LayerCreator
 			{
 				foreach (int[] point in list[i])
 				{
-					LayerGrid[point[0], point[1]] = LayerType.Ground;
+					tileGrid.SetTile(point[0], point[1],  layerTileSets.GetLayerTile(TileType.GroundLayer).GetTile());
 				}
 				list.RemoveAt(i);
 				i--;
@@ -97,7 +96,7 @@ public class LayerCreator
 		return list;
 	}
 
-	private void LimitingAreaCount(List<List<int[]>> list, LayerType layerType)
+	private void LimitingAreaCount(List<List<int[]>> list, TileType layerType)
 	{
 		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
 
@@ -105,7 +104,7 @@ public class LayerCreator
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
-		if(landscapeSets.maxCount == -1)
+		if (landscapeSets.maxCount == -1)
 		{
 			return;
 		}
@@ -116,7 +115,7 @@ public class LayerCreator
 
 			foreach (int[] point in list[index])
 			{
-				LayerGrid[point[0], point[1]] = LayerType.Ground;
+				tileGrid.SetTile(point[0], point[1], layerTileSets.GetLayerTile(TileType.GroundLayer).GetTile());
 			}
 			list.RemoveAt(index);
 		}
@@ -127,9 +126,9 @@ public class LayerCreator
 	/// </summary>
 	/// <param name="layerType"></param>
 	/// <returns></returns>
-	private List<List<int[]>> GetAllAreas(LayerType layerType)
+	private List<List<int[]>> GetAllAreas(TileType layerType)
 	{
-		int[,] layerMap = GetLayerMap(layerType);
+		int[,] layerMap = tileGrid.GetTileTypeMap(layerType);
 		var allAreasList = new List<List<int[]>>();
 
 		for (int x = 0; x < tileCountX; x++)
@@ -218,30 +217,5 @@ public class LayerCreator
 		}
 
 		return nextPointsList;
-	}
-
-	/// <summary>
-	/// Возвращает карту расположения слоя layerType
-	/// </summary>
-	/// <returns>1 - тайл занят слоем layerType, 0 - другим слоем</returns>
-	public int[,] GetLayerMap(LayerType layerType)
-	{
-		int[,] mas = new int[tileCountX, tileCountZ];
-		for (int x = 0; x < tileCountX; x++)
-		{
-			for (int z = 0; z < tileCountZ; z++)
-			{
-				if (LayerGrid[x, z] == layerType)
-				{
-					mas[x, z] = 1;
-				}
-				else
-				{
-					mas[x, z] = 0;
-				}
-			}
-		}
-
-		return mas;
 	}
 }

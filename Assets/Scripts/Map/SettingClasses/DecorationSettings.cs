@@ -8,7 +8,6 @@ public class DecorationSettings
 	public string name;
 	public GameObject[] decorPrefabs;
 
-	public LayerType layer = LayerType.Ground;
 	public GeneratorSettings genSets;
 	public AreaSettings areaSets;
 

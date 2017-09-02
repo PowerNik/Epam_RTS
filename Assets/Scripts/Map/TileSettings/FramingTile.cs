@@ -8,15 +8,15 @@ public class FramingTile
 	[SerializeField]
 	private Tile tile;
 
-	private LayerType bandedLayerType = LayerType.Water;
+	private TileType bandedLayerType = TileType.FramingWaterSide;
 
-	public FramingTile(TileType tileType, LayerType bandedLayerType)
+	public FramingTile(TileType tileType, TileType bandedLayerType)
 	{
-		tile = new Tile(tileType, LayerType.Ground);
+		tile = new Tile(tileType, TileType.GroundLayer);
 		this.bandedLayerType = bandedLayerType;
 	}
 
-	public LayerType GetLayerType()
+	public TileType GetLayerType()
 	{
 		return tile.GetLayerType();
 	}
@@ -25,7 +25,7 @@ public class FramingTile
 	/// Области какого слоя обрамляет данный тайл
 	/// </summary>
 	/// <returns></returns>
-	public LayerType GetBandedLayerType()
+	public TileType GetBandedLayerType()
 	{
 		return bandedLayerType;
 	}

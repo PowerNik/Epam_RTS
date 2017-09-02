@@ -15,14 +15,20 @@ public class MainPointsSettingsSO : ScriptableObject
 	private TradePointSettingsSO TradePointSettings;
 
 	[SerializeField]
-	private NeutralPointSettingsSO NeutralSpawnSettings;
+	private NeutralPointSettingsSO NeutralPointSettings;
 
 	[Space(10)]
+	[Tooltip("Главный ключ для генерации точек")]
 	[SerializeField]
-	private SectorSettings basePointsSectors;
+	private string seed = "main";
+
+	[Tooltip("Сетка карты для баз")]
+	[SerializeField]
+	private SectorSettings regionSettings;
 
 	[SerializeField]
-	private SectorSettings smallSectors;
+	[Tooltip("Сетка каждого региона для ресурсов, рынков, нейтралов")]
+	private SectorSettings localSectors;
 
 
 	public BasePointSettings GetBasePointSettings()
@@ -42,16 +48,46 @@ public class MainPointsSettingsSO : ScriptableObject
 
 	public NeutralPointSettings GetNeutralSpawnSettings()
 	{
-		return NeutralSpawnSettings.GetNeutralPointSettings();
+		return NeutralPointSettings.GetNeutralPointSettings();
 	}
 
-	public SectorSettings GetBaseSectorSettings()
+	public SectorSettings GetRegionSettings()
 	{
-		return basePointsSectors;
+		return regionSettings;
 	}
 
-	public SectorSettings GetSmallSettings()
+	public SectorSettings GetLocalSectorsSettings()
 	{
-		return smallSectors;
+		return localSectors;
+	}
+
+	public string GetSeed()
+	{
+		return seed;
+	}
+
+	public Dictionary<TileType, Tile> GetMainPointsDictionary()
+	{
+		Dictionary<TileType, Tile> dict = new Dictionary<TileType, Tile>();
+
+		MainPointTile mpTile = BasePointSettings.GetBasePointSettings().GetBasePoints(Race.Citizen)[0];
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+		mpTile = BasePointSettings.GetBasePointSettings().GetBasePoints(Race.Fermer)[0];
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+
+		mpTile = ExtractPointSettings.GetExtractPointSettings().GetExtractPoint(Race.Citizen);
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+		mpTile = ExtractPointSettings.GetExtractPointSettings().GetExtractPoint(Race.Fermer);
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+
+		mpTile = TradePointSettings.GetTradePointSettings().GetTradePoint(Race.Citizen);
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+
+		mpTile = NeutralPointSettings.GetNeutralPointSettings().GetNeutralPoint(Race.Citizen);
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+		mpTile = NeutralPointSettings.GetNeutralPointSettings().GetNeutralPoint(Race.Fermer);
+		dict.Add(mpTile.GetTileType(), mpTile.GetTile());
+
+		return dict;
 	}
 }

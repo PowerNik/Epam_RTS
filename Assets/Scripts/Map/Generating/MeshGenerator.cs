@@ -7,6 +7,7 @@ using MapGenerate;
 
 public class MeshGenerator : MonoBehaviour
 {
+	int bigCount = 0;
 	public SquareGrid squareGrid;
 
 	private List<Vector3> vertices;
