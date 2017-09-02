@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5b2ea7555cc0ecc4b8e15f83881df4be
-timeCreated: 1504258701
+timeCreated: 1504374979
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -10,9 +10,7 @@ MonoImporter:
       type: 2}
   - heightMapSettings: {fileID: 11400000, guid: 481a1110ae2550945a339a3145c9a8e9,
       type: 2}
-  - layerTileSettings: {fileID: 11400000, guid: 72efe0fa58a5d11449081b018a9bf5e8,
-      type: 2}
-  - framingTileSettings: {fileID: 11400000, guid: ecec1acba27dd0c49bec3900af73e5e8,
+  - layerTileSettings: {fileID: 11400000, guid: 868a4bb148edb4a4a8720ffbae6a69ff,
       type: 2}
   - coloringTileSettings: {fileID: 11400000, guid: 0479cad53bc94e546b3a4ab27ee94cc3,
       type: 2}

@@ -7,7 +7,7 @@ public class FramingTile
 {
 	private Tile tile;
 
-	private TileType bandedLayerType = TileType.FramingWaterSide;
+	private TileType bandedLayerType = TileType.WaterFraming;
 
 	public void SetBandedTile(TileType tileType, TileType bandedLayerType)
 	{

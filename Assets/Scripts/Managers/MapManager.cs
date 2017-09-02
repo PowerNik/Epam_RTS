@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-	public int MapWidth { get; private set; }
-	public int MapLength { get; private set; }
-
-	public int TileCountX { get; private set; }
-	public int TileCountZ { get; private set; }
-	public float TileSize { get; private set; }
+	public int MapWidth { get { return mapSizeSets.width; } }
+	public int MapLength { get { return mapSizeSets.length; } }
 
 	[SerializeField]
 	private MapSettingsManagerSO mapSetsManager;
@@ -22,26 +18,16 @@ public class MapManager : MonoBehaviour
 
 	private void Awake()
 	{
-		SetParams();
+		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		CreateMap();
 
 		buildAreaSelecter = gameObject.AddComponent<BuildAreaSelecter>();
-	}
-
-	private void SetParams()
-	{
-		mapSizeSets = mapSetsManager.GetMapSizeSettings();
-
-		MapWidth = mapSizeSets.width;
-		MapLength = mapSizeSets.length;
-		TileSize = mapSizeSets.tileSize;
-		TileCountX = mapSizeSets.TileCountX;
-		TileCountZ = mapSizeSets.TileCountZ;
+		buildAreaSelecter.SetGridManager(gridManager);
 	}
 
 	private void CreateMap()
 	{
-		gridManager = new GridManager(mapSetsManager);
+		gridManager = new GridManager(mapSetsManager.GetMapSizeSettings());
 		mapCreator = new MapCreator(mapSetsManager, ref gridManager.tileGrid);
 
 		GameObject mapGO = new GameObject();
@@ -90,11 +76,6 @@ public class MapManager : MonoBehaviour
 	public Vector3 GetTilePos(Vector3 position)
 	{
 		return gridManager.GetTilePos(position);
-	}
-
-	public bool IsBuildableTile(Vector3 position, Race race)
-	{
-		return gridManager.IsBuildableTile(position, race);
 	}
 
 	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)

@@ -9,10 +9,9 @@ public class LayerCreator
 	private int tileCountZ;
 
 	private TileGrid tileGrid;
+	private LayerSettings layerSets;
 
-	private LayerTileSettings layerTileSets;
-
-	public LayerCreator(MapSizeSettings mapSizeSets, LayerTileSettings layerTileSets, ref TileGrid tileGrid)
+	public LayerCreator(MapSizeSettings mapSizeSets, LayerSettings layerSets, ref TileGrid tileGrid)
 	{
 		this.tileGrid = tileGrid;
 
@@ -20,12 +19,12 @@ public class LayerCreator
 		tileCountZ = mapSizeSets.TileCountZ;
 
 		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
-		this.layerTileSets = layerTileSets;
+		this.layerSets = layerSets;
 	}
 
 	public void CreateLayers()
 	{
-		foreach (var item in layerTileSets.GetLayerTileDictionary())
+		foreach (var item in layerSets.GetLayerTileDictionary())
 		{
 			tileGrid.AddTile(item.Value.GetTile());
 		}
@@ -38,6 +37,8 @@ public class LayerCreator
 		CreateLayer(TileType.GroundLayer);
 
 		CorrectLayers();
+
+		new FramingCreator(layerSets.GetFramingTilePairs(), ref tileGrid);
 	}
 
 	private void CorrectLayers()
@@ -48,7 +49,7 @@ public class LayerCreator
 
 	private void CreateLayer(TileType layerType, int border = 0)
 	{
-		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 		int[,] grid = RandomGenerator.Generate(genSets, border);
 
 		for (int x = 0; x < tileCountX; x++)
@@ -78,7 +79,7 @@ public class LayerCreator
 
 	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, TileType layerType)
 	{
-		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
+		LandscapeSettings landscapeSets = layerSets.GetLandscapeSettings(layerType);
 
 		if (landscapeSets.minSize == -1)
 		{
@@ -103,12 +104,12 @@ public class LayerCreator
 
 	private void LimitingAreaCount(List<List<int[]>> list, TileType layerType)
 	{
-		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 
 		int seedHash = genSets.GetOverseed().GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
+		LandscapeSettings landscapeSets = layerSets.GetLandscapeSettings(layerType);
 		if (landscapeSets.maxCount == -1)
 		{
 			return;

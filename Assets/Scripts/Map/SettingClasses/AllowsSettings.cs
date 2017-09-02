@@ -15,8 +15,8 @@ public static class AllowsSettings
 			case TileType.MountainLayer:
 				return LayerNoGround;
 
-			case TileType.FramingFoothill:
-			case TileType.FramingWaterSide:
+			case TileType.MountainFraming:
+			case TileType.WaterFraming:
 				return Framing;
 
 			case TileType.CitizenBasePoint:

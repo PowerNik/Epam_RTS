@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class TileGrid
 {
-	public int countX { get; private set; }
+	public int CountX { get; private set; }
 
-	public int countZ { get; private set; }
+	public int CountZ { get; private set; }
+
+	public float TileSize { get; private set; }
 
 	private TileType[,] grid;
 	private Dictionary<TileType, Tile> dict;
@@ -29,10 +31,11 @@ public class TileGrid
 		}
 	}
 
-	public TileGrid(int countX, int countZ)
+	public TileGrid(MapSizeSettings mapSizeSets)
 	{
-		this.countX = countX;
-		this.countZ = countZ;
+		CountX = mapSizeSets.TileCountX;
+		CountZ = mapSizeSets.TileCountZ;
+		TileSize = mapSizeSets.tileSize;
 
 		dict = new Dictionary<TileType, Tile>();
 		CreateGrid();
@@ -58,11 +61,11 @@ public class TileGrid
 
 	private void CreateGrid()
 	{
-		grid = new TileType[countX, countZ];
+		grid = new TileType[CountX, CountZ];
 
-		for (int x = 0; x < countX; x++)
+		for (int x = 0; x < CountX; x++)
 		{
-			for (int z = 0; z < countZ; z++)
+			for (int z = 0; z < CountZ; z++)
 			{
 				grid[x, z] = TileType.None;
 			}
@@ -75,10 +78,10 @@ public class TileGrid
 	/// <returns> 1 - тайл занят типом tileType, 0 - другим типом тайла</returns>
 	public int[,] GetTileMap(TileType tileType)
 	{
-		int[,] mas = new int[countX, countZ];
-		for (int x = 0; x < countX; x++)
+		int[,] mas = new int[CountX, CountZ];
+		for (int x = 0; x < CountX; x++)
 		{
-			for (int z = 0; z < countZ; z++)
+			for (int z = 0; z < CountZ; z++)
 			{
 				if (grid[x, z] == tileType)
 				{

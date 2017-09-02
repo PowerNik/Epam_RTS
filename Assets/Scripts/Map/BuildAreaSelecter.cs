@@ -10,18 +10,21 @@ public class BuildAreaSelecter : MonoBehaviour
 	private Transform buildArea;
 	private Vector3 defaultPosition = new Vector3(0, -100, 0);
 
-	private MapManager mapManager;
+	private GridManager gridManager;
 	private float tileSize;
 
 	// Число тайлов под макет здания
 	private int tileCountX;
 	private int tileCountZ;
 
+	public void SetGridManager(GridManager gridManager)
+	{
+		this.gridManager = gridManager;
+		tileSize = gridManager.tileGrid.TileSize;
+	}
+
 	void Start()
 	{
-		mapManager = GameManager.GetGameManager().MapManagerInstance;
-		tileSize = mapManager.TileSize;
-
 		buildArea = new GameObject().transform;
 		buildArea.name = "BuildingArea";
 		buildArea.position = defaultPosition;
@@ -89,13 +92,13 @@ public class BuildAreaSelecter : MonoBehaviour
 		bool isBuildableArea = true;
 
 		// TODO Nik
-		// Читать из mapManager массив тайлов/булов нужного размера
+		// Читать из gridManager массив тайлов/булов нужного размера
 		for (int i = 0; i < buildArea.childCount; i++)
 		{
 			Renderer rend = buildArea.GetChild(i).gameObject.GetComponent<Renderer>();
 			rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
 
-			if (!mapManager.IsBuildableTile(buildArea.GetChild(i).transform.position, race))
+			if (!gridManager.IsBuildableTile(buildArea.GetChild(i).transform.position, race))
 			{
 				rend.sharedMaterial = unbuildableTileMat;
 				isBuildableArea = false;

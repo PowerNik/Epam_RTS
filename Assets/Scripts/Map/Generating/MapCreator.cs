@@ -9,11 +9,10 @@ public class MapCreator
 	public Vector3[] FermerBasePoints { get; private set; }
 
 	private TileGrid tileGrid;
-	private LayerTileSettings layerTileSets;
+	private LayerSettings layerTileSets;
 
 	private MainPointsCreator mainPointsCreator;
 	private LayerCreator layerCreator;
-	private FramingCreator framingCreator;
 
 	private float tileSize;
 
@@ -34,14 +33,12 @@ public class MapCreator
 
 		mainPointsCreator = new MainPointsCreator(mapSizeSets, mapSetsManager.GetMainPointsSettings(), ref tileGrid);
 		layerCreator = new LayerCreator(mapSizeSets, layerTileSets, ref tileGrid);
-		framingCreator = new FramingCreator(mapSizeSets, mapSetsManager.GetFramingTileSettings(), ref tileGrid);
 	}
 
 	private void MapCreating()
 	{
 		mainPointsCreator.CreateMainPoints();
 		layerCreator.CreateLayers();
-		framingCreator.CreateLayerFraming();
 
 		CitizenBasePoint = mainPointsCreator.CitizenBasePoint;
 		FermerBasePoints = mainPointsCreator.FermerBasePoints;

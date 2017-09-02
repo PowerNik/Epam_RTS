@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class MeshSettings
 {
-	public float lifting = 0.1f;
-	public float noiseHeight = 0.1f;
-	public float noiseFrequency = 0.1f;
+	public float lifting = 0.01f;
+	public float noiseHeight = 0.01f;
+	public float noiseFrequency = 0.01f;
 }

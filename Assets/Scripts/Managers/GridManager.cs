@@ -5,21 +5,13 @@ using UnityEngine;
 
 public class GridManager
 {
-	private int tileCountX;
-	private int tileCountZ;
+	public TileGrid tileGrid;
 	private float tileSize;
 
-	public TileGrid tileGrid;
-
-	public GridManager(MapSettingsManagerSO mapSetsManager)
+	public GridManager(MapSizeSettings mapSizeSets)
 	{
-		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
-
-		tileCountX = mapSizeSets.TileCountX;
-		tileCountZ = mapSizeSets.TileCountZ;
-		tileSize = mapSizeSets.tileSize;
-
-		tileGrid = new TileGrid(tileCountX, tileCountZ);
+		tileGrid = new TileGrid(mapSizeSets);
+		tileSize = tileGrid.TileSize;
 	}
 
 	public Vector3 GetTilePos(Vector3 pos)
@@ -43,7 +35,7 @@ public class GridManager
 		int x = (int)((position.x - position.x % tileSize) / tileSize);
 		int z = (int)((position.z - position.z % tileSize) / tileSize);
 
-		if (x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
+		if (x < 0 || tileGrid.CountX <= x || z < 0 || tileGrid.CountZ <= z)
 		{
 			return false;
 		}

@@ -16,10 +16,7 @@ public class MapSettingsManagerSO : ScriptableObject
 	private HeightMapSettingsSO heightMapSettings;
 
 	[SerializeField]
-	private LayerTileSettingsSO layerTileSettings;
-
-	[SerializeField]
-	private FramingTileSettingsSO framingTileSettings;
+	private LayerSettingsSO layerTileSettings;
 
 	[SerializeField]
 	private ColoringTileSettingsSO coloringTileSettings;
@@ -43,14 +40,9 @@ public class MapSettingsManagerSO : ScriptableObject
 		return heightMapSettings.GetHeightMapSettings();
 	}
 
-	public LayerTileSettings GetLayerTileSettings()
+	public LayerSettings GetLayerTileSettings()
 	{
-		return layerTileSettings.GetLayerTileSettings();
-	}
-
-	public FramingTileSettings GetFramingTileSettings()
-	{
-		return framingTileSettings.GetFramingTileSettings();
+		return layerTileSettings.GetLayerSettings();
 	}
 
 	public ColoringTileSettings GetColoringTileSettings()

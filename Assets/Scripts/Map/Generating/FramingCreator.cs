@@ -4,23 +4,15 @@ using UnityEngine;
 
 public class FramingCreator
 {
-	private int tileCountX;
-	private int tileCountZ;
-
 	private TileGrid tileGrid;
-	private Dictionary<TileType, FramingTile> framingTileDict;
 
-	public FramingCreator(MapSizeSettings mapSizeSets, FramingTileSettings frameTileSets, ref TileGrid tileGrid)
+	public FramingCreator(Dictionary<TileType, FramingTile> framingTileDict, ref TileGrid tileGrid)
 	{
 		this.tileGrid = tileGrid;
-
-		tileCountX = mapSizeSets.TileCountX;
-		tileCountZ = mapSizeSets.TileCountZ;
-
-		framingTileDict = frameTileSets.GetFramingTilePairs();
+		CreateLayerFraming(framingTileDict);
 	}
 
-	public void CreateLayerFraming()
+	private void CreateLayerFraming(Dictionary<TileType, FramingTile> framingTileDict)
 	{
 		foreach (var item in framingTileDict)
 		{
@@ -36,9 +28,9 @@ public class FramingCreator
 	/// <param name="framingType"></param>
 	private void SetFramingTilesAroundArea(TileType areaType, TileType framingType)
 	{
-		for (int x = 0; x < tileCountX; x++)
+		for (int x = 0; x < tileGrid.CountX; x++)
 		{
-			for (int z = 0; z < tileCountZ; z++)
+			for (int z = 0; z < tileGrid.CountZ; z++)
 			{
 				// Обрамление происходит только на земле
 				if (tileGrid[x, z] == TileType.GroundLayer)
@@ -67,7 +59,7 @@ public class FramingCreator
 			int x = curX + dX[i];
 			int z = curZ + dZ[i];
 
-			if (x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
+			if (x < 0 || tileGrid.CountX <= x || z < 0 || tileGrid.CountZ <= z)
 			{
 				continue;
 			}

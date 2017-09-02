@@ -6,8 +6,8 @@ public enum TileType
 	WaterLayer = 2,
 	MountainLayer = 3,
 
-	FramingWaterSide = 10,
-	FramingFoothill = 11,
+	WaterFraming = 10,
+	MountainFraming = 11,
 
 	CitizenBasePoint = 20,
 	FermersBasePoint = 21,

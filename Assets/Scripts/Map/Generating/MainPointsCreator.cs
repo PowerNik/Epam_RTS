@@ -165,8 +165,8 @@ public class MainPointsCreator
 		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = tileCountX / regionSets.countX;
-		int sectorLength = tileCountZ / regionSets.countZ;
+		int sectorWidth = tileGrid.CountX / regionSets.countX;
+		int sectorLength = tileGrid.CountZ / regionSets.countZ;
 
 		// Размещение в центре сектора + сдвиг
 		int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
@@ -191,8 +191,8 @@ public class MainPointsCreator
 		int seedHash = (seed + basePointSets.GetOverseed()).GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int sectorWidth = tileCountX / regionSets.countX;
-		int sectorLength = tileCountZ / regionSets.countZ;
+		int sectorWidth = tileGrid.CountX / regionSets.countX;
+		int sectorLength = tileGrid.CountZ / regionSets.countZ;
 
 		FermerBasePoints = new Vector3[basePointSets.GetBasePoints(Race.Fermer).Length];
 		bool isSetBase = false;
@@ -248,8 +248,8 @@ public class MainPointsCreator
 		{
 			for (int z = -areaSize; z < areaSize; z++)
 			{
-				if (0 < posX + x && posX + x < tileCountX - 1)
-					if (0 < posZ + z && posZ + z < tileCountZ - 1)
+				if (0 < posX + x && posX + x < tileGrid.CountX - 1)
+					if (0 < posZ + z && posZ + z < tileGrid.CountZ - 1)
 					{
 						tileGrid[posX + x, posZ + z] = type;
 					}
