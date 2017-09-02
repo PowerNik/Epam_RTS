@@ -5,36 +5,26 @@ using UnityEngine;
 [System.Serializable]
 public class LayerTileSettings
 {
-	public LayerTile groundTile = new LayerTile(TileType.GroundLayer, TileType.GroundLayer);
-	public LayerTile waterTile = new LayerTile(TileType.WaterLayer, TileType.WaterLayer);
-	public LayerTile mountainTile = new LayerTile(TileType.MountainsLayer, TileType.MountainsLayer);
+	[SerializeField]
+	private string seed = "main";
 
-	public Dictionary<TileType, LayerTile> GetLayerTileDictionary()
-	{
-		Dictionary<TileType, LayerTile> tileDict = new Dictionary<TileType, LayerTile>();
+	[Space(15)]
+	[SerializeField]
+	private Material groundMaterial;
+	[SerializeField]
+	private LayerTile groundTile;
 
-		tileDict.Add(groundTile.GetLayerType(), groundTile);
-		tileDict.Add(waterTile.GetLayerType(), waterTile);
-		tileDict.Add(mountainTile.GetLayerType(), mountainTile);
+	[Space(10)]
+	[SerializeField]
+	private Material waterMaterial;
+	[SerializeField]
+	private LayerTile waterTile;
 
-		return tileDict;
-	}
-
-	public Dictionary<TileType, Tile> GetTileDictionary()
-	{
-		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
-
-		tileDict.Add(groundTile.GetTileType(), groundTile.GetTile());
-		tileDict.Add(waterTile.GetTileType(), waterTile.GetTile());
-		tileDict.Add(mountainTile.GetTileType(), mountainTile.GetTile());
-
-		return tileDict;
-	}
-
-	public LayerTile GetLayerTile(TileType layerType)
-	{
-		return GetLayerTileDictionary()[layerType];
-	}
+	[Space(10)]
+	[SerializeField]
+	private Material mountainMaterial;
+	[SerializeField]
+	private LayerTile mountainTile;
 
 	public GeneratorSettings GetGeneratorSettings(TileType layerType)
 	{
@@ -49,5 +39,32 @@ public class LayerTileSettings
 	public LandscapeSettings GetLandscapeSettings(TileType layerType)
 	{
 		return GetLayerTileDictionary()[layerType].GetLandscapeSettings();
+	}
+
+	public LayerTile GetLayerTile(TileType layerType)
+	{
+		return GetLayerTileDictionary()[layerType];
+	}
+
+	public Dictionary<TileType, LayerTile> GetLayerTileDictionary()
+	{
+		Dictionary<TileType, LayerTile> tileDict = new Dictionary<TileType, LayerTile>();
+
+		groundTile.SetTileType(TileType.GroundLayer, TileType.GroundLayer);
+		groundTile.SetMaterial(groundMaterial);
+		groundTile.SetSeed(seed);
+		tileDict.Add(groundTile.GetLayerType(), groundTile);
+
+		waterTile.SetTileType(TileType.WaterLayer, TileType.WaterLayer);
+		waterTile.SetMaterial(waterMaterial);
+		waterTile.SetSeed(seed);
+		tileDict.Add(waterTile.GetLayerType(), waterTile);
+
+		mountainTile.SetTileType(TileType.MountainLayer, TileType.MountainLayer);
+		mountainTile.SetMaterial(mountainMaterial);
+		mountainTile.SetSeed(seed);
+		tileDict.Add(mountainTile.GetLayerType(), mountainTile);
+
+		return tileDict;
 	}
 }

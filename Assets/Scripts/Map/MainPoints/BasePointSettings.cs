@@ -26,6 +26,14 @@ public class BasePointSettings
 	private DomainSettings[] fermerDomainSets;
 
 
+	public void SetSeed(string seed)
+	{
+		if(overseed == "")
+		{
+			overseed = seed;
+		}
+	}
+
 	public string GetOverseed()
 	{
 		return overseed;
@@ -58,5 +66,20 @@ public class BasePointSettings
 
 			return tiles;
 		}
+	}
+
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		MainPointTile tile = new MainPointTile(TileType.CitizenBasePoint);
+		tile.SetMaterial(citizenBasePointMaterial);
+		tileDict.Add(TileType.CitizenBasePoint, tile.GetTile());
+
+		tile = new MainPointTile(TileType.FermersBasePoint);
+		tile.SetMaterial(fermerBasePointMaterial);
+		tileDict.Add(TileType.FermersBasePoint, tile.GetTile());
+
+		return tileDict;
 	}
 }

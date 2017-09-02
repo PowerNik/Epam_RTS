@@ -9,7 +9,7 @@ public class DecorationSettings
 	public GameObject[] decorPrefabs;
 
 	public GeneratorSettings genSets;
-	public AreaSettings areaSets;
+	public LandscapeSettings landscapeSets;
 
 	public float minScale = 0.7f;
 	public float maxScale = 1.5f;

@@ -21,6 +21,13 @@ public class TradePointSettings
 	[SerializeField]
 	private DomainSettings tradePointDomainSets;
 
+	public void SetSeed(string seed)
+	{
+		if (overseed == "")
+		{
+			overseed = seed;
+		}
+	}
 
 	public string GetOverseed()
 	{
@@ -44,5 +51,14 @@ public class TradePointSettings
 	public int GetTradePointsCount(Race race)
 	{
 		return tradePointCount;
+	}
+
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.TradePoint, new MainPointTile(TileType.TradePoint).GetTile());
+
+		return tileDict;
 	}
 }

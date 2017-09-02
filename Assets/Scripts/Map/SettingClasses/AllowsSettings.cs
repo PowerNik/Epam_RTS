@@ -12,7 +12,7 @@ public static class AllowsSettings
 			case TileType.GroundLayer:
 				return LayerGround;
 			case TileType.WaterLayer:
-			case TileType.MountainsLayer:
+			case TileType.MountainLayer:
 				return LayerNoGround;
 
 			case TileType.FramingFoothill:

@@ -22,7 +22,7 @@ public class TileGrid
 			TileType type = value;
 			if (!dict.ContainsKey(type))
 			{
-				throw new System.ArgumentException();
+				throw new System.ArgumentException("Try add unknown tileType to TileGrid");
 			}
 
 			grid[x, z] = type;
@@ -38,10 +38,12 @@ public class TileGrid
 		CreateGrid();
 	}
 
-	public void SetTile(int x, int z, Tile tile)
+	public void AddTile(Tile tile)
 	{
-		AddTile(tile);
-		grid[x, z] = tile.GetTileType();
+		if (!dict.ContainsKey(tile.GetTileType()))
+		{
+			dict.Add(tile.GetTileType(), tile);
+		}
 	}
 
 	public Tile GetTile(int x, int z)
@@ -52,14 +54,6 @@ public class TileGrid
 	public Dictionary<TileType, Tile> GetTileDictionary()
 	{
 		return dict;
-	}
-
-	private void AddTile(Tile tile)
-	{
-		if (!dict.ContainsKey(tile.GetTileType()))
-		{
-			dict.Add(tile.GetTileType(), tile);
-		}
 	}
 
 	private void CreateGrid()
@@ -79,7 +73,7 @@ public class TileGrid
 	/// Возвращает карту расположения тайла tileType
 	/// </summary>
 	/// <returns> 1 - тайл занят типом tileType, 0 - другим типом тайла</returns>
-	public int[,] GetTileTypeMap(TileType tileType)
+	public int[,] GetTileMap(TileType tileType)
 	{
 		int[,] mas = new int[countX, countZ];
 		for (int x = 0; x < countX; x++)

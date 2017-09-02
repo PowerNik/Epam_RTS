@@ -5,8 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public class FramingTileSettings
 {
-	public FramingTile waterSideTile = new FramingTile(TileType.FramingWaterSide, TileType.WaterLayer);
-	public FramingTile foothillTile = new FramingTile(TileType.FramingFoothill, TileType.MountainsLayer);
+	[SerializeField]
+	private Material waterSideMaterial;
+	[SerializeField]
+	private FramingTile waterSideTile;
+
+	[Space(10)]
+	[SerializeField]
+	private Material foothillMaterial;
+	[SerializeField]
+	private FramingTile foothillTile;
 
 	/// <summary>
 	/// Возвращает пары (обрамляемый тип тайла, обрамляющий тайл)
@@ -16,7 +24,12 @@ public class FramingTileSettings
 	{
 		Dictionary<TileType, FramingTile> dict = new Dictionary<TileType, FramingTile>();
 
+		waterSideTile.SetBandedTile(TileType.FramingWaterSide, TileType.WaterLayer);
+		waterSideTile.SetMaterial(waterSideMaterial);
 		dict.Add(waterSideTile.GetBandedLayerType(), waterSideTile);
+
+		foothillTile.SetBandedTile(TileType.FramingFoothill, TileType.MountainLayer);
+		foothillTile.SetMaterial(foothillMaterial);
 		dict.Add(foothillTile.GetBandedLayerType(), foothillTile);
 
 		return dict;

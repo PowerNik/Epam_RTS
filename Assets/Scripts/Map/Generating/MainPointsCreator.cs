@@ -48,8 +48,17 @@ public class MainPointsCreator
 
 	public void CreateMainPoints()
 	{
+		AddTilesToTileGrid(basePointSets.GetTileDictionary());
 		CreateBasePoints();
 
+	}
+
+	private void AddTilesToTileGrid(Dictionary<TileType, Tile> dict)
+	{
+		foreach (var item in dict)
+		{
+			tileGrid.AddTile(item.Value);
+		}
 	}
 
 	private void CreateBasePoints()
@@ -242,8 +251,7 @@ public class MainPointsCreator
 				if (0 < posX + x && posX + x < tileCountX - 1)
 					if (0 < posZ + z && posZ + z < tileCountZ - 1)
 					{
-						var tile = mainPointsSets.GetMainPointsDictionary()[type];
-						tileGrid.SetTile(posX + x, posZ + z, tile);
+						tileGrid[posX + x, posZ + z] = type;
 					}
 			}
 		}

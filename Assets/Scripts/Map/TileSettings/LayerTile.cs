@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class LayerTile
 {
-	[SerializeField]
 	private Tile tile;
 
 	[SerializeField]
@@ -17,15 +16,14 @@ public class LayerTile
 	[SerializeField]
 	private LandscapeSettings landscapeSets;
 
-
-	public LayerTile(TileType tileType, TileType layerType = TileType.GroundLayer)
+	public void SetTileType(TileType tileType, TileType layerType = TileType.GroundLayer)
 	{
 		tile = new Tile(tileType, layerType);
 	}
 
-	public TileType GetLayerType()
+	public void SetSeed(string seed)
 	{
-		return tile.GetLayerType();
+		genSets.SetSeed(seed);
 	}
 
 	public GeneratorSettings GetGeneratorSettings()
@@ -43,18 +41,28 @@ public class LayerTile
 		return landscapeSets;
 	}
 
+	public void SetMaterial(Material mat)
+	{
+		tile.SetDefaultMaterial(mat);
+	}
+
 	public Material GetMaterial()
 	{
 		return tile.GetMaterial();
 	}
 
-	public Tile GetTile()
-	{
-		return tile;
-	}
-
 	public TileType GetTileType()
 	{
 		return tile.GetTileType();
+	}
+
+	public TileType GetLayerType()
+	{
+		return tile.GetLayerType();
+	}
+
+	public Tile GetTile()
+	{
+		return tile;
 	}
 }

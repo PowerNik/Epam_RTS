@@ -31,6 +31,13 @@ public class ExtractPointSettings
 	[SerializeField]
 	private DomainSettings fermerDomainSets;
 
+	public void SetSeed(string seed)
+	{
+		if (overseed == "")
+		{
+			overseed = seed;
+		}
+	}
 
 	public string GetOverseed()
 	{
@@ -72,5 +79,15 @@ public class ExtractPointSettings
 		{
 			return fermerExtractPointCount;
 		}
+	}
+
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.CitizenExtractPoint, new MainPointTile(TileType.CitizenExtractPoint).GetTile());
+		tileDict.Add(TileType.FermersExtractPoint, new MainPointTile(TileType.FermersExtractPoint).GetTile());
+
+		return tileDict;
 	}
 }

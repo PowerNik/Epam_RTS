@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class MainPointTile
 {
-	[SerializeField]
 	private Tile tile;
 
 	[SerializeField]
@@ -14,16 +13,6 @@ public class MainPointTile
 	public MainPointTile(TileType tileType, TileType layerType = TileType.GroundLayer)
 	{
 		tile = new Tile(tileType, layerType);
-	}
-
-	public void SetMaterial(Material mat)
-	{
-		tile.SetDefaultMaterial(mat);
-	}
-
-	public Material GetMaterial()
-	{
-		return tile.GetMaterial();
 	}
 
 	public void SetDomainSettings(DomainSettings domainSets)
@@ -36,9 +25,14 @@ public class MainPointTile
 		return domainSets;
 	}
 
-	public Tile GetTile()
+	public void SetMaterial(Material mat)
 	{
-		return tile;
+		tile.SetDefaultMaterial(mat);
+	}
+
+	public Material GetMaterial()
+	{
+		return tile.GetMaterial();
 	}
 
 	public TileType GetTileType()
@@ -49,5 +43,10 @@ public class MainPointTile
 	public TileType GetLayerType()
 	{
 		return tile.GetLayerType();
+	}
+
+	public Tile GetTile()
+	{
+		return tile;
 	}
 }

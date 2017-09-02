@@ -11,8 +11,9 @@ public class MapCreator
 	private TileGrid tileGrid;
 	private LayerTileSettings layerTileSets;
 
-	private LayerCreator layerCreator;
 	private MainPointsCreator mainPointsCreator;
+	private LayerCreator layerCreator;
+	private FramingCreator framingCreator;
 
 	private float tileSize;
 
@@ -33,12 +34,14 @@ public class MapCreator
 
 		mainPointsCreator = new MainPointsCreator(mapSizeSets, mapSetsManager.GetMainPointsSettings(), ref tileGrid);
 		layerCreator = new LayerCreator(mapSizeSets, layerTileSets, ref tileGrid);
+		framingCreator = new FramingCreator(mapSizeSets, mapSetsManager.GetFramingTileSettings(), ref tileGrid);
 	}
 
 	private void MapCreating()
 	{
 		mainPointsCreator.CreateMainPoints();
 		layerCreator.CreateLayers();
+		framingCreator.CreateLayerFraming();
 
 		CitizenBasePoint = mainPointsCreator.CitizenBasePoint;
 		FermerBasePoints = mainPointsCreator.FermerBasePoints;
@@ -46,15 +49,19 @@ public class MapCreator
 
 	public void CreateMapMesh(GameObject map)
 	{
-		CreateMeshForLayer(map, TileType.GroundLayer);
+		foreach (var item in tileGrid.GetTileDictionary())
+		{
+			CreateMeshForLayer(map, item.Key);
+		}
+
+		/*CreateMeshForLayer(map, TileType.GroundLayer);
 		CreateMeshForLayer(map, TileType.WaterLayer);
-		CreateMeshForLayer(map, TileType.MountainsLayer);
+		CreateMeshForLayer(map, TileType.MountainLayer);*/
 	}
 
 	private void CreateMeshForLayer(GameObject map, TileType tileType)
 	{
-		int[,] mas = tileGrid.GetTileTypeMap(tileType);
-		MeshSettings meshSets = layerTileSets.GetMeshSettings(tileType);
+		int[,] mas = tileGrid.GetTileMap(tileType);
 
 		GameObject layerGO = new GameObject();
 		layerGO.name = tileType.ToString();
@@ -62,11 +69,17 @@ public class MapCreator
 		layerGO.AddComponent<MeshCollider>();
 		layerGO.AddComponent<MeshFilter>();
 
-		LayerTile tile = layerTileSets.GetLayerTile(tileType);
-		layerGO.AddComponent<MeshRenderer>().material = tile.GetMaterial();
+		MeshSettings meshSets = new MeshSettings();
+		if (layerTileSets.GetLayerTileDictionary().ContainsKey(tileType))
+		{
+			meshSets = layerTileSets.GetMeshSettings(tileType);
+		}
 
 		MeshGenerator meshGen = layerGO.AddComponent<MeshGenerator>();
 		meshGen.GenerateMesh(mas, tileSize, meshSets);
 		meshGen.gameObject.AddComponent<NavMeshSourceTag>();
+
+		Tile tile = tileGrid.GetTileDictionary()[tileType];
+		layerGO.AddComponent<MeshRenderer>().material = tile.GetMaterial();
 	}
 }

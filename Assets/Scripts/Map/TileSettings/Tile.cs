@@ -27,8 +27,6 @@ public class Tile
 		allows = AllowsSettings.GetAllow(tileType);
 	}
 
-
-
 	public TileType GetLayerType()
 	{
 		return layerType;

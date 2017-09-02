@@ -24,10 +24,15 @@ public class LayerCreator
 	}
 
 	public void CreateLayers()
-	{		
+	{
+		foreach (var item in layerTileSets.GetLayerTileDictionary())
+		{
+			tileGrid.AddTile(item.Value.GetTile());
+		}
+
 		//TODO Nik
 		int border = 2;
-		CreateLayer(TileType.MountainsLayer, border);
+		CreateLayer(TileType.MountainLayer, border);
 
 		CreateLayer(TileType.WaterLayer);
 		CreateLayer(TileType.GroundLayer);
@@ -38,7 +43,7 @@ public class LayerCreator
 	private void CorrectLayers()
 	{
 		CorrectAreas(TileType.WaterLayer);
-		CorrectAreas(TileType.MountainsLayer);
+		CorrectAreas(TileType.MountainLayer);
 	}
 
 	private void CreateLayer(TileType layerType, int border = 0)
@@ -50,9 +55,9 @@ public class LayerCreator
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				if (grid[x, z] == 1 && tileGrid[x,z] == TileType.None)
+				if (grid[x, z] == 1 && tileGrid[x, z] == TileType.None)
 				{
-					tileGrid.SetTile(x, z, layerTileSets.GetTileDictionary()[layerType]);
+					tileGrid[x, z] = layerType;
 				}
 			}
 		}
@@ -86,7 +91,7 @@ public class LayerCreator
 			{
 				foreach (int[] point in list[i])
 				{
-					tileGrid.SetTile(point[0], point[1],  layerTileSets.GetLayerTile(TileType.GroundLayer).GetTile());
+					tileGrid[point[0], point[1]] = TileType.GroundLayer;
 				}
 				list.RemoveAt(i);
 				i--;
@@ -100,7 +105,7 @@ public class LayerCreator
 	{
 		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
 
-		int seedHash = genSets.seed.GetHashCode();
+		int seedHash = genSets.GetOverseed().GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
 		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
@@ -115,7 +120,7 @@ public class LayerCreator
 
 			foreach (int[] point in list[index])
 			{
-				tileGrid.SetTile(point[0], point[1], layerTileSets.GetLayerTile(TileType.GroundLayer).GetTile());
+				tileGrid[point[0], point[1]] = TileType.GroundLayer;
 			}
 			list.RemoveAt(index);
 		}
@@ -128,14 +133,14 @@ public class LayerCreator
 	/// <returns></returns>
 	private List<List<int[]>> GetAllAreas(TileType layerType)
 	{
-		int[,] layerMap = tileGrid.GetTileTypeMap(layerType);
+		int[,] layerMap = tileGrid.GetTileMap(layerType);
 		var allAreasList = new List<List<int[]>>();
 
 		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				// Равносильно LayerGrid[x, z] == layerType
+				// Равносильно layerGrid[x, z] == layerType
 				if (layerMap[x, z] == 1)
 				{
 					var areaList = GetArea(x, z, ref layerMap);

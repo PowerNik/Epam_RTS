@@ -31,6 +31,13 @@ public class NeutralPointSettings
 	[SerializeField]
 	private DomainSettings peacefulNeuntralPointDomainSets;
 
+	public void SetSeed(string seed)
+	{
+		if (overseed == "")
+		{
+			overseed = seed;
+		}
+	}
 
 	public string GetOverseed()
 	{
@@ -72,5 +79,17 @@ public class NeutralPointSettings
 		{
 			return peacefulNeuntralPointCount;
 		}
+	}
+
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.AggressiveNeuntralsPoint,
+			new MainPointTile(TileType.AggressiveNeuntralsPoint).GetTile());
+		tileDict.Add(TileType.PeacefulNeuntralsPoint, 
+			new MainPointTile(TileType.PeacefulNeuntralsPoint).GetTile());
+
+		return tileDict;
 	}
 }

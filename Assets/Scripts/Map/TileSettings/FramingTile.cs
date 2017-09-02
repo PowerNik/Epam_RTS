@@ -5,20 +5,39 @@ using UnityEngine;
 [System.Serializable]
 public class FramingTile
 {
-	[SerializeField]
 	private Tile tile;
 
 	private TileType bandedLayerType = TileType.FramingWaterSide;
 
-	public FramingTile(TileType tileType, TileType bandedLayerType)
+	public void SetBandedTile(TileType tileType, TileType bandedLayerType)
 	{
 		tile = new Tile(tileType, TileType.GroundLayer);
 		this.bandedLayerType = bandedLayerType;
 	}
 
+	public void SetMaterial(Material mat)
+	{
+		tile.SetDefaultMaterial(mat);
+	}
+
+	public Material GetMaterial()
+	{
+		return tile.GetMaterial();
+	}
+
+	public TileType GetTileType()
+	{
+		return tile.GetTileType();
+	}
+
 	public TileType GetLayerType()
 	{
 		return tile.GetLayerType();
+	}
+
+	public Tile GetTile()
+	{
+		return tile;
 	}
 
 	/// <summary>
@@ -28,15 +47,5 @@ public class FramingTile
 	public TileType GetBandedLayerType()
 	{
 		return bandedLayerType;
-	}
-
-	public Tile GetTile()
-	{
-		return tile;
-	}
-
-	public TileType GetTileType()
-	{
-		return tile.GetTileType();
 	}
 }

@@ -4,7 +4,7 @@ public enum TileType
 	None = 0,
 	GroundLayer = 1,
 	WaterLayer = 2,
-	MountainsLayer = 3,
+	MountainLayer = 3,
 
 	FramingWaterSide = 10,
 	FramingFoothill = 11,
