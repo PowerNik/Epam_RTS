@@ -54,7 +54,7 @@ public class ExtractPointSettings
 		}
 		else
 		{
-			MainPointTile tile = new MainPointTile(TileType.FermersBasePoint);
+			MainPointTile tile = new MainPointTile(TileType.FermersExtractPoint);
 			tile.SetMaterial(fermerExtractPointMaterial);
 			tile.SetDomainSettings(fermerDomainSets);
 

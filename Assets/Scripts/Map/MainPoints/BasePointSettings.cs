@@ -54,7 +54,6 @@ public class BasePointSettings
 				tiles[i] = new MainPointTile(TileType.FermersBasePoint);
 				tiles[i].SetMaterial(fermerBasePointMaterial);
 				tiles[i].SetDomainSettings(fermerDomainSets[i]);
-
 			}
 
 			return tiles;

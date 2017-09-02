@@ -1,9 +1,10 @@
 ﻿
 public enum TileType
 {
-	GroundLayer = 0,
-	WaterLayer = 1,
-	MountainsLayer = 2,
+	None = 0,
+	GroundLayer = 1,
+	WaterLayer = 2,
+	MountainsLayer = 3,
 
 	FramingWaterSide = 10,
 	FramingFoothill = 11,
@@ -14,8 +15,8 @@ public enum TileType
 	CitizenExtractPoint = 30,
 	FermersExtractPoint = 31,
 
-	PeacefulNeuntralsPoint = 40,
-	AggressiveNeuntralsPoint = 41,
+	AggressiveNeuntralsPoint = 40,
+	PeacefulNeuntralsPoint = 41,
 
 	TradePoint = 50,
 }
