@@ -1,7 +1,7 @@
 ﻿public enum MainPointType
 {
-	BasePoint = 1,
-	ExtractPoint = 2,
-	TradePoint = 3,
-	NeutralPoint = 4,
+	Base = 1,
+	Extract = 2,
+	Trade = 3,
+	Neutral = 4,
 }

@@ -1,11 +1,27 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MainPointsCreator
 {
-	public Vector3 CitizenBasePoint { get; private set; }
-	public Vector3[] FermerBasePoints { get; private set; }
+	public Vector3 CitizenBasePoint
+	{
+		get
+		{
+			return mainPointPositions[MainPointType.Base][Race.Citizen][0];
+		}
+	}
+	public Vector3[] FermerBasePoints
+	{
+		get
+		{
+			return mainPointPositions[MainPointType.Base][Race.Fermer];
+		}
+	}
+
+	private Dictionary<MainPointType, Dictionary<Race, Vector3[]>> mainPointPositions =
+		new Dictionary<MainPointType, Dictionary<Race, Vector3[]>>();
 
 	private TileGrid tileGrid;
 
@@ -14,14 +30,20 @@ public class MainPointsCreator
 	private float tileSize;
 	private string seed;
 
+	/// <summary>
+	/// В одном регионе располагается только база, без ресурсов?
+	/// </summary>
+	private bool isUnique;
+
 	private MainPointsSettingsSO mainPointsSets;
 	private IMainPointSettings currentMainPointSets;
-	private SectorSettings regionSets;
 
 	/// <summary>
 	/// Первичное разбиение карты. В одном регионе может быть только одна база
 	/// </summary>
 	private TileType[,] regions;
+	private int regionCountX;
+	private int regionCountZ;
 
 	/// <summary>
 	/// Каждый регион дополнительно разбивается на сектора.
@@ -29,6 +51,8 @@ public class MainPointsCreator
 	/// (ExtractPoint, TradePoint, NeutralPoint)
 	/// </summary>
 	private TileType[,] sectors;
+	private int sectorCountX;
+	private int sectorCountZ;
 
 	public MainPointsCreator(MapSizeSettings mapSizeSets, MainPointsSettingsSO mainPointsSets, ref TileGrid tileGrid)
 	{
@@ -38,19 +62,69 @@ public class MainPointsCreator
 		tileCountX = mapSizeSets.TileCountX;
 		tileCountZ = mapSizeSets.TileCountZ;
 		tileSize = mapSizeSets.tileSize;
-
-		regionSets = mainPointsSets.GetRegionSettings();
-		regions = new TileType[regionSets.countX, regionSets.countZ];
 	}
 
 	public void CreateMainPoints()
 	{
-		currentMainPointSets = mainPointsSets.GetMainPointSettings(MainPointType.BasePoint);
+		CreateRegionsAndSectors();
+
+		ChooseMainPointSettings(MainPointType.Base);
+		SetRegionDataOnSectors();
+
+		GenerateMainPointPosition(MainPointType.Base, Race.Citizen);
+		GenerateMainPointPosition(MainPointType.Base, Race.Fermer);
+
+		ChooseMainPointSettings(MainPointType.Extract);
+		GenerateMainPointPosition(MainPointType.Extract, Race.Citizen);
+		GenerateMainPointPosition(MainPointType.Extract, Race.Fermer);
+
+		ChooseMainPointSettings(MainPointType.Neutral);
+		GenerateMainPointPosition(MainPointType.Neutral, Race.Citizen);
+		GenerateMainPointPosition(MainPointType.Neutral, Race.Fermer);
+
+		ChooseMainPointSettings(MainPointType.Trade);
+		GenerateMainPointPosition(MainPointType.Trade, Race.Citizen);
+	}
+
+	private void CreateRegionsAndSectors()
+	{
+		SectorSettings sectorSets = mainPointsSets.GetSectorsSettings();
+
+		regionCountX = sectorSets.regionCountX;
+		regionCountZ = sectorSets.regionCountZ;
+		regions = new TileType[regionCountX, regionCountZ];
+
+		sectorCountX = sectorSets.sectorCountX * regionCountX;
+		sectorCountZ = sectorSets.sectorCountZ * regionCountZ;
+		sectors = new TileType[sectorCountX, sectorCountZ];
+
+		isUnique = sectorSets.isUnique;
+	}
+
+	private void ChooseMainPointSettings(MainPointType type)
+	{
+		currentMainPointSets = mainPointsSets.GetMainPointSettings(type);
 		seed = currentMainPointSets.GetSeed();
 
 		AddTilesToTileGrid(currentMainPointSets.GetTileDictionary());
-		CreateBasePoints();
 
+		if (type == MainPointType.Base)
+		{
+			SectorGenerator.SetGeneratingParams(regions, seed, currentMainPointSets.GetIsCenter());
+			CreatePoints(Race.Citizen, true);
+			CreatePoints(Race.Fermer, false);
+			regions = SectorGenerator.GetSectors();
+		}
+		else
+		{
+			SectorGenerator.SetGeneratingParams(sectors, seed, currentMainPointSets.GetIsCenter());
+			CreatePoints(Race.Citizen, true);
+			if (type != MainPointType.Trade)
+			{
+				CreatePoints(Race.Fermer, false);
+			}
+			sectors = SectorGenerator.GetSectors();
+		}
 	}
 
 	private void AddTilesToTileGrid(Dictionary<TileType, Tile> dict)
@@ -61,195 +135,126 @@ public class MainPointsCreator
 		}
 	}
 
-	private void CreateBasePoints()
+	/// <summary>
+	/// </summary>
+	/// <param name="race"></param>
+	/// <param name="getIsCenter">Взять ли значение GetIsCenter() из currentMainPointSets</param>
+	private void CreatePoints(Race race, bool getIsCenter)
 	{
-		SectoringCitizenBasePoint();
-		SectoringFermerBasePoints();
+		TileType type = currentMainPointSets.GetMainPoint(race).GetTileType();
+		int count = currentMainPointSets.GetMainPointCount(race);
 
-		PlaceCitizenBasePointOnMap();
-		PlaceFermerBasePointsOnMap();
-		SetBasePointsArea();
+		bool isCenter = false;
+		if (getIsCenter)
+		{
+			isCenter = currentMainPointSets.GetIsCenter();
+		}
+
+		SectorGenerator.GeneratePoints(type, count, isCenter);
 	}
 
-	private void SectoringCitizenBasePoint()
+	/// <summary>
+	/// Помещает регионы расположения баз на более мелкое разбиение секторов
+	/// </summary>
+	private void SetRegionDataOnSectors()
+	{
+		for (int x = 0; x < sectorCountX; x++)
+		{
+			for (int z = 0; z < sectorCountZ; z++)
+			{
+				// TODO Nik isUnique
+				// Заполнять сектора в зависимости от размеров баз?
+				// Тогда прям рядом с базой может попасться ресурс, рынок или точка нейтралов
+				int secWidth = sectorCountX / regionCountX;
+				int secLength = sectorCountZ / regionCountZ;
+				sectors[x, z] = regions[x / secWidth, z / secLength];
+			}
+		}
+	}
+
+	private void GenerateMainPointPosition(MainPointType pointType, Race race)
 	{
 		int seedHash = seed.GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		int xCoord;
-		int zCoord;
+		// Базы размещаются по регионам
+		int countX = regionCountX;
+		int countZ = regionCountZ;
+		TileType[,] tileMas = regions;
 
-		if (currentMainPointSets.GetIsCenter())
+		// Другие главные точки - по секторам
+		if (pointType != MainPointType.Base)
 		{
-			List<KeyValuePair<int, int>> centerCoordXZ = CalculateCenterSectors();
-			int centerIndex = pseudoRandom.Next(0, centerCoordXZ.Count);
+			countX = sectorCountX;
+			countZ = sectorCountZ;
+			tileMas = sectors;
+		}
 
-			xCoord = centerCoordXZ[centerIndex].Key;
-			zCoord = centerCoordXZ[centerIndex].Value;
+		int width = tileGrid.CountX / countX;
+		int length = tileGrid.CountZ / countZ;
+
+		TileType tileType = currentMainPointSets.GetMainPoint(race).GetTileType();
+		Vector3[] mas = new Vector3[currentMainPointSets.GetMainPointCount(race)];
+		int currentPoint = 0;
+
+		for (int x = 0; x < countX; x++)
+		{
+			for (int z = 0; z < countZ; z++)
+			{
+				if (tileMas[x, z] == tileType)
+				{
+					tileMas[x, z] = TileType.None;
+
+					// Сдвиги относительно центра области (региона или сектора)
+					int deltaX = width / 2 + pseudoRandom.Next(-width / 4, width / 4);
+					int deltaZ = length / 2 + pseudoRandom.Next(-length / 4, length / 4);
+
+					float xPos = x * width + deltaX;
+					float zPos = z * length + deltaZ;
+					mas[currentPoint] = new Vector3(xPos, 0, zPos);
+					currentPoint++;
+				}
+			}
+		}
+
+		if (mainPointPositions.ContainsKey(pointType) == false)
+		{
+			var dict = new Dictionary<Race, Vector3[]>();
+			dict.Add(race, mas);
+			mainPointPositions.Add(pointType, dict);
 		}
 		else
 		{
-			xCoord = pseudoRandom.Next(0, regionSets.countX);
-			zCoord = pseudoRandom.Next(0, regionSets.countZ);
+			mainPointPositions[pointType].Add(race, mas);
 		}
 
-		regions[xCoord, zCoord] = TileType.CitizenBasePoint;
+		SetBasePointsArea(pointType, race);
 	}
 
-	private List<KeyValuePair<int, int>> CalculateCenterSectors()
+	private void SetBasePointsArea(MainPointType pointType, Race race)
 	{
-		// Диапазон номеров секторов для баз горожан
-		int[] xIndices = CalculateCenter(regionSets.countX);
-		int[] zIndices = CalculateCenter(regionSets.countZ);
+		var dict = mainPointPositions[pointType];
+		MainPointTile mainPoint = mainPointsSets.GetMainPointSettings(pointType).GetMainPoint(race);
 
-		List<KeyValuePair<int, int>> coordValuePairs = new List<KeyValuePair<int, int>>();
-		for (int x = 0; x < xIndices.Length; x++)
+		float areaSize = mainPoint.GetDomainSettings().mainRadius / tileSize;
+		for (int i = 0; i < dict[race].Length; i++)
 		{
-			for (int z = 0; z < zIndices.Length; z++)
-			{
-				coordValuePairs.Add(new KeyValuePair<int, int>(xIndices[x], zIndices[z]));
-			}
-		}
-
-		return coordValuePairs;
-	}
-
-	private int[] CalculateCenter(int sectorsCount)
-	{
-		// Если число секторов нечетно, то середина - один сектор 
-		// Иначе середина - два сектора
-		int[] res;
-		if (sectorsCount % 2 == 1)
-		{
-			res = new int[] { (sectorsCount - 1) / 2 };
-		}
-		else
-		{
-			int x1 = (sectorsCount - 2) / 2;
-			int x2 = x1 + 1;
-			res = new int[] { x1, x2 };
-		}
-
-		return res;
-	}
-
-	private void SectoringFermerBasePoints()
-	{
-		int seedHash = seed.GetHashCode();
-		System.Random pseudoRandom = new System.Random(seedHash);
-
-		int xCoord;
-		int zCoord;
-
-		for (int i = 0; i < currentMainPointSets.GetMainPointCount(Race.Fermer); i++)
-		{
-			while (true)
-			{
-				int val = pseudoRandom.Next(0, regionSets.countX * regionSets.countZ * 10);
-				val = val % (regionSets.countX * regionSets.countZ);
-
-				xCoord = val / regionSets.countZ;
-				zCoord = val % regionSets.countZ;
-
-				if (regions[xCoord, zCoord] != TileType.CitizenBasePoint)
-				{
-					regions[xCoord, zCoord] = TileType.FermersBasePoint;
-					break;
-				}
-			}
+			SetArea((int)areaSize, dict[race][i], mainPoint.GetTileType());
+			dict[race][i] *= tileSize;
 		}
 	}
 
-	private void PlaceCitizenBasePointOnMap()
-	{
-		int seedHash = seed.GetHashCode();
-		System.Random pseudoRandom = new System.Random(seedHash);
-
-		int sectorWidth = tileGrid.CountX / regionSets.countX;
-		int sectorLength = tileGrid.CountZ / regionSets.countZ;
-
-		// Размещение в центре сектора + сдвиг
-		int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
-		int zCoord = sectorLength / 2 + pseudoRandom.Next(-sectorLength / 4, sectorLength / 4);
-
-		for (int x = 0; x < regionSets.countX; x++)
-		{
-			for (int z = 0; z < regionSets.countZ; z++)
-			{
-				if (regions[x, z] == TileType.CitizenBasePoint)
-				{
-					float xPos = x * sectorWidth + xCoord;
-					float zPos = z * sectorLength + zCoord;
-					CitizenBasePoint = new Vector3(xPos, 0, zPos);
-				}
-			}
-		}
-	}
-
-	private void PlaceFermerBasePointsOnMap()
-	{
-		int seedHash = seed.GetHashCode();
-		System.Random pseudoRandom = new System.Random(seedHash);
-
-		int sectorWidth = tileGrid.CountX / regionSets.countX;
-		int sectorLength = tileGrid.CountZ / regionSets.countZ;
-
-		FermerBasePoints = new Vector3[currentMainPointSets.GetMainPointCount(Race.Fermer)];
-		bool isSetBase = false;
-
-		for (int i = 0; i < FermerBasePoints.Length; i++)
-		{
-			isSetBase = false;
-			for (int x = 0; x < regionSets.countX; x++)
-			{
-				for (int z = 0; z < regionSets.countZ; z++)
-				{
-					if (regions[x, z] == TileType.FermersBasePoint && isSetBase == false)
-					{
-						int xCoord = sectorWidth / 2 + pseudoRandom.Next(-sectorWidth / 4, sectorWidth / 4);
-						int zCoord = sectorLength / 2 + pseudoRandom.Next(-sectorLength / 4, sectorLength / 4);
-
-						float xPos = x * sectorWidth + xCoord;
-						float zPos = z * sectorLength + zCoord;
-						FermerBasePoints[i] = new Vector3(xPos, 0, zPos);
-
-						regions[x, z] = TileType.None;
-						isSetBase = true;
-					}
-				}
-			}
-		}
-	}
-
-	private void SetBasePointsArea()
-	{
-		SetAreaParams((int)(currentMainPointSets.GetMainPoint(Race.Citizen).GetDomainSettings().mainRadius / tileSize), 
-			CitizenBasePoint, TileType.CitizenBasePoint);
-		CitizenBasePoint *= tileSize;
-
-		for (int i = 0; i < currentMainPointSets.GetMainPointCount(Race.Fermer); i++)
-		{
-			SetAreaParams((int)(currentMainPointSets.GetMainPoint(Race.Fermer).GetDomainSettings().mainRadius / tileSize), 
-				FermerBasePoints[i], TileType.FermersBasePoint);
-			FermerBasePoints[i] *= tileSize;
-		}
-	}
-
-	private void SetAreaParams(int areaSize, Vector3 pos, TileType type)
+	private void SetArea(int areaSize, Vector3 pos, TileType type)
 	{
 		int posX = (int)pos.x;
 		int posZ = (int)pos.z;
-		SetArea(areaSize, posX, posZ, type);
-	}
 
-	private void SetArea(int areaSize, int posX, int posZ, TileType type)
-	{
 		for (int x = -areaSize; x < areaSize; x++)
 		{
 			for (int z = -areaSize; z < areaSize; z++)
 			{
-				if (0 < posX + x && posX + x < tileGrid.CountX - 1)
-					if (0 < posZ + z && posZ + z < tileGrid.CountZ - 1)
+				if (0 <= posX + x && posX + x < tileGrid.CountX)
+					if (0 <= posZ + z && posZ + z < tileGrid.CountZ)
 					{
 						tileGrid[posX + x, posZ + z] = type;
 					}

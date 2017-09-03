@@ -60,8 +60,8 @@ public class ExtractPointSettings : IMainPointSettings
 	{
 		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
 
-		tileDict.Add(TileType.CitizenExtractPoint, new MainPointTile(TileType.CitizenExtractPoint).GetTile());
-		tileDict.Add(TileType.FermersExtractPoint, new MainPointTile(TileType.FermersExtractPoint).GetTile());
+		tileDict.Add(TileType.CitizenExtractPoint, GetMainPoint(Race.Citizen).GetTile());
+		tileDict.Add(TileType.FermersExtractPoint, GetMainPoint(Race.Fermer).GetTile());
 
 		return tileDict;
 	}

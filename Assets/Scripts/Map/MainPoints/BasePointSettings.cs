@@ -57,13 +57,8 @@ public class BasePointSettings : IMainPointSettings
 	{
 		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
 
-		MainPointTile tile = new MainPointTile(TileType.CitizenBasePoint);
-		tile.SetMaterial(citizenBasePointMaterial);
-		tileDict.Add(TileType.CitizenBasePoint, tile.GetTile());
-
-		tile = new MainPointTile(TileType.FermersBasePoint);
-		tile.SetMaterial(fermerBasePointMaterial);
-		tileDict.Add(TileType.FermersBasePoint, tile.GetTile());
+		tileDict.Add(TileType.CitizenBasePoint, GetMainPoint(Race.Citizen).GetTile());
+		tileDict.Add(TileType.FermersBasePoint, GetMainPoint(Race.Fermer).GetTile());
 
 		return tileDict;
 	}

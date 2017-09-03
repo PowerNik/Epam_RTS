@@ -60,10 +60,8 @@ public class NeutralPointSettings : IMainPointSettings
 	{
 		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
 
-		tileDict.Add(TileType.AggressiveNeuntralsPoint,
-			new MainPointTile(TileType.AggressiveNeuntralsPoint).GetTile());
-		tileDict.Add(TileType.PeacefulNeuntralsPoint,
-			new MainPointTile(TileType.PeacefulNeuntralsPoint).GetTile());
+		tileDict.Add(TileType.AggressiveNeuntralsPoint, GetMainPoint(Race.Citizen).GetTile());
+		tileDict.Add(TileType.PeacefulNeuntralsPoint, GetMainPoint(Race.Fermer).GetTile());
 
 		return tileDict;
 	}

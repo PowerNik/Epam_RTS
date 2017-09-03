@@ -23,13 +23,8 @@ public class MainPointsSettingsSO : ScriptableObject
 	private string seed = "";
 	private string mainSeed = "";
 
-	[Tooltip("Сетка карты для баз")]
 	[SerializeField]
-	private SectorSettings regionSettings;
-
-	[SerializeField]
-	[Tooltip("Сетка каждого региона для ресурсов, рынков, нейтралов")]
-	private SectorSettings localSectorSettings;
+	private SectorSettings sectorSettings;
 
 	public void SetMainSeed(string mainSeed)
 	{
@@ -42,19 +37,19 @@ public class MainPointsSettingsSO : ScriptableObject
 		switch (type)
 		{
 			default:
-			case MainPointType.BasePoint:
+			case MainPointType.Base:
 				sets = BasePointSettings.GetBasePointSettings();
 				break;
 
-			case MainPointType.ExtractPoint:
+			case MainPointType.Extract:
 				sets = ExtractPointSettings.GetExtractPointSettings();
 				break;
 
-			case MainPointType.TradePoint:
+			case MainPointType.Trade:
 				sets = TradePointSettings.GetTradePointSettings();
 				break;
 
-			case MainPointType.NeutralPoint:
+			case MainPointType.Neutral:
 				sets = NeutralPointSettings.GetNeutralPointSettings();
 				break;
 		}
@@ -71,13 +66,8 @@ public class MainPointsSettingsSO : ScriptableObject
 		return sets;
 	}
 
-	public SectorSettings GetRegionSettings()
+	public SectorSettings GetSectorsSettings()
 	{
-		return regionSettings;
-	}
-
-	public SectorSettings GetLocalSectorsSettings()
-	{
-		return localSectorSettings;
+		return sectorSettings;
 	}
 }

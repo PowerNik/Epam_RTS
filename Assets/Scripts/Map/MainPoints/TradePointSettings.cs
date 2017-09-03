@@ -49,9 +49,7 @@ public class TradePointSettings : IMainPointSettings
 	public Dictionary<TileType, Tile> GetTileDictionary()
 	{
 		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
-
-		tileDict.Add(TileType.TradePoint, new MainPointTile(TileType.TradePoint).GetTile());
-
+		tileDict.Add(TileType.TradePoint, GetMainPoint(Race.Citizen).GetTile());
 		return tileDict;
 	}
 
