@@ -30,11 +30,6 @@ public class MainPointsCreator
 	private float tileSize;
 	private string seed;
 
-	/// <summary>
-	/// В одном регионе располагается только база, без ресурсов?
-	/// </summary>
-	private bool isUnique;
-
 	private MainPointsSettingsSO mainPointsSets;
 	private IMainPointSettings currentMainPointSets;
 
@@ -71,6 +66,8 @@ public class MainPointsCreator
 		CreateMainPoints(sectors, MainPointType.Extract);
 		CreateMainPoints(sectors, MainPointType.Neutral);
 		CreateMainPoints(sectors, MainPointType.Trade);
+
+		FramingNonDecorableAreas();
 	}
 
 	private void CreateRegionsAndSectors()
@@ -82,8 +79,6 @@ public class MainPointsCreator
 		int sectorCountX = sectorSets.sectorCountX * sectorSets.regionCountX;
 		int sectorCountZ = sectorSets.sectorCountZ * sectorSets.regionCountZ;
 		sectors = new TileType[sectorCountX, sectorCountZ];
-
-		isUnique = sectorSets.isUnique;
 	}
 
 	private void CreateMainPoints(TileType[,] tileMas, MainPointType pointType)
@@ -291,5 +286,15 @@ public class MainPointsCreator
 						}
 			}
 		}
+	}
+
+	private void FramingNonDecorableAreas()
+	{
+		var dict = new Dictionary<TileType, FramingTile>();
+		FramingTile tile = new FramingTile();
+		tile.SetBandedTile(TileType.GroundLayer, TileType.NonDecorable);
+		dict.Add(TileType.NonDecorable, tile);
+
+		new FramingCreator(dict, ref tileGrid);
 	}
 }

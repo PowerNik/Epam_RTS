@@ -20,18 +20,16 @@ public class LayerCreator
 
 		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
 		this.layerSets = layerSets;
-	}
 
-	public void CreateLayers()
-	{
 		foreach (var item in layerSets.GetLayerTileDictionary())
 		{
 			tileGrid.AddTile(item.Value.GetTile());
 		}
+	}
 
-		//TODO Nik
-		int border = 2;
-		CreateLayer(TileType.MountainLayer, border);
+	public void CreateLayers()
+	{
+		CreateLayer(TileType.MountainLayer);
 
 		CreateLayer(TileType.WaterLayer);
 		CreateLayer(TileType.GroundLayer);
@@ -47,10 +45,10 @@ public class LayerCreator
 		CorrectAreas(TileType.MountainLayer);
 	}
 
-	private void CreateLayer(TileType layerType, int border = 0)
+	private void CreateLayer(TileType layerType)
 	{
 		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
-		int[,] grid = RandomGenerator.Generate(genSets, border);
+		int[,] grid = RandomGenerator.Generate(genSets);
 
 		for (int x = 0; x < tileCountX; x++)
 		{

@@ -7,8 +7,13 @@ public class FramingTile
 {
 	private Tile tile;
 
-	private TileType bandedLayerType = TileType.WaterFraming;
+	private TileType bandedLayerType = TileType.WaterLayer;
 
+	/// <summary>
+	/// Тип тайла, тип обрамляемого тайла
+	/// </summary>
+	/// <param name="tileType"></param>
+	/// <param name="bandedLayerType"></param>
 	public void SetBandedTile(TileType tileType, TileType bandedLayerType)
 	{
 		tile = new Tile(tileType, TileType.GroundLayer);

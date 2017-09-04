@@ -17,8 +17,4 @@ public class SectorSettings
 	public int sectorCountX = 4;
 	[Range(3, 5)]
 	public int sectorCountZ = 4;
-
-	[Space(10)]
-	[Tooltip("В одном регионе располагается только база, без ресурсов?")]
-	public bool isUnique = true;
 }

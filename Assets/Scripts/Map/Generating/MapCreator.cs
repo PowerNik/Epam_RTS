@@ -50,10 +50,6 @@ public class MapCreator
 		{
 			CreateMeshForLayer(map, item.Key);
 		}
-
-		/*CreateMeshForLayer(map, TileType.GroundLayer);
-		CreateMeshForLayer(map, TileType.WaterLayer);
-		CreateMeshForLayer(map, TileType.MountainLayer);*/
 	}
 
 	private void CreateMeshForLayer(GameObject map, TileType tileType)

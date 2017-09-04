@@ -32,8 +32,7 @@ public class FramingCreator
 		{
 			for (int z = 0; z < tileGrid.CountZ; z++)
 			{
-				// Обрамление происходит только на земле
-				if (tileGrid[x, z] == TileType.GroundLayer)
+				if (tileGrid[x, z] == TileType.GroundLayer || tileGrid[x, z] == TileType.None)
 				{
 					if (IsNearestTilesHasType(x, z, areaType))
 					{

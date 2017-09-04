@@ -24,7 +24,7 @@ public class TileGrid
 			TileType type = value;
 			if (!dict.ContainsKey(type))
 			{
-				throw new System.ArgumentException("Try add unknown tileType to TileGrid");
+				throw new System.ArgumentException("Try add unknown tileType to TileGrid " + type);
 			}
 
 			grid[x, z] = type;
@@ -79,17 +79,37 @@ public class TileGrid
 	public int[,] GetTileMap(TileType tileType)
 	{
 		int[,] mas = new int[CountX, CountZ];
+		if(tileType == TileType.NonDecorable) // Костыль
+		{
+			return mas;
+		}
+
 		for (int x = 0; x < CountX; x++)
 		{
 			for (int z = 0; z < CountZ; z++)
 			{
-				if (grid[x, z] == tileType)
+				if (tileType != TileType.GroundLayer)
 				{
-					mas[x, z] = 1;
+					if (grid[x, z] == tileType)
+					{
+						mas[x, z] = 1;
+					}
+					else
+					{
+						mas[x, z] = 0;
+					}
 				}
 				else
 				{
-					mas[x, z] = 0;
+					//Костыль, чтобы NonDecorable и GroundLayer имели один меш
+					if (grid[x, z] == tileType || grid[x, z] == TileType.NonDecorable)
+					{
+						mas[x, z] = 1;
+					}
+					else
+					{
+						mas[x, z] = 0;
+					}
 				}
 			}
 		}
