@@ -88,7 +88,7 @@ public class MapManager : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit))
 		{
-			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, race);
+			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 2.5f, 3f, race);
 		}
 	}
 

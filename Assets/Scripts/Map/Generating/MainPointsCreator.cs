@@ -177,9 +177,9 @@ public class MainPointsCreator
 			{
 				if (tileMas[x, z] == tileType)
 				{
-					int radius = CalculateRadius(race, width, length);
-					float posX = GeneratePosition(radius, width, x, pseudoRandom);
-					float posZ = GeneratePosition(radius, length, z, pseudoRandom);
+					int nonDecSize = CalculateNonDecorableSize(race, width, length);
+					float posX = GeneratePosition(nonDecSize, width, x, pseudoRandom);
+					float posZ = GeneratePosition(nonDecSize, length, z, pseudoRandom);
 
 					positionMas[currentPoint] = new Vector3(posX, 0, posZ);
 					currentPoint++;
@@ -191,23 +191,26 @@ public class MainPointsCreator
 		SetMainPointsArea(tileMas, pointType, race);
 	}
 
-	private float GeneratePosition(int clearRadius, int width, int curX, System.Random pseudoRandom)
+	private float GeneratePosition(int nonDecorWidth, int secWidth, int curX, System.Random pseudoRandom)
 	{
+		//Зазор между секторами
+		int border = 1;
+
 		// Сдвиг относительно центра области (региона или сектора)
-		int maxDX = width / 2 - clearRadius;
-		int deltaX = width / 2 + pseudoRandom.Next(-maxDX, maxDX);
-		float xPos = curX * width + deltaX;
+		int maxDX = secWidth / 2 - nonDecorWidth / 2 - border;
+		int deltaX = secWidth / 2 + pseudoRandom.Next(-maxDX, maxDX);
+		float xPos = curX * secWidth + deltaX;
 
 		return xPos;
 	}
 
-	private int CalculateRadius(Race race, int width, int length)
+	private int CalculateNonDecorableSize(Race race, int width, int length)
 	{
-		int clearRadius = currentMainPointSets.GetMainPoint(race).GetDomainSettings().nonDecorableRadius;
-		int minSize = Math.Min(width / 2, length / 2);
-		clearRadius = Math.Min(clearRadius, minSize);
+		int nonDecSize = currentMainPointSets.GetMainPoint(race).GetDomainSettings().nonDecorableSize;
+		int minSize = Math.Min(width, length);
+		nonDecSize = Math.Min(nonDecSize, minSize);
 
-		return clearRadius;
+		return nonDecSize;
 	}
 
 	private void AddMainPointPositionsToDict(MainPointType pointType, Race race, Vector3[] mas)
@@ -231,25 +234,25 @@ public class MainPointsCreator
 
 		int width = tileGrid.CountX / tileMas.GetLength(0);
 		int length = tileGrid.CountZ / tileMas.GetLength(1);
-		int nonDecorRadius = CalculateRadius(race, width, length);
+		int nonDecorSize = CalculateNonDecorableSize(race, width, length);
 
 		for (int i = 0; i < dict[race].Length; i++)
 		{
-			SetNonDecorableArea(dict[race][i], nonDecorRadius);
-			SetTileArea(dict[race][i], mainPoint.GetTileType(), mainPoint.GetDomainSettings().mainRadius);
+			SetNonDecorableArea(dict[race][i], nonDecorSize);
+			SetTileArea(dict[race][i], mainPoint.GetTileType(), mainPoint.GetDomainSettings().mainSize);
 			dict[race][i] *= tileSize;
 		}
 	}
 
-	private void SetNonDecorableArea(Vector3 pos, int nonDecorRadius)
+	private void SetNonDecorableArea(Vector3 pos, int nonDecorAreaSize)
 	{
 		int posX = (int)pos.x;
 		int posZ = (int)pos.z;
-		int clearArea = (int)(nonDecorRadius / tileSize);
+		int clearArea = (int)(nonDecorAreaSize / tileSize);
 
-		for (int x = -clearArea; x < clearArea; x++)
+		for (int x = -clearArea / 2; x < clearArea - clearArea / 2; x++)
 		{
-			for (int z = -clearArea; z < clearArea; z++)
+			for (int z = -clearArea / 2; z < clearArea - clearArea / 2; z++)
 			{
 				if (0 <= posX + x && posX + x < tileGrid.CountX)
 					if (0 <= posZ + z && posZ + z < tileGrid.CountZ)
@@ -260,15 +263,15 @@ public class MainPointsCreator
 		}
 	}
 
-	private void SetTileArea(Vector3 pos, TileType type, int mainRadius)
+	private void SetTileArea(Vector3 pos, TileType type, int mainAreaSize)
 	{
 		int posX = (int)pos.x;
 		int posZ = (int)pos.z;
-		int mainArea = (int)(mainRadius / tileSize);
+		int mainArea = (int)(mainAreaSize / tileSize);
 
-		for (int x = -mainArea; x < mainArea; x++)
+		for (int x = -mainArea / 2; x < mainArea - mainArea / 2; x++)
 		{
-			for (int z = -mainArea; z < mainArea; z++)
+			for (int z = -mainArea / 2; z < mainArea - mainArea / 2; z++)
 			{
 				if (0 <= posX + x && posX + x < tileGrid.CountX)
 					if (0 <= posZ + z && posZ + z < tileGrid.CountZ)
