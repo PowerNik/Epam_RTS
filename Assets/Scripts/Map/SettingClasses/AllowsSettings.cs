@@ -33,8 +33,13 @@ public static class AllowsSettings
 			case TileType.PeacefulNeuntralsPoint:
 			case TileType.TradePoint:
 				return NaturePoint;
+
+			case TileType.NonDecorable:
+				return NonDecorablePoint;
 		}
 	}
+
+	static private Allows NonDecorablePoint { get { return new Allows(1, 2, 0); } }
 
 	static private Allows LayerGround { get { return new Allows(7, 2, 0); } }
 	static private Allows LayerNoGround { get { return new Allows(7, 0, 0); } }

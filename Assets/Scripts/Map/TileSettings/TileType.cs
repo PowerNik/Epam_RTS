@@ -19,4 +19,6 @@ public enum TileType
 	PeacefulNeuntralsPoint = 41,
 
 	TradePoint = 50,
+
+	NonDecorable = 60,
 }

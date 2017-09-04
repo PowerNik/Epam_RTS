@@ -26,6 +26,16 @@ public class MainPointsSettingsSO : ScriptableObject
 	[SerializeField]
 	private SectorSettings sectorSettings;
 
+	[SerializeField]
+	private Material nonDecorableAreaMaterial;
+
+	public Tile GetNonDecorableTile()
+	{
+		Tile tile = new Tile(TileType.NonDecorable, TileType.GroundLayer);
+		tile.SetDefaultMaterial(nonDecorableAreaMaterial);
+		return tile;
+	}
+
 	public void SetMainSeed(string mainSeed)
 	{
 		this.mainSeed = mainSeed;
