@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         #region TestInit_TODELETE
         StartGame(1);
         #endregion
+
     }
 
     #endregion
@@ -130,6 +131,9 @@ public class GameManager : MonoBehaviour
         players.Add(
             Instantiate(playerPrefab, Vector3.zero, transform.rotation)
         );
+
+        //TO DELETE
+        MouseManager.Current.CurrentPlayer = players.Last();
     }
 
     void InitCitizenPlayer()
@@ -149,7 +153,6 @@ public class GameManager : MonoBehaviour
         players.Last().playerFactory = new FermersStructureFactory(players.Last());
         players.Last().startPoints = MapManagerInstance.GetFermerBasePoints();
     }
-
     #endregion
 
 

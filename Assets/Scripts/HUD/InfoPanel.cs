@@ -73,7 +73,7 @@ public class InfoPanel : MonoBehaviour {
         {
             Destroy(b.gameObject);
         }
-        if(unit.GetComponent<UnitContainer>()!=null && !unit.IsEnemy)
+        if(unit.GetComponent<UnitContainer>()!=null && !unit.IsEnemyFor(GetComponent<Unit>().playerOwner))
         {
             foreach (var u in unit.GetComponent<UnitContainer>().UnitsInside)
             {

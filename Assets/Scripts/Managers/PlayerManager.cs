@@ -113,7 +113,8 @@ public class PlayerManager : MonoBehaviour
         playerUnits.Add(fsuf.CreateUnit(new Vector3(14, 0, 27)));
         FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
         playerUnits.Add(flameruf.CreateUnit(new Vector3(12, 0, 29)));
-
+        SpiderUnitFactory spideruf = new SpiderUnitFactory(this);
+        playerUnits.Add(spideruf.CreateUnit(new Vector3(20, 0, 31)));
         CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
         playerUnits.Add(citizenBuilderFactory.CreateUnit(new Vector3(20, 0, 30)));
         #endregion

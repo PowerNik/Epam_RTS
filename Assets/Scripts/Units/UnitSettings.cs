@@ -13,6 +13,8 @@ public class UnitSettings {
     [SerializeField]
     private float maxHealth;
     [SerializeField]
+    private float speed;
+    [SerializeField]
     private float cost;
     [SerializeField]
     private Fraction fraction;
@@ -28,10 +30,6 @@ public class UnitSettings {
 
 
     //public List<UnityAction> AvaliableActions = new List<UnityAction>();
-
-    [SerializeField]                        //убрать
-    bool isEnemy;                           //убрать
-    public bool IsEnemy { get { return isEnemy; } }
 
     // Анимация
 
@@ -51,6 +49,18 @@ public class UnitSettings {
         get
         {
             return maxHealth;
+        }
+        set
+        {
+            maxHealth = value;
+        }
+    }
+
+    public float Speed
+    {
+        get
+        {
+            return speed;
         }
     }
 
@@ -84,6 +94,11 @@ public class UnitSettings {
         {
             return icon;
         }
+
+        set
+        {
+            icon = value;
+        }
     }
 
     public string Name
@@ -101,4 +116,5 @@ public class UnitSettings {
             return prefab;
         }
     }
+
 }

@@ -20,7 +20,7 @@ public class Movable : MonoBehaviour {
 
     void Start () {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = Speed;
+        agent.speed = GetComponent<Unit>().Settings.Speed;
 	}
 
 	void Update () {

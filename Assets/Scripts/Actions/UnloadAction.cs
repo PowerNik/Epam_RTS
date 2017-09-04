@@ -7,20 +7,17 @@ using UnityEngine.UI;
 
 public class UnloadAction : ActionBehaviour
 {
-
-    public override UnityAction GetClickAction()
+    public override void CurrentAction(System.Object obj)
     {
-        return delegate ()
-        {
-            GetComponent<UnitContainer>().UnloadUnits();
+        GetComponent<UnitContainer>().UnloadUnits();
 
-            if (InfoPanel.Current.SingleSelection.gameObject.activeSelf)
+        if (InfoPanel.Current.SingleSelection.gameObject.activeSelf)
+        {
+            foreach (var button in InfoPanel.Current.SingleSelection.ContainerPanel.GetComponentsInChildren<Button>())
             {
-                foreach (var button in InfoPanel.Current.SingleSelection.ContainerPanel.GetComponentsInChildren<Button>())
-                {
-                    Destroy(button.gameObject);
-                }
+                Destroy(button.gameObject);
             }
-        };
+        }
     }
+
 }

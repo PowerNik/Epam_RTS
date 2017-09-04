@@ -36,9 +36,21 @@ public class Unit : MonoBehaviour {
 
     public Queue<UnityAction> ActionsQueue = new Queue<UnityAction>();
 
-    [SerializeField]                        //убрать
-    bool isEnemy;                           //убрать
-    public bool IsEnemy { get { return isEnemy; } }
+    public bool IsEnemyFor(PlayerManager thisPlayer)
+    {
+        switch (settings.Fraction)
+        {
+
+            case Fraction.Citizen:
+                if ((int)thisPlayer.playerRace == (int)settings.Fraction) return false; else return true;
+            case Fraction.Farmer:
+                if ((int)thisPlayer.playerRace == (int)settings.Fraction) return false; else return true;
+            case Fraction.Nature:
+                if ((int)thisPlayer.playerRace == (int)settings.Fraction) return false; else return true;
+            default:
+                return false;
+        }
+    }
 
     // Анимация
 
@@ -50,8 +62,6 @@ public class Unit : MonoBehaviour {
             unitAnimator = GetComponent<Animator>();
 
         currentAction = CurrentAction.DoingNothing;
-
-        health = settings.MaxHealth;
 	}
 
     protected void Update()
@@ -69,7 +79,7 @@ public class Unit : MonoBehaviour {
 
 public enum AttackType { Melee, Range, Siege, Area };
 
-public enum Fraction { Citizen, Farmer, Nature }
+public enum Fraction { Spectator, Citizen, Farmer, Nature }
 
 public enum UnitType
 {
@@ -78,5 +88,6 @@ public enum UnitType
     Rover = 2,
     Rhiro = 3,
     CitizenBuilder = 4,
-    FermerBuilder = 5
+    FermerBuilder = 5,
+    Spider = 6,
 }

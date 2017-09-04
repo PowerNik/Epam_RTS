@@ -11,6 +11,7 @@ public class CitizenBuilderUnitFactory : UnitFactory
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
         unit.Settings = settings;
+        unit.Health = settings.MaxHealth;
         //Add actions
         newUnit.AddComponent<BuildMainStructureAction>();
 
