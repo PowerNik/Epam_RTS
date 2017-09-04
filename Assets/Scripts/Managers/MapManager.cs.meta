@@ -1,26 +1,12 @@
 fileFormatVersion: 2
 guid: 816e3aa0fd7759a41af01a757251086a
-<<<<<<< HEAD
-timeCreated: 1503764339
-=======
-timeCreated: 1504085689
->>>>>>> NikBranch
+timeCreated: 1504548766
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-<<<<<<< HEAD
-  - tileSettings: {fileID: 11400000, guid: a1f815963537a1740a34fc54ac3f47f9, type: 2}
-  - basePointSettings: {fileID: 11400000, guid: cf276388f46887244a75e7d3480fd141,
-      type: 2}
-  - mapSettings: {fileID: 11400000, guid: 648aeaca0090d084d8b3c0e2af05ed8f, type: 2}
-  - prefabMap: {fileID: 1151417494180544, guid: 808fcdcd68c0b2343aba446718869ead,
-      type: 2}
-  executionOrder: 200
-=======
   - mapSetsManager: {fileID: 11400000, guid: 7266e57f94b289045ba6c79b6280f1ed, type: 2}
   executionOrder: 0
->>>>>>> NikBranch
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

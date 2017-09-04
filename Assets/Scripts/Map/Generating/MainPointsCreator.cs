@@ -5,19 +5,9 @@ using UnityEngine;
 
 public class MainPointsCreator
 {
-	public Vector3 CitizenBasePoint
+	public Vector3[] MainPointPositions(MainPointType type, Race race)
 	{
-		get
-		{
-			return mainPointPositions[MainPointType.Base][Race.Citizen][0];
-		}
-	}
-	public Vector3[] FermerBasePoints
-	{
-		get
-		{
-			return mainPointPositions[MainPointType.Base][Race.Fermer];
-		}
+		return mainPointPositions[type][race];
 	}
 
 	private Dictionary<MainPointType, Dictionary<Race, Vector3[]>> mainPointPositions =

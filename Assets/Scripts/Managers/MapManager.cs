@@ -115,11 +115,36 @@ public class MapManager : MonoBehaviour
 
 	public Vector3 GetCitizenBasePoint()
 	{
-		return mapCreator.CitizenBasePoint;
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Base, Race.Citizen)[0];
 	}
 
 	public Vector3[] GetFermerBasePoints()
 	{
-		return mapCreator.FermerBasePoints;
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Base, Race.Fermer);
+	}
+
+	public Vector3[] GetCitizenExtractPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Extract, Race.Citizen);
+	}
+
+	public Vector3[] GetFermerExtractPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Extract, Race.Fermer);
+	}
+
+	public Vector3[] GetTradePoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Trade, Race.Citizen);
+	}
+
+	public Vector3[] GetAgressiveNeutralPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Neutral, Race.Citizen);
+	}
+
+	public Vector3[] GetPeacefulNeutralPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Neutral, Race.Fermer);
 	}
 }

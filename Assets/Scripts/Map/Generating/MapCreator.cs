@@ -5,13 +5,10 @@ using UnityEngine;
 
 public class MapCreator
 {
-	public Vector3 CitizenBasePoint { get; private set; }
-	public Vector3[] FermerBasePoints { get; private set; }
-
 	private TileGrid tileGrid;
 	private LayerSettings layerTileSets;
 
-	private MainPointsCreator mainPointsCreator;
+	public MainPointsCreator mainPointsCreator { get; private set; }
 	private LayerCreator layerCreator;
 
 	private float tileSize;
@@ -39,9 +36,6 @@ public class MapCreator
 	{
 		mainPointsCreator.CreateMainPoints();
 		layerCreator.CreateLayers();
-
-		CitizenBasePoint = mainPointsCreator.CitizenBasePoint;
-		FermerBasePoints = mainPointsCreator.FermerBasePoints;
 	}
 
 	public void CreateMapMesh(GameObject map)
