@@ -254,11 +254,14 @@ public class MainPointsCreator
 		{
 			for (int z = -clearArea / 2; z < clearArea - clearArea / 2; z++)
 			{
-				if (0 <= posX + x && posX + x < tileGrid.CountX)
-					if (0 <= posZ + z && posZ + z < tileGrid.CountZ)
-					{
-						tileGrid[posX + x, posZ + z] = TileType.NonDecorable;
-					}
+				int curX = posX + x;
+				int curZ = posZ + z;
+				if (0 <= curX && curZ < tileGrid.CountX)
+					if (0 <= curX && curZ < tileGrid.CountZ)
+						if (Mathf.Sqrt(x * x + z * z) < clearArea / 2)
+						{
+							tileGrid[curX, curZ] = TileType.NonDecorable;
+						}
 			}
 		}
 	}
@@ -275,9 +278,17 @@ public class MainPointsCreator
 			{
 				if (0 <= posX + x && posX + x < tileGrid.CountX)
 					if (0 <= posZ + z && posZ + z < tileGrid.CountZ)
-					{
-						tileGrid[posX + x, posZ + z] = type;
-					}
+						if (type == TileType.CitizenBasePoint)
+						{
+							tileGrid[posX + x, posZ + z] = type;
+						}
+						else
+						{
+							if (Mathf.Sqrt(x * x + z * z) < mainArea / 2)
+							{
+								tileGrid[posX + x, posZ + z] = type;
+							}
+						}
 			}
 		}
 	}
