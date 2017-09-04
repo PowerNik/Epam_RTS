@@ -7,7 +7,7 @@ public class BuildAreaSelecter : MonoBehaviour
 	public Material unbuildableTileMat;
 	public GameObject selectedTilePrefab;
 
-	private Transform buildArea;
+	private Transform selectedArea;
 	private Vector3 defaultPosition = new Vector3(0, -100, 0);
 
 	private GridManager gridManager;
@@ -25,21 +25,32 @@ public class BuildAreaSelecter : MonoBehaviour
 
 	void Start()
 	{
-		buildArea = new GameObject().transform;
-		buildArea.name = "BuildingArea";
-		buildArea.position = defaultPosition;
+		selectedArea = new GameObject().transform;
+		selectedArea.name = "BuildingArea";
+		selectedArea.position = defaultPosition;
 	}
 
 	public bool SelectBuildArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		if (buildArea.position == defaultPosition)
+		SetSelectAreaPosition(pos, areaSizeX, areaSizeZ);
+		return SelectAreaRevision(race, true);
+	}
+
+	public bool SelectExtractArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
+	{
+		SetSelectAreaPosition(pos, areaSizeX, areaSizeZ);
+		return SelectAreaRevision(race, false);
+	}
+
+	private void SetSelectAreaPosition(Vector3 pos, float areaSizeX, float areaSizeZ)
+	{
+		if (selectedArea.position == defaultPosition)
 		{
 			CreateTiles(areaSizeX, areaSizeZ);
-			PlaceTilesOnBuildArea();
+			PlaceTilesOnSelectArea();
 		}
 
-		buildArea.position = pos;
-		return BuildAreaRevision(race);
+		selectedArea.position = pos;
 	}
 
 	private void CreateTiles(float xSize, float zSize)
@@ -50,7 +61,7 @@ public class BuildAreaSelecter : MonoBehaviour
 		for (int i = 0; i < tileCountX * tileCountZ; i++)
 		{
 			GameObject go = Instantiate(selectedTilePrefab);
-			go.transform.parent = buildArea.transform;
+			go.transform.parent = selectedArea.transform;
 			go.transform.localScale *= tileSize;
 		}
 	}
@@ -72,52 +83,68 @@ public class BuildAreaSelecter : MonoBehaviour
 		return count;
 	}
 
-	private void PlaceTilesOnBuildArea()
+	private void PlaceTilesOnSelectArea()
 	{
 		for (int x = 0; x < tileCountX; x++)
 		{
 			for (int z = 0; z < tileCountZ; z++)
 			{
-				Vector3 parentPos = buildArea.position;
+				Vector3 parentPos = selectedArea.position;
 				Vector3 dX = (x - tileCountX / 2) * Vector3.left * tileSize;
 				Vector3 dZ = (z - tileCountZ / 2) * Vector3.forward * tileSize;
 
-				buildArea.GetChild(x * tileCountZ + z).transform.position = parentPos - dX + dZ;
+				selectedArea.GetChild(x * tileCountZ + z).transform.position = parentPos - dX + dZ;
 			}
 		}
 	}
 
-	private bool BuildAreaRevision(Race race)
+	/// <summary>
+	/// Можно ли использовать выбранную область
+	/// </summary>
+	/// <param name="race"></param>
+	/// <param name="isBuild">true - для зданий, false - для экстракторов</param>
+	/// <returns></returns>
+	private bool SelectAreaRevision(Race race, bool isBuild)
 	{
-		bool isBuildableArea = true;
+		bool isSelectableArea = true;
 
 		// TODO Nik
 		// Читать из gridManager массив тайлов/булов нужного размера
-		for (int i = 0; i < buildArea.childCount; i++)
+		for (int i = 0; i < selectedArea.childCount; i++)
 		{
-			Renderer rend = buildArea.GetChild(i).gameObject.GetComponent<Renderer>();
+			Renderer rend = selectedArea.GetChild(i).gameObject.GetComponent<Renderer>();
 			rend.sharedMaterial = selectedTilePrefab.GetComponent<Renderer>().sharedMaterial;
 
-			if (!gridManager.IsBuildableTile(buildArea.GetChild(i).transform.position, race))
+			bool isAllow;
+			if (isBuild)
+			{
+				isAllow = gridManager.IsBuildableTile(selectedArea.GetChild(i).transform.position, race);
+			}
+			else
+			{
+				isAllow = gridManager.IsExtractableTile(selectedArea.GetChild(i).transform.position, race);
+			}
+
+			if(!isAllow)
 			{
 				rend.sharedMaterial = unbuildableTileMat;
-				isBuildableArea = false;
+				isSelectableArea = false;
 			}
 		}
 
-		return isBuildableArea;
+		return isSelectableArea;
 	}
 
-	public void DeselectBuildArea()
+	public void DeselectArea()
 	{
-		if (buildArea.transform.childCount > 0)
+		if (selectedArea.transform.childCount > 0)
 		{
-			foreach (Transform child in buildArea.transform)
+			foreach (Transform child in selectedArea.transform)
 			{
 				Destroy(child.gameObject);
 			}
 		}
 
-		buildArea.position = defaultPosition;
+		selectedArea.position = defaultPosition;
 	}
 }

@@ -30,17 +30,43 @@ public class GridManager
 		return new Vector3(x, pos.y, z);
 	}
 
-	public bool IsBuildableTile(Vector3 position, Race race)
+	public bool IsBuildableTile(Vector3 pos, Race race)
 	{
-		int x = (int)((position.x - position.x % tileSize) / tileSize);
-		int z = (int)((position.z - position.z % tileSize) / tileSize);
+		int x, z;
+		if (CalculateTilePos(pos, out x, out z))
+		{
+			return tileGrid.GetTile(x, z).IsAllowBuild(race);
+		}
+
+		return false;
+	}
+
+	public bool IsExtractableTile(Vector3 pos, Race race)
+	{
+		int x, z;
+		if (CalculateTilePos(pos, out x, out z))
+		{
+			return tileGrid.GetTile(x, z).IsAllowExtract(race);
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Находится ли pos в пределах карты
+	/// </summary>
+	/// <returns></returns>
+	private bool CalculateTilePos(Vector3 pos, out int x, out int z)
+	{
+		x = (int)((pos.x - pos.x % tileSize) / tileSize);
+		z = (int)((pos.z - pos.z % tileSize) / tileSize);
 
 		if (x < 0 || tileGrid.CountX <= x || z < 0 || tileGrid.CountZ <= z)
 		{
 			return false;
 		}
 
-		return tileGrid.GetTile(x, z).IsAllowBuild(race);
+		return true;
 	}
 }
 

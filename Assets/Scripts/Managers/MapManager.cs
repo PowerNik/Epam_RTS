@@ -52,24 +52,49 @@ public class MapManager : MonoBehaviour
 	private void Update()
 	{
 		if (Input.GetKey(KeyCode.Alpha1))
-			SelectArea();
+			SelectBuildArea(Race.Fermer);
 		if (Input.GetKeyUp(KeyCode.Alpha1))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha2))
+			SelectBuildArea(Race.Citizen);
+		if (Input.GetKeyUp(KeyCode.Alpha2))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha3))
+			SelectExtractArea(Race.Fermer);
+		if (Input.GetKeyUp(KeyCode.Alpha3))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha4))
+			SelectExtractArea(Race.Citizen);
+		if (Input.GetKeyUp(KeyCode.Alpha4))
 			DeselectArea();
 	}
 
-	public void SelectArea()
+	public void SelectBuildArea(Race race)
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit))
 		{
-			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, Race.Fermer);
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, race);
+		}
+	}
+
+	public void SelectExtractArea(Race race)
+	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit))
+		{
+			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, race);
 		}
 	}
 
 	public void DeselectArea()
 	{
-		buildAreaSelecter.DeselectBuildArea();
+		buildAreaSelecter.DeselectArea();
 	}
 	#endregion
 
@@ -80,10 +105,12 @@ public class MapManager : MonoBehaviour
 
 	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		// TODO Nik Cнять заглушку
-		// 01.09.17. Сейчас недопилена постройка для горожан
-		// Поэтому стоит заглушка
-		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, Race.Fermer);
+		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, race);
+	}
+
+	public bool IsExtractableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
+	{
+		return buildAreaSelecter.SelectExtractArea(pos, areaSizeX, areaSizeZ, race);
 	}
 
 	public Vector3 GetCitizenBasePoint()
