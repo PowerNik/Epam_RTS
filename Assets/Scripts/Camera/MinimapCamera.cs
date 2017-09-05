@@ -42,5 +42,10 @@ public class MinimapCamera : MonoBehaviour
 	    }
 	    #endregion
     }
+
+	public LayerMask GetLayerToRay()
+	{
+		return layerToRay;
+	}
     
 }

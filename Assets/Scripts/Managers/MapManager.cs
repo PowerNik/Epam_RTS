@@ -10,6 +10,9 @@ public class MapManager : MonoBehaviour
 	[SerializeField]
 	private MapSettingsManagerSO mapSetsManager;
 
+	//TODO FOR TEST selecting
+	private LayerMask layerToRay;
+
 	private GridManager gridManager;
 	private MapCreator mapCreator;
 	private MapSizeSettings mapSizeSets;
@@ -18,6 +21,9 @@ public class MapManager : MonoBehaviour
 
 	private void Awake()
 	{
+		//TODO FOR TEST selecting
+		layerToRay = GameObject.Find("MinimapCamera").GetComponent<MinimapCamera>().GetLayerToRay();
+
 		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		CreateMap();
 
@@ -48,7 +54,7 @@ public class MapManager : MonoBehaviour
 		lnmb.m_Size = new Vector3(MapWidth, 20, MapLength);
 	}
 
-	#region FOR TEST selecting buildArea
+	#region FOR TEST selecting Area
 	private void Update()
 	{
 		if (Input.GetKey(KeyCode.Alpha1))
@@ -76,9 +82,9 @@ public class MapManager : MonoBehaviour
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit))
+		if (Physics.Raycast(ray, out hit, 1000, layerToRay))
 		{
-			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, race);
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 1.3f, 3.1f, 3f, race);
 		}
 	}
 
@@ -86,15 +92,10 @@ public class MapManager : MonoBehaviour
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit))
+		if (Physics.Raycast(ray, out hit, 1000, layerToRay))
 		{
-			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 2.5f, 3f, race);
+			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 1.3f, 2.5f, 3f, race);
 		}
-	}
-
-	public void DeselectArea()
-	{
-		buildAreaSelecter.DeselectArea();
 	}
 	#endregion
 
@@ -112,6 +113,13 @@ public class MapManager : MonoBehaviour
 	{
 		return buildAreaSelecter.SelectExtractArea(pos, areaSizeX, areaSizeZ, race);
 	}
+
+	public void DeselectArea()
+	{
+		buildAreaSelecter.DeselectArea();
+	}
+
+	#region GetMainPointPositions
 
 	public Vector3 GetCitizenBasePoint()
 	{
@@ -147,4 +155,6 @@ public class MapManager : MonoBehaviour
 	{
 		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Neutral, Race.Fermer);
 	}
+
+	#endregion
 }
