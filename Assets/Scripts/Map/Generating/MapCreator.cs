@@ -48,7 +48,7 @@ public class MapCreator
 
 	private void CreateMeshForLayer(GameObject map, TileType tileType)
 	{
-		int[,] mas = tileGrid.GetTileMap(tileType);
+		int[,] mas = layerCreator.GetLayerGrid().GetTileMap(tileType);
 
 		GameObject layerGO = new GameObject();
 		layerGO.name = tileType.ToString();
@@ -68,5 +68,8 @@ public class MapCreator
 
 		Tile tile = tileGrid.GetTileDictionary()[tileType];
 		layerGO.AddComponent<MeshRenderer>().material = tile.GetMaterial();
+
+		int border = layerCreator.GetBorderSize();
+		layerGO.transform.position = new Vector3(-border, 0, -border);
 	}
 }

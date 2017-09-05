@@ -41,6 +41,16 @@ public class TileGrid
 		CreateGrid();
 	}
 
+	public TileGrid(int countX, int countZ, float tileSize)
+	{
+		CountX = countX;
+		CountZ = countZ;
+		TileSize = tileSize;
+
+		dict = new Dictionary<TileType, Tile>();
+		CreateGrid();
+	}
+
 	public void AddTile(Tile tile)
 	{
 		if (!dict.ContainsKey(tile.GetTileType()))

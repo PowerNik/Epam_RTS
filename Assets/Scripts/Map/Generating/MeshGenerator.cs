@@ -33,7 +33,6 @@ public class MeshGenerator : MonoBehaviour
 		Vector2[] uv = new Vector2[vertices.Count];
 		for (int i = 0; i < vertices.Count; i++)
 		{
-
 			uv[i] = new Vector2(vertices[i].x / nodeCountX, vertices[i].z / nodeCountZ);
 			if (vertices[i].y < 0)
 			{

@@ -69,7 +69,7 @@ public static class RandomGenerator
 		// Не костыль, а фича :)
 		// Заполнение массива на 100% не является рандомной генерацией
 		// Так что за вызов рандомогенератора не считается
-		if(fillPercent == 100)
+		if (fillPercent == 100)
 		{
 			callCount--;
 		}
