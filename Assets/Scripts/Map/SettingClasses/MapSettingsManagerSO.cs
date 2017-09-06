@@ -16,15 +16,11 @@ public class MapSettingsManagerSO : ScriptableObject
 	[SerializeField]
 	private LayerSettingsSO layerTileSettings;
 
+	[SerializeField]
+	private DecorationSettingsSO staticDecorSettings;
 
 	[SerializeField]
-	private HeightMapSettingsSO heightMapSettings;
-
-	[SerializeField]
-	private ColoringTileSettingsSO coloringTileSettings;
-
-	[SerializeField]
-	private DecorationSettingsSO decorationSettings;
+	private DecorationSettingsSO dynamicDecorSettings;
 
 	private void OnEnable()
 	{
@@ -48,18 +44,15 @@ public class MapSettingsManagerSO : ScriptableObject
 		return layerTileSettings.GetLayerSettings();
 	}
 
-	public HeightMapSettings GetHeightMapSettings()
+	public DecorationSettings[] GetStaticDecorationSettings()
 	{
-		return heightMapSettings.GetHeightMapSettings();
+		staticDecorSettings.SetMainSeed(mainSeed);
+		return staticDecorSettings.GetDecorationSettings();
 	}
 
-	public ColoringTileSettings GetColoringTileSettings()
+	public DecorationSettings[] GetDynamicDecorSettings()
 	{
-		return coloringTileSettings.GetColoringTileSettings();
-	}
-
-	public DecorationSettings[] GetDecorationSettings()
-	{
-		return decorationSettings.GetDecorationSettings();
+		dynamicDecorSettings.SetMainSeed(mainSeed);
+		return dynamicDecorSettings.GetDecorationSettings();
 	}
 }

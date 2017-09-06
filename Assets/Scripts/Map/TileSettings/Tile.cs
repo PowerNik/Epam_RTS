@@ -47,7 +47,7 @@ public class Tile
 
 	public void SetNewMaterial(Material mat)
 	{
-		if((allows.allowDecorate & AllowDecorateType.Texturing) == AllowDecorateType.Texturing)
+		if((allows.allowDecorate & AllowDecorateType.AreaMaterial) == AllowDecorateType.AreaMaterial)
 		{
 			newMaterial = mat;
 		}
@@ -67,17 +67,17 @@ public class Tile
 
 	public bool IsAllowTexturing()
 	{
-		return (allows.allowDecorate & AllowDecorateType.Texturing) == AllowDecorateType.Texturing;
+		return (allows.allowDecorate & AllowDecorateType.AreaMaterial) == AllowDecorateType.AreaMaterial;
 	}
 
 	public bool IsAllowScenery()
 	{
-		return (allows.allowDecorate & AllowDecorateType.Scenery) == AllowDecorateType.Scenery;
+		return (allows.allowDecorate & AllowDecorateType.StaticObject) == AllowDecorateType.StaticObject;
 	}
 
 	public bool IsAllowDynamic()
 	{
-		return (allows.allowDecorate & AllowDecorateType.Dynamic) == AllowDecorateType.Dynamic;
+		return (allows.allowDecorate & AllowDecorateType.DynamicObject) == AllowDecorateType.DynamicObject;
 	}
 
 	public bool IsAllowBuild(Race race)
@@ -133,7 +133,7 @@ public class Tile
 			left.scenery = right.scenery;
 			if(right.IsAllowScenery() == false)
 			{
-				left.allows.allowDecorate -= AllowDecorateType.Scenery;
+				left.allows.allowDecorate -= AllowDecorateType.StaticObject;
 			}
 		}
 
@@ -142,7 +142,7 @@ public class Tile
 			left.dynamic = right.dynamic;
 			if (right.IsAllowDynamic() == false)
 			{
-				left.allows.allowDecorate -= AllowDecorateType.Dynamic;
+				left.allows.allowDecorate -= AllowDecorateType.DynamicObject;
 			}
 		}
 
@@ -151,7 +151,7 @@ public class Tile
 			left.newMaterial = right.defaultMaterial;
 			if (right.IsAllowTexturing() == false)
 			{
-				left.allows.allowDecorate -= AllowDecorateType.Texturing;
+				left.allows.allowDecorate -= AllowDecorateType.AreaMaterial;
 			}
 		}
 
