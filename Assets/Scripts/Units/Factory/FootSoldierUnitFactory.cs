@@ -12,7 +12,7 @@ public class FootSoldierUnitFactory : UnitFactory
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
         unit.Settings = settings;
-
+        unit.Health = settings.MaxHealth;
         unit.playerOwner = this.playerOwner;
 
         return unit;

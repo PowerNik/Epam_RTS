@@ -29,7 +29,7 @@ public class Flamethrower : MonoBehaviour {
     private void OnTriggerStay(Collider obj)
     {
         if (obj.GetComponent<Unit>()!=null)
-            if(obj.GetComponent<Unit>().IsEnemy)
+            if(obj.GetComponent<Unit>().IsEnemyFor(GetComponentInParent<Unit>().playerOwner))
             {
                 obj.GetComponent<Unit>().Health -= GetComponentInParent<Attack>().currentDPS * Time.deltaTime;
             }
