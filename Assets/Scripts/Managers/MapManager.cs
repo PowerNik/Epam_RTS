@@ -18,6 +18,7 @@ public class MapManager : MonoBehaviour
 	private MapSizeSettings mapSizeSets;
 
 	private BuildAreaSelecter buildAreaSelecter;
+	private DecorationCreator decorationCreator;
 
 	private void Awake()
 	{
@@ -26,6 +27,12 @@ public class MapManager : MonoBehaviour
 
 		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		CreateMap();
+
+		decorationCreator = gameObject.AddComponent<DecorationCreator>();
+		decorationCreator.SetTileGrid(ref gridManager.tileGrid);
+		decorationCreator.SetDecorationSettings(mapSetsManager.GetStaticDecorationSettings(), 
+			mapSetsManager.GetDynamicDecorationSettings());
+		decorationCreator.CreateStaticDecorations();
 
 		buildAreaSelecter = gameObject.AddComponent<BuildAreaSelecter>();
 		buildAreaSelecter.SetGridManager(gridManager);

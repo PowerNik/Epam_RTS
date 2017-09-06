@@ -50,7 +50,7 @@ public class MapSettingsManagerSO : ScriptableObject
 		return staticDecorSettings.GetDecorationSettings();
 	}
 
-	public DecorationSettings[] GetDynamicDecorSettings()
+	public DecorationSettings[] GetDynamicDecorationSettings()
 	{
 		dynamicDecorSettings.SetMainSeed(mainSeed);
 		return dynamicDecorSettings.GetDecorationSettings();

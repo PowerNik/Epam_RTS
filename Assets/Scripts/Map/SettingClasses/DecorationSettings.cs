@@ -6,13 +6,18 @@ using UnityEngine;
 public class DecorationSettings
 {
 	public string name;
-	public TileType placeHolderTile;
+	[SerializeField]
+	private TileType tileHolder;
 
-	public Material[] decorMaterials;
-	public GameObject[] decorPrefabs;
+	[SerializeField]
+	private Material[] decorMaterials;
+	[SerializeField]
+	private GameObject[] decorPrefabs;
 
-	public GeneratorSettings genSets;
-	public LandscapeSettings landscapeSets;
+	[SerializeField]
+	private GeneratorSettings genSets;
+	[SerializeField]
+	private LandscapeSettings landscapeSets;
 
 	public float minScale = 0.7f;
 	public float maxScale = 1.5f;
@@ -26,4 +31,31 @@ public class DecorationSettings
 	{
 		return genSets.GetSeed();
 	}
+
+
+	public TileType GetTileHolder()
+	{
+		return tileHolder;
+	}
+	public Material[] GetMaterials()
+	{
+		return decorMaterials;
+	}
+
+	public GameObject[] GetDecorations()
+	{
+		return decorPrefabs;
+	}
+
+	public GeneratorSettings GetGeneratorSettings()
+	{
+		return genSets;
+	}
+
+	public LandscapeSettings GetLandscapeSettings()
+	{
+		return landscapeSets;
+	}
+
+
 }
