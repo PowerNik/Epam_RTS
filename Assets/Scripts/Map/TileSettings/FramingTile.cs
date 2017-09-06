@@ -5,29 +5,39 @@ using UnityEngine;
 [System.Serializable]
 public class FramingTile
 {
-	[SerializeField]
 	private Tile tile;
 
-	private LayerType bandedLayerType = LayerType.Water;
+	private TileType bandedLayerType = TileType.WaterLayer;
 
-	public FramingTile(TileType tileType, LayerType bandedLayerType)
+	/// <summary>
+	/// Тип тайла, тип обрамляемого тайла
+	/// </summary>
+	/// <param name="tileType"></param>
+	/// <param name="bandedLayerType"></param>
+	public void SetBandedTile(TileType tileType, TileType bandedLayerType)
 	{
-		tile = new Tile(tileType, LayerType.Ground);
+		tile = new Tile(tileType, TileType.GroundLayer);
 		this.bandedLayerType = bandedLayerType;
 	}
 
-	public LayerType GetLayerType()
+	public void SetMaterial(Material mat)
 	{
-		return tile.GetLayerType();
+		tile.SetDefaultMaterial(mat);
 	}
 
-	/// <summary>
-	/// Области какого слоя обрамляет данный тайл
-	/// </summary>
-	/// <returns></returns>
-	public LayerType GetBandedLayerType()
+	public Material GetMaterial()
 	{
-		return bandedLayerType;
+		return tile.GetMaterial();
+	}
+
+	public TileType GetTileType()
+	{
+		return tile.GetTileType();
+	}
+
+	public TileType GetLayerType()
+	{
+		return tile.GetLayerType();
 	}
 
 	public Tile GetTile()
@@ -35,8 +45,12 @@ public class FramingTile
 		return tile;
 	}
 
-	public TileType GetTileType()
+	/// <summary>
+	/// Области какого слоя обрамляет данный тайл
+	/// </summary>
+	/// <returns></returns>
+	public TileType GetBandedLayerType()
 	{
-		return tile.GetTileType();
+		return bandedLayerType;
 	}
 }

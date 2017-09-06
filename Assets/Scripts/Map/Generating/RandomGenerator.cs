@@ -26,18 +26,18 @@ public static class RandomGenerator
 
 	private static void SetGeneratingParams(GeneratorSettings genSets)
 	{
-		if (genSets.isRandom)
+		if (genSets.IsRandom())
 		{
 			seedHash = Time.time.ToString().GetHashCode() + callCount;
 			callCount++;
 		}
 		else
 		{
-			seedHash = genSets.seed.GetHashCode() + callCount;
+			seedHash = genSets.GetSeed().GetHashCode() + callCount;
 			callCount++;
 		}
 
-		fillPercent = genSets.fillPercent;
+		fillPercent = genSets.GetFillPercent();
 	}
 
 	/// <summary>
@@ -56,7 +56,7 @@ public static class RandomGenerator
 		map = new int[tileCountX, tileCountZ];
 		RandomFillMap(border);
 
-		for (int i = 0; i < genSets.smoothCount; i++)
+		for (int i = 0; i < genSets.GetSmoothCount(); i++)
 		{
 			SmoothMap();
 		}
@@ -69,7 +69,7 @@ public static class RandomGenerator
 		// Не костыль, а фича :)
 		// Заполнение массива на 100% не является рандомной генерацией
 		// Так что за вызов рандомогенератора не считается
-		if(fillPercent == 100)
+		if (fillPercent == 100)
 		{
 			callCount--;
 		}

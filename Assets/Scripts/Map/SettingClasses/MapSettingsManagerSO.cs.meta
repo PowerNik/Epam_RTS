@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5b2ea7555cc0ecc4b8e15f83881df4be
-timeCreated: 1504258701
+timeCreated: 1504698941
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -8,15 +8,11 @@ MonoImporter:
   - mapSizeSettings: {fileID: 11400000, guid: 4031700f950631a47b257670b71a3123, type: 2}
   - mainPointsSettings: {fileID: 11400000, guid: 3cd1540b9a7e5894d8d9340df175fb67,
       type: 2}
-  - heightMapSettings: {fileID: 11400000, guid: 481a1110ae2550945a339a3145c9a8e9,
+  - layerTileSettings: {fileID: 11400000, guid: 868a4bb148edb4a4a8720ffbae6a69ff,
       type: 2}
-  - layerTileSettings: {fileID: 11400000, guid: 72efe0fa58a5d11449081b018a9bf5e8,
+  - staticDecorSettings: {fileID: 11400000, guid: 8d5cc06253034ba45a1ac70d8c3e753a,
       type: 2}
-  - framingTileSettings: {fileID: 11400000, guid: ecec1acba27dd0c49bec3900af73e5e8,
-      type: 2}
-  - coloringTileSettings: {fileID: 11400000, guid: 0479cad53bc94e546b3a4ab27ee94cc3,
-      type: 2}
-  - decorationSettings: {fileID: 11400000, guid: 8d5cc06253034ba45a1ac70d8c3e753a,
+  - dynamicDecorSettings: {fileID: 11400000, guid: 34ef4e3c78c13fd49afd7d94e4353f95,
       type: 2}
   executionOrder: 0
   icon: {instanceID: 0}

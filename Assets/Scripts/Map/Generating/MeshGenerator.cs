@@ -34,6 +34,14 @@ public class MeshGenerator : MonoBehaviour
 		for (int i = 0; i < vertices.Count; i++)
 		{
 			uv[i] = new Vector2(vertices[i].x / nodeCountX, vertices[i].z / nodeCountZ);
+			if (vertices[i].y < 0)
+			{
+				if (gameObject.name == (TileType.MountainLayer).ToString())
+					uv[i] = new Vector2((vertices[i].x + vertices[i].y / 2f) / nodeCountX, (vertices[i].z + vertices[i].y / 2f) / nodeCountZ);
+
+				if (gameObject.name == (TileType.WaterFraming).ToString())
+					uv[i] = new Vector2(vertices[i].x / nodeCountX, (vertices[i].z - vertices[i].y) / nodeCountZ);
+			}
 		}
 
 		Mesh mesh = new Mesh();

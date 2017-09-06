@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ExtractPointSettings
+public class ExtractPointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -32,9 +34,21 @@ public class ExtractPointSettings
 	private DomainSettings fermerDomainSets;
 
 
-	public string GetOverseed()
+	public void SetMainSeed(string mainSeed)
 	{
-		return overseed;
+		this.mainSeed = mainSeed;
+	}
+
+	public string GetSeed()
+	{
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
@@ -42,7 +56,17 @@ public class ExtractPointSettings
 		return isCenter;
 	}
 
-	public MainPointTile GetExtractPoint(Race race)
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.CitizenExtractPoint, GetMainPoint(Race.Citizen).GetTile());
+		tileDict.Add(TileType.FermersExtractPoint, GetMainPoint(Race.Fermer).GetTile());
+
+		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -54,7 +78,7 @@ public class ExtractPointSettings
 		}
 		else
 		{
-			MainPointTile tile = new MainPointTile(TileType.FermersBasePoint);
+			MainPointTile tile = new MainPointTile(TileType.FermersExtractPoint);
 			tile.SetMaterial(fermerExtractPointMaterial);
 			tile.SetDomainSettings(fermerDomainSets);
 
@@ -62,7 +86,7 @@ public class ExtractPointSettings
 		}
 	}
 
-	public int GetExtractCount(Race race)
+	public int GetMainPointCount(Race race)
 	{
 		if (race == Race.Citizen)
 		{

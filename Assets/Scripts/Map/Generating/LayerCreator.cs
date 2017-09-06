@@ -5,55 +5,69 @@ using UnityEngine;
 
 public class LayerCreator
 {
-	private int tileCountX;
-	private int tileCountZ;
+	private int layerCountX;
+	private int layerCountZ;
 
-	public LayerType[,] LayerGrid { get; private set; }
-	private LayerTileSettings layerTileSets;
+	private TileGrid tileGrid;
+	private TileGrid layerGrid;
 
-	public LayerCreator(MapSettingsManagerSO mapSetsManager)
+	private LayerSettings layerSets;
+	private int borderSize = 12;
+
+	public LayerCreator(MapSizeSettings mapSizeSets, LayerSettings layerSets, ref TileGrid tileGrid)
 	{
-		MapSizeSettings mapSizeSets = mapSetsManager.GetMapSizeSettings();
-		tileCountX = mapSizeSets.TileCountX;
-		tileCountZ = mapSizeSets.TileCountZ;
+		layerCountX = mapSizeSets.TileCountX + 2 * borderSize;
+		layerCountZ = mapSizeSets.TileCountZ + 2 * borderSize;
 
-		RandomGenerator.SetTileMapSize(tileCountX, tileCountZ);
+		RandomGenerator.SetTileMapSize(layerCountX, layerCountZ);
+		layerGrid = new TileGrid(layerCountX, layerCountZ, mapSizeSets.tileSize);
+		this.tileGrid = tileGrid;
+		this.layerSets = layerSets;
 
-		layerTileSets = mapSetsManager.GetLayerTileSettings();
+		foreach (var item in layerSets.GetLayerTileDictionary())
+		{
+			tileGrid.AddTile(item.Value.GetTile());
+		}
+
+		foreach (var item in layerSets.GetLayerTileDictionary())
+		{
+			layerGrid.AddTile(item.Value.GetTile());
+		}
 	}
 
 	public void CreateLayers()
 	{
-		LayerGrid = new LayerType[tileCountX, tileCountZ];
+		CreateLayer(TileType.GroundLayer);
+		CreateLayer(TileType.WaterLayer, borderSize);
+		CreateLayer(TileType.MountainLayer, borderSize / 2);
 
-		CreateLayer(LayerType.Ground);
-		CreateLayer(LayerType.Water);
+		SetTileGridToLayer();
 
-		//TODO Nik
-		int border = 2;//layerTileSets.mountainBorderWidth;
-		CreateLayer(LayerType.Mountain, border);
+		CorrectLayers();
+		SetBorder(TileType.WaterLayer);
+
+		new FramingCreator(layerSets.GetFramingTilePairs(), ref layerGrid);
+		SetLayerToTileGrid();
 	}
 
-	public void CorrectLayers(LayerType[,] layerGrid)
+	private void CorrectLayers()
 	{
-		LayerGrid = layerGrid;
-
-		CorrectAreas(LayerType.Water);
-		CorrectAreas(LayerType.Mountain);
+		CorrectAreas(TileType.WaterLayer);
+		CorrectAreas(TileType.MountainLayer);
 	}
 
-	private void CreateLayer(LayerType layerType, int border = 0)
+	private void CreateLayer(TileType layerType, int border = 0)
 	{
-		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 		int[,] grid = RandomGenerator.Generate(genSets, border);
 
-		for (int x = 0; x < tileCountX; x++)
+		for (int x = 0; x < layerCountX; x++)
 		{
-			for (int z = 0; z < tileCountZ; z++)
+			for (int z = 0; z < layerCountZ; z++)
 			{
 				if (grid[x, z] == 1)
 				{
-					LayerGrid[x, z] = layerType;
+					layerGrid[x, z] = layerType;
 				}
 			}
 		}
@@ -64,7 +78,7 @@ public class LayerCreator
 	/// и ограничивает число оставшихся областей
 	/// </summary>
 	/// <param name="layerType"></param>
-	private void CorrectAreas(LayerType layerType)
+	private void CorrectAreas(TileType layerType)
 	{
 		var list = GetAllAreas(layerType);
 
@@ -72,11 +86,11 @@ public class LayerCreator
 		LimitingAreaCount(list, layerType);
 	}
 
-	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, LayerType layerType)
+	private List<List<int[]>> RemoveSmallAreas(List<List<int[]>> list, TileType layerType)
 	{
-		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
+		LandscapeSettings landscapeSets = layerSets.GetLandscapeSettings(layerType);
 
-		if(landscapeSets.minSize == -1)
+		if (landscapeSets.minSize == -1)
 		{
 			return list;
 		}
@@ -87,7 +101,7 @@ public class LayerCreator
 			{
 				foreach (int[] point in list[i])
 				{
-					LayerGrid[point[0], point[1]] = LayerType.Ground;
+					layerGrid[point[0], point[1]] = TileType.GroundLayer;
 				}
 				list.RemoveAt(i);
 				i--;
@@ -97,15 +111,15 @@ public class LayerCreator
 		return list;
 	}
 
-	private void LimitingAreaCount(List<List<int[]>> list, LayerType layerType)
+	private void LimitingAreaCount(List<List<int[]>> list, TileType layerType)
 	{
-		GeneratorSettings genSets = layerTileSets.GetGeneratorSettings(layerType);
+		GeneratorSettings genSets = layerSets.GetGeneratorSettings(layerType);
 
-		int seedHash = genSets.seed.GetHashCode();
+		int seedHash = genSets.GetSeed().GetHashCode();
 		System.Random pseudoRandom = new System.Random(seedHash);
 
-		LandscapeSettings landscapeSets = layerTileSets.GetLandscapeSettings(layerType);
-		if(landscapeSets.maxCount == -1)
+		LandscapeSettings landscapeSets = layerSets.GetLandscapeSettings(layerType);
+		if (landscapeSets.maxCount == -1)
 		{
 			return;
 		}
@@ -116,7 +130,7 @@ public class LayerCreator
 
 			foreach (int[] point in list[index])
 			{
-				LayerGrid[point[0], point[1]] = LayerType.Ground;
+				layerGrid[point[0], point[1]] = TileType.GroundLayer;
 			}
 			list.RemoveAt(index);
 		}
@@ -127,16 +141,16 @@ public class LayerCreator
 	/// </summary>
 	/// <param name="layerType"></param>
 	/// <returns></returns>
-	private List<List<int[]>> GetAllAreas(LayerType layerType)
+	private List<List<int[]>> GetAllAreas(TileType layerType)
 	{
-		int[,] layerMap = GetLayerMap(layerType);
+		int[,] layerMap = layerGrid.GetTileMap(layerType);
 		var allAreasList = new List<List<int[]>>();
 
-		for (int x = 0; x < tileCountX; x++)
+		for (int x = 0; x < layerCountX; x++)
 		{
-			for (int z = 0; z < tileCountZ; z++)
+			for (int z = 0; z < layerCountZ; z++)
 			{
-				// Равносильно LayerGrid[x, z] == layerType
+				// Равносильно layerGrid[x, z] == layerType
 				if (layerMap[x, z] == 1)
 				{
 					var areaList = GetArea(x, z, ref layerMap);
@@ -202,7 +216,7 @@ public class LayerCreator
 				int x = item[0] + dX[i];
 				int z = item[1] + dZ[i];
 
-				if (x < 0 || tileCountX <= x || z < 0 || tileCountZ <= z)
+				if (x < 0 || layerCountX <= x || z < 0 || layerCountZ <= z)
 				{
 					continue;
 				}
@@ -220,28 +234,158 @@ public class LayerCreator
 		return nextPointsList;
 	}
 
-	/// <summary>
-	/// Возвращает карту расположения слоя layerType
-	/// </summary>
-	/// <returns>1 - тайл занят слоем layerType, 0 - другим слоем</returns>
-	public int[,] GetLayerMap(LayerType layerType)
+	public int GetBorderSize()
 	{
-		int[,] mas = new int[tileCountX, tileCountZ];
-		for (int x = 0; x < tileCountX; x++)
+		return borderSize;
+	}
+
+	private void SetTileGridToLayer()
+	{
+		foreach (var item in tileGrid.GetTileDictionary())
 		{
-			for (int z = 0; z < tileCountZ; z++)
+			layerGrid.AddTile(item.Value);
+		}
+
+		for (int x = 0; x < tileGrid.CountX; x++)
+		{
+			for (int z = 0; z < tileGrid.CountZ; z++)
 			{
-				if (LayerGrid[x, z] == layerType)
+				if (tileGrid[x, z] != TileType.None)
 				{
-					mas[x, z] = 1;
+					layerGrid[x + borderSize, z + borderSize] = tileGrid[x, z];
 				}
-				else
+			}
+		}
+	}
+
+	private void SetLayerToTileGrid()
+	{
+		foreach (var item in layerGrid.GetTileDictionary())
+		{
+			tileGrid.AddTile(item.Value);
+		}
+
+		for (int x = 0; x < tileGrid.CountX; x++)
+		{
+			for (int z = 0; z < tileGrid.CountZ; z++)
+			{
+				tileGrid[x, z] = layerGrid[x + borderSize, z + borderSize];
+			}
+		}
+	}
+
+	public TileGrid GetLayerGrid()
+	{
+		return layerGrid;
+	}
+
+	private void SetBorder(TileType borderType)
+	{
+		int maxX = layerCountX - 1;
+		int maxZ = layerCountZ - 1;
+
+		// "Заливка" земли в пределах границы водой
+		for (int i = 0; i < borderSize; i++)
+		{
+			for (int z = 0; z < layerCountZ; z++)
+			{
+				if (layerGrid[i, z] == TileType.GroundLayer)
 				{
-					mas[x, z] = 0;
+					layerGrid[i, z] = borderType;
+				}
+
+				if (layerGrid[maxX - i, z] == TileType.GroundLayer)
+				{
+					layerGrid[maxX - i, z] = borderType;
 				}
 			}
 		}
 
-		return mas;
+		for (int i = 0; i < borderSize; i++)
+		{
+			for (int x = 0; x < layerCountX; x++)
+			{
+				if (layerGrid[x, i] == TileType.GroundLayer)
+				{
+					layerGrid[x, i] = borderType;
+				}
+
+				if (layerGrid[x, maxZ - i] == TileType.GroundLayer)
+				{
+					layerGrid[x, maxZ - i] = borderType;
+				}
+			}
+		}
+
+		SetIrregularBorder(borderType);
+	}
+
+	private void SetIrregularBorder(TileType borderType)
+	{
+		int maxX = layerCountX - 1;
+		int maxZ = layerCountZ - 1;
+
+		//Обрамление границы неровностями
+		System.Random pseudoRandom = new System.Random(layerSets.GetSeed().GetHashCode());
+		int fillPercent = 50;
+
+		for (int z = 0; z < layerCountZ; z++)
+		{
+			if (layerGrid[borderSize, z] == TileType.GroundLayer)
+			{
+				if (pseudoRandom.Next(0, 100) < fillPercent)
+				{
+					layerGrid[borderSize, z] = borderType;
+					if (layerGrid[borderSize + 1, z] == TileType.GroundLayer)
+					{
+						if (pseudoRandom.Next(0, 100) < fillPercent / 3)
+							layerGrid[borderSize + 1, z] = borderType;
+					}
+				}
+			}
+
+			if (layerGrid[maxX - borderSize, z] == TileType.GroundLayer)
+			{
+				if (pseudoRandom.Next(0, 100) < fillPercent)
+				{
+					layerGrid[maxX - borderSize, z] = borderType;
+					if (layerGrid[maxX - (borderSize + 1), z] == TileType.GroundLayer)
+					{
+						if (pseudoRandom.Next(0, 100) < fillPercent / 3)
+							layerGrid[maxX - (borderSize + 1), z] = borderType;
+					}
+				}
+			}
+		}
+
+		for (int x = 0; x < layerCountX; x++)
+		{
+			if (layerGrid[x, borderSize] == TileType.GroundLayer)
+			{
+				if (pseudoRandom.Next(0, 100) < fillPercent)
+				{
+					layerGrid[x, borderSize] = borderType;
+					if (layerGrid[x, borderSize + 1] == TileType.GroundLayer)
+					{
+						if (pseudoRandom.Next(0, 100) < fillPercent / 3)
+							layerGrid[x, borderSize + 1] = borderType;
+					}
+				}
+			}
+
+			if (layerGrid[x, maxZ - borderSize] == TileType.GroundLayer)
+			{
+				if (pseudoRandom.Next(0, 100) < fillPercent)
+				{
+					layerGrid[x, maxZ - borderSize] = borderType;
+					if (layerGrid[x, maxZ - (borderSize + 1)] == TileType.GroundLayer)
+					{
+						if (pseudoRandom.Next(0, 100) < fillPercent / 3)
+							layerGrid[x, maxZ - (borderSize + 1)] = borderType;
+					}
+				}
+			}
+
+		}
 	}
 }

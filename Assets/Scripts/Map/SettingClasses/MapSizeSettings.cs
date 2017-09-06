@@ -13,4 +13,7 @@ public class MapSizeSettings{
 
 	public int TileCountX { get { return (int)(width / tileSize); } }
 	public int TileCountZ { get { return (int)(length / tileSize); } }
+
+	[Tooltip("Главный ключ для генерации")]
+	public string mainSeed = "main";
 }
