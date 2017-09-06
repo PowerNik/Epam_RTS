@@ -67,7 +67,7 @@ public class DecorationCreator : MonoBehaviour
 					Transform tr = Instantiate(decorMas[curDecor % decorCount]).transform;
 					curDecor++;
 
-					tr.position = new Vector3(point[0], 0, point[1]) * tileGrid.TileSize;
+					tr.position = new Vector3(point[0] + 0.5f, 0, point[1] + 0.5f) * tileGrid.TileSize;
 					tr.localScale *= Random.Range(minScale, maxScale);
 					tr.localRotation = Quaternion.Euler(0, Random.Range(0, 180), 0);
 
