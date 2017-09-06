@@ -10,8 +10,6 @@ public class MapManager : MonoBehaviour
 	[SerializeField]
 	private MapSettingsManagerSO mapSetsManager;
 
-	private int levelNumber;
-
 	//TODO FOR TEST selecting
 	private LayerMask layerToRay;
 
@@ -78,11 +76,6 @@ public class MapManager : MonoBehaviour
 			SelectExtractArea(Race.Citizen);
 		if (Input.GetKeyUp(KeyCode.Alpha4))
 			DeselectArea();
-	}
-
-	public void SetGameLevel(int levelNumber)
-	{
-		this.levelNumber = levelNumber;
 	}
 
 	public void SelectBuildArea(Race race)
