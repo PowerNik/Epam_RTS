@@ -14,6 +14,7 @@ public class CitizenStructureFactory : StructureFactory
 
     public override Structure SpawnBaseStructure(Vector3 SpawnPosition)
     {
+        playerManager.playerResources -= citizenBaseStructure.structurePrice;
         return citizenBaseStructure.Build(SpawnPosition, playerManager.StructuresPlaceHolder.transform);
     }
 

@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class CitizenBaseStructure : StructureSettings
 {
-    public Structure Build(Vector3 SpawnPoint, Transform placeHolder)
+    public CitizenBaseStructure()
     {
+        //Get settings from SCriptableObject
         this.Init(GameManager.getStructureSettings(StructuresTypes.BaseStructure, Race.Citizen));
-        Debug.Log("Spawn Base Structure");
+    }
+    public Structure Build(Vector3 SpawnPoint, Transform placeHolder)
+    {   
         GameObject spawnedStructure = GameObject.Instantiate<GameObject>(this.StructureGameObject, SpawnPoint, this.StructureGameObject.transform.rotation);
         Structure spawnedStructureMB = spawnedStructure.AddComponent<Structure>();
+        //Place settings in Structure class after instantiating
         spawnedStructureMB.Init(this);
         spawnedStructure.transform.SetParent(placeHolder);
         return spawnedStructureMB;

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     private StructureScriptableObject sso;
     [SerializeField]
     private UnitScriptableObject uso;
+    [SerializeField]
+    private ResourcesScriptableObject rso;
 
     public static StructureSettings getStructureSettings(StructuresTypes type,Race race)
     {
@@ -45,6 +47,19 @@ public class GameManager : MonoBehaviour
         {
             if (settings[i].Type == type)
                 return instance.uso.unitSettings[i];
+        }
+        return null;
+    }
+
+    public static GameResources getStartupInitResources(Race playerRace)
+    {
+        List<GameResources> startupInit = instance.rso.playerResources;
+        for (int i = 0; i < startupInit.Count; i++)
+        {
+            if (startupInit[i].playerRace == playerRace)
+            {
+                return startupInit[i];
+            }
         }
         return null;
     }
@@ -134,20 +149,19 @@ public class GameManager : MonoBehaviour
 
     void InitCitizenPlayer()
     {
-        InstantiatePlayerManager();
-        players.Last().playerRace = Race.Citizen;
-        players.Last().playerFactory = new CitizenStructureFactory(players.Last());
+        Debug.Log("IntCitizenPlayer");
         Vector3[] citizenStartPoint = new Vector3[1];
         citizenStartPoint[0] = MapManagerInstance.GetCitizenBasePoint();
-        players.Last().startPoints = citizenStartPoint;
+        InstantiatePlayerManager();
+        players.Last().Init(Race.Citizen, citizenStartPoint);
     }
 
     void InitFermerPlayer()
     {
         InstantiatePlayerManager();
-        players.Last().playerRace = Race.Fermer;
-        players.Last().playerFactory = new FermersStructureFactory(players.Last());
-        players.Last().startPoints = MapManagerInstance.GetFermerBasePoints();
+        //players.Last().playerRace = Race.Fermer;
+        //players.Last().playerFactory = new FermersStructureFactory(players.Last());
+        //players.Last().startPoints = MapManagerInstance.GetFermerBasePoints();
     }
 
     #endregion
@@ -169,7 +183,7 @@ public class GameManager : MonoBehaviour
     }
 
     #region Camera
-
+    //TODO.Add spawning main & minimap camera
     void InitCamera()
     {
     }
@@ -181,23 +195,12 @@ public class GameManager : MonoBehaviour
     //TODO.Rewrite hardcode setting player.Will works only when playing local with bots.
     void InitResourceBoard()
     {
-        
-        Transform ResourceHUDTransform = GameObject.FindGameObjectWithTag("HUD").transform;
-        GameObject ResHUD;
-        if (players[0].playerRace == Race.Citizen)
-        {
-            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceCitizenHUD"), ResourceHUDTransform);
-        }
-        else
-        {
-            ResHUD = (GameObject)Instantiate(Resources.Load("ResourceFermerHUD"), ResourceHUDTransform);
-        }
-        ResourceHUD[] resources = ResHUD.GetComponentsInChildren<ResourceHUD>();
-        for (int it = 0; it < resources.Length; it++)
-        {
-            resources[it].SetPlayer(players[0]);
-        }
-        //Instantiate(ResourceBoard, Vector3.zero, transform.rotation);
+        //Debug.Log("IntResourceBoard");
+        Transform ResourceHUDTransform = GameObject.FindGameObjectWithTag("ResourceHUD").transform;
+        GameObject FoodResHUD = (GameObject)Instantiate(Resources.Load("ResourceBlock"), ResourceHUDTransform);
+        GameObject EquipResHUD = (GameObject)Instantiate(Resources.Load("ResourceBlock"), ResourceHUDTransform);
+        GameObject SpecResHUD = (GameObject)Instantiate(Resources.Load("ResourceBlock"), ResourceHUDTransform);
+        players[0].InitResourceHUD(FoodResHUD, EquipResHUD, SpecResHUD);
     }
 
     #endregion

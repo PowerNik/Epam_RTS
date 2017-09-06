@@ -12,8 +12,8 @@ public enum ResourceType
 public class ResourceHUD : MonoBehaviour 
 {
 
-	[SerializeField]
-	ResourceType resource;
+    [SerializeField]
+    GameResource resource;
 
     private Text resourceValuePresentation;
 
@@ -22,20 +22,13 @@ public class ResourceHUD : MonoBehaviour
         resourceValuePresentation = gameObject.GetComponent<Text>();
     }
 
-    public void SetPlayer(PlayerManager player)
+    public void Init(ref GameResource resource)
     {
-        switch (resource)
-        {
-            case ResourceType.Food:
-                player.foodResChange = ChangeValue;
-                break;
-            case ResourceType.Eqipment:
-                player.equipResChange = ChangeValue;
-                break;
-            case ResourceType.Special:
-                player.specialResChange = ChangeValue;
-                break;
-        }
+        this.resource = resource;
+        this.transform.GetComponentInParent<Image>().sprite = this.resource.backgroundUI;
+        resource.ChangeValue = this.ChangeValue;
+        ////First invoke of ChangeValue
+        resource.Value = resource.Value;
     }
 
     private void ChangeValue(int newVal)

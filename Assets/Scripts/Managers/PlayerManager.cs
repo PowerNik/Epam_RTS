@@ -12,59 +12,63 @@ public enum Race
     Nature = 3
 }
 
-#region Resource
-public struct GameResources
-{
-}
-#endregion
+
+//public static bool operator >=(Dumbbell left, Dumbbell right)
+//{
+//    return left.dumbbellWeight >= right.dumbbellWeight;
+//}
 
 public class PlayerManager : MonoBehaviour
 {
-    private int foodResource,
-        equipResource,
-        specialResource;
-    public int FoodResource
-    {
-        get { return foodResource; }
-        set
-        {
-            foodResource += value;
-            if (foodResChange != null)
-            {
-                foodResChange(foodResource);
-            }
-        }
-    }
+    #region OldResource_TODELETE
+    //private int foodResource,
+    //    equipResource,
+    //    specialResource;
+    //public int FoodResource
+    //{
+    //    get { return foodResource; }
+    //    set
+    //    {
+    //        foodResource += value;
+    //        if (foodResChange != null)
+    //        {
+    //            foodResChange(foodResource);
+    //        }
+    //    }
+    //}
 
-    public int EquipResource
-    {
-        get { return equipResource; }
-        set
-        {
-            equipResource += value;
-            if (equipResChange != null)
-            {
-                equipResChange(equipResource);
-            }
-        }
-    }
+    //public int EquipResource
+    //{
+    //    get { return equipResource; }
+    //    set
+    //    {
+    //        equipResource += value;
+    //        if (equipResChange != null)
+    //        {
+    //            equipResChange(equipResource);
+    //        }
+    //    }
+    //}
 
-    public int SpecialResource
-    {
-        get { return specialResource; }
-        set
-        {
-            specialResource += value;
-            if (specialResChange != null)
-            {
-                specialResChange(specialResource);
-            }
-        }
-    }
+    //public int SpecialResource
+    //{
+    //    get { return specialResource; }
+    //    set
+    //    {
+    //        specialResource += value;
+    //        if (specialResChange != null)
+    //        {
+    //            specialResChange(specialResource);
+    //        }
+    //    }
+    //}
 
-    public delegate void ResourceChangeDelegate(int AddFood);
+    //public delegate void ResourceChangeDelegate(int AddFood);
 
-    public ResourceChangeDelegate foodResChange, equipResChange, specialResChange;
+    //public ResourceChangeDelegate foodResChange, equipResChange, specialResChange;
+    #endregion
+
+    public GameResources playerResources;
 
     public Race playerRace { get; set; }
 
@@ -80,7 +84,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject StructuresPlaceHolder { get; private set; }
     public GameObject UnitsPlaceHolder { get; private set; }
 
-    public Vector3[] startPoints { get; set; }
+    //private Vector3[] startPoints { get; set; }
 
     #region MonoBehaviour
     void Awake()
@@ -95,14 +99,6 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
-        //TODO.Create scriptable object or json,to store init resources - Each race has own pre-set
-        #region InitResource_TODELETE
-
-        FoodResource = 500;
-        EquipResource = 500;
-        SpecialResource = 500;
-
-        #endregion
 
         #region RegionForTestingSpawnUnityWithFactory
         RhiroUnitFactory ruf = new RhiroUnitFactory(this);
@@ -120,18 +116,17 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-
     //TODO.Better to create subclass FermerManager and CitizenManager to resolve ugly if desicion.
     #region Init
-    public void Init()
+    public void Init(Race playerRace, Vector3[] startPoints)
     {
         switch (playerRace)
         {
             case Race.Citizen:
-                InitCitizen();
+                InitCitizen(startPoints[0]);
                 break;
             case Race.Fermer:
-                InitFermer();
+                InitFermer(startPoints);
                 break;
             default:
                 Debug.Log("Not supported");
@@ -139,15 +134,19 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void InitCitizen()
+    private void InitCitizen(Vector3 startPoint)
     {
         //playerFactory.SpawnBaseStructure(startPoints[0]);
         CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
-        playerUnits.Add(citizenBuilderFactory.CreateUnit(startPoints[0]));
+        playerUnits.Add(citizenBuilderFactory.CreateUnit(startPoint));
         playerUnits.Last().transform.SetParent(UnitsPlaceHolder.transform);
+
+        playerResources = GameManager.getStartupInitResources(Race.Citizen);
+
+        playerFactory = new CitizenStructureFactory(this);
     }
 
-    private void InitFermer()
+    private void InitFermer(Vector3[] startPoints)
     {
         //foreach (Vector3 point in startPoints)
         //{
@@ -159,6 +158,9 @@ public class PlayerManager : MonoBehaviour
             playerUnits.Add(fermerBuilderFactory.CreateUnit(point));
             playerUnits.Last().transform.SetParent(UnitsPlaceHolder.transform);
         }
+        playerResources = GameManager.getStartupInitResources(Race.Fermer);
+
+        playerFactory = new FermersStructureFactory(this);
     }
     #endregion
 
@@ -179,4 +181,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
     #endregion
+
+    public void InitResourceHUD(GameObject foodRes, GameObject equipRes, GameObject specRes)
+    {
+        foodRes.GetComponentInChildren<ResourceHUD>().Init(ref playerResources.foodResource);
+        equipRes.GetComponentInChildren<ResourceHUD>().Init(ref playerResources.equipResource);
+        specRes.GetComponentInChildren<ResourceHUD>().Init(ref playerResources.specialResource);
+    }
 }
