@@ -9,7 +9,6 @@ public class BuildMainStructureAction : ActionBehaviour
     {
         return delegate ()
         {
-            Debug.Log("Button clicked");
             PlayerManager playerOwner = GetComponent<Unit>().playerOwner;
             playerOwner.SpawnStructure(StructuresTypes.BaseStructure, GetComponent<Unit>().gameObject.transform.position);
         };

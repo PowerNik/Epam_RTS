@@ -7,6 +7,11 @@ public class FermersStructureFactory : StructureFactory
 {
     public FermersStructureFactory(PlayerManager playerManagerRef) : base(playerManagerRef){ }
 
+    public override GameResources GetStructurePrice(StructuresTypes type)
+    {
+        return new GameResources();
+    }
+
     public override Structure SpawnBaseStructure(Vector3 SpawnPosition)
     {
         return new FermersBaseStructure(SpawnPosition, playerManager.StructuresPlaceHolder.transform);

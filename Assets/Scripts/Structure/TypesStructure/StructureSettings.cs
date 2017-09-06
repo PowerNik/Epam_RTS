@@ -31,6 +31,17 @@ public class StructureSettings
     protected float timeToBuild;
 
     [SerializeField]
+    protected GameResources price;
+
+    public GameResources structurePrice
+    {
+        get
+        {
+            return price;
+        }
+    }
+
+    [SerializeField]
     protected GameObject structureGameObject;
 
     [SerializeField]
@@ -55,6 +66,7 @@ public class StructureSettings
         this.health = settings.health;
         this.structureGameObject = settings.structureGameObject;
         this.timeToBuild = settings.timeToBuild;
+        this.price = settings.price;
         this.structureName = settings.structureName;
         this.structureType = settings.structureType;
         this.structureRace = settings.structureRace;
