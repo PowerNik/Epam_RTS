@@ -50,6 +50,10 @@ public class DecorationCreator : MonoBehaviour
 		List<List<int[]>> areaList = CorrectAreas(ref map);
 
 		GameObject[] decorMas = curentSets.GetDecorations();
+		if (decorMas.Length == 0)
+		{
+			return;
+		}
 		int decorCount = decorMas.Length;
 		int curDecor = 0;
 
