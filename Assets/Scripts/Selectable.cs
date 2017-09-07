@@ -40,6 +40,8 @@ public class Selectable : MonoBehaviour {
     public void Deselect()
     {
         selected = false;
+		//Hotfix2
+		if(highlight != null)
         highlight.enabled = false;
         ActionButtonManager.Current.ClearButtons();
         if (MouseManager.Current.SelectedObjects.Count == 1)
@@ -47,8 +49,13 @@ public class Selectable : MonoBehaviour {
             InfoPanel.Current.Clear();
         }
 
-        if (MouseManager.Current.SelectedObjects.Count >= 2)
-            InfoPanel.Current.RemoveUnitFromGroupSelection(GetComponent<Unit>());
+		if (MouseManager.Current.SelectedObjects.Count >= 2)
+		{
+			//Hotfix2
+			var unit = GetComponent<Unit>();
+			if(unit != null)
+			InfoPanel.Current.RemoveUnitFromGroupSelection(unit);
+		}
     }
     public void AttackSelection()
     {

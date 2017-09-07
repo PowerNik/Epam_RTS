@@ -42,9 +42,11 @@ public class Attack : MonoBehaviour
     public void EnableAttack(Unit enemy)
     {
         this.enemy = enemy;
-        if (GetComponent<Movable>() != null && Vector3.Distance(transform.position, enemy.transform.position) > CurrentAttackRadius)
+		//Hotfix2
+		var movable = GetComponent<Movable>();
+		if (movable != null && Vector3.Distance(transform.position, enemy.transform.position) > CurrentAttackRadius)
         {
-            GetComponent<Movable>().MoveToTarget(enemy.transform.position);
+			movable.MoveToTarget(enemy.transform.position);
             approachingTarget = true;
             print(Vector3.Distance(transform.position, enemy.transform.position));
             return;

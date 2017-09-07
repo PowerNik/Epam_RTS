@@ -104,6 +104,8 @@ public class MouseManager : MonoBehaviour
                         hit.collider.GetComponent<Selectable>().AttackSelection();
                         foreach (var obj in SelectedObjects)
                         {
+							//Hotfix2
+							if(obj!= null)
                             if (obj.GetComponent<Attack>() != null)
                             {
                                 obj.GetComponent<Attack>().EnableAttack(hit.collider.GetComponent<Unit>());
@@ -127,6 +129,8 @@ public class MouseManager : MonoBehaviour
                 {
                     foreach (var unit in selectedObjects)
                     {
+						//Hotfix2
+						if(unit != null)
                         if (unit.GetComponent<Movable>()!=null)
                             unit.GetComponent<Movable>().MoveToTarget(hit.point);
                     }
