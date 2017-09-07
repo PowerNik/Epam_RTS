@@ -52,6 +52,9 @@ public class Selectable : MonoBehaviour {
 		if (MouseManager.Current.SelectedObjects.Count >= 2)
 		{
 			//Hotfix2
+			if (gameObject == null)
+				return;
+
 			var unit = GetComponent<Unit>();
 			if(unit != null)
 			InfoPanel.Current.RemoveUnitFromGroupSelection(unit);

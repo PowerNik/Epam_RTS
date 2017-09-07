@@ -43,6 +43,9 @@ public class Attack : MonoBehaviour
     {
         this.enemy = enemy;
 		//Hotfix2
+		if (gameObject == null)
+			return;
+
 		var movable = GetComponent<Movable>();
 		if (movable != null && Vector3.Distance(transform.position, enemy.transform.position) > CurrentAttackRadius)
         {
@@ -89,6 +92,9 @@ public class Attack : MonoBehaviour
 
         if (approachingTarget)
         {
+			if (gameObject == null)
+				return;
+
             if (Vector3.Distance(transform.position, enemy.transform.position) > CurrentAttackRadius)
                 return;
             else
