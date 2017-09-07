@@ -97,14 +97,31 @@ public class PlayerManager : MonoBehaviour
 		#region RegionForTestingSpawnUnityWithFactory
 		Vector3 citBase = GameManager.GetGameManager().MapManagerInstance.GetCitizenBasePoint();
 
+
+		FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
+		playerUnits.Add(flameruf.CreateUnit(citBase + new Vector3(-8, 0, -8)));
+
+		FlamerUnitFactory flameruf1 = new FlamerUnitFactory(this);
+		playerUnits.Add(flameruf1.CreateUnit(citBase + new Vector3(-9, 0, -8)));
+
+
 		FootSoldierUnitFactory fsuf = new FootSoldierUnitFactory(this);
-		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(10, 0, 15)));
+		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(7, 0, 7)));
 
 		FootSoldierUnitFactory fsuf1 = new FootSoldierUnitFactory(this);
-		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(15, 0, 15)));
+		playerUnits.Add(fsuf1.CreateUnit(citBase + new Vector3(7, 0, -7)));
 
 		FootSoldierUnitFactory fsuf2 = new FootSoldierUnitFactory(this);
-		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(15, 0, 10)));
+		playerUnits.Add(fsuf2.CreateUnit(citBase + new Vector3(-7, 0, 7)));
+
+		FootSoldierUnitFactory fsuf11 = new FootSoldierUnitFactory(this);
+		playerUnits.Add(fsuf11.CreateUnit(citBase + new Vector3(5, 0, 5)));
+
+		FootSoldierUnitFactory fsuf12 = new FootSoldierUnitFactory(this);
+		playerUnits.Add(fsuf12.CreateUnit(citBase + new Vector3(5, 0, -5)));
+
+		FootSoldierUnitFactory fsuf13 = new FootSoldierUnitFactory(this);
+		playerUnits.Add(fsuf13.CreateUnit(citBase + new Vector3(-5, 0, 5)));
 
 		int i = 0;
 		foreach (var item in GameManager.GetGameManager().MapManagerInstance.GetPeacefulNeutralPoitns())
@@ -140,8 +157,8 @@ public class PlayerManager : MonoBehaviour
 		RoverUnitFactory rovuf = new RoverUnitFactory(this);
 		playerUnits.Add(rovuf.CreateUnit(s + new Vector3(10, 0, 10)));
 
-		FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
-		playerUnits.Add(flameruf.CreateUnit(s + new Vector3(15, 0, 15)));
+		FlamerUnitFactory flameruf10 = new FlamerUnitFactory(this);
+		playerUnits.Add(flameruf10.CreateUnit(s + new Vector3(15, 0, 15)));
 
 		CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
 		playerUnits.Add(citizenBuilderFactory.CreateUnit(citBase + new Vector3(5, 0, 5)));	

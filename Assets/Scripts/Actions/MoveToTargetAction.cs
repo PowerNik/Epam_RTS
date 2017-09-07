@@ -10,7 +10,9 @@ public class MoveToTargetAction : ActionBehaviour {
     {
         RaycastHit hit = (RaycastHit)obj;
         Vector3 targetMove = hit.point;
-        GetComponent<Movable>().MoveToTarget(targetMove);
+		var movable = GetComponent<Movable>();
+		if(movable != null)
+			movable.MoveToTarget(targetMove);
     }
 
 
