@@ -66,7 +66,7 @@ public class PeaceNeutralAI : MonoBehaviour
 			if (unit == null)
 			{ continue; }
 
-			if (unit.IsEnemy == false)
+			if (!unit.IsEnemyFor(myUnit.playerOwner))
 			{
 				findEnemy = true;
 				attack.EnableAttack(unit);

@@ -11,6 +11,7 @@ public class RhiroUnitFactory : UnitFactory
         UnitSettings settings = GameManager.getUnitSettings(UnitType.Rhiro);
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
+		newUnit.AddComponent<PeaceNeutralAI>();
         unit.Settings = settings;
         unit.Health = settings.MaxHealth;
         unit.playerOwner = this.playerOwner;

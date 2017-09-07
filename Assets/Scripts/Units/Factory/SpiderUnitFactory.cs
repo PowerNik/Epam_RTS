@@ -10,7 +10,8 @@ public class SpiderUnitFactory : UnitFactory
         UnitSettings settings = GameManager.getUnitSettings(UnitType.Spider);
         GameObject newUnit = GameObject.Instantiate<GameObject>(settings.Prefab, spawnPosition, settings.Prefab.transform.rotation);
         Unit unit = newUnit.AddComponent<Unit>();
-        unit.Settings = settings;
+		newUnit.AddComponent<AgroNeutralAI>();
+		unit.Settings = settings;
         unit.Health = settings.MaxHealth;
         unit.playerOwner = this.playerOwner;
         return unit;

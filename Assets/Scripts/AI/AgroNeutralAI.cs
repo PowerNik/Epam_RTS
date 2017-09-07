@@ -53,7 +53,7 @@ public class AgroNeutralAI : MonoBehaviour
 			if (unit == null)
 			{ continue; }
 
-			if (unit.IsEnemy == false)
+			if (!unit.IsEnemyFor(myUnit.playerOwner))
 			{
 				findEnemy = true;
 				attack.EnableAttack(unit);
