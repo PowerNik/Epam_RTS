@@ -53,9 +53,9 @@ public class MainPointsCreator
 		CreateMainPoints(regions, MainPointType.Base);
 		SetRegionDataOnSectors();
 
+		CreateMainPoints(sectors, MainPointType.Trade);
 		CreateMainPoints(sectors, MainPointType.Extract);
 		CreateMainPoints(sectors, MainPointType.Neutral);
-		CreateMainPoints(sectors, MainPointType.Trade);
 
 		FramingNonDecorableAreas();
 	}

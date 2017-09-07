@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 35f88946aad531c4fa6b759dc72d995a
 folderAsset: yes
 timeCreated: 1504719610
+=======
+guid: 5d66855135b4fb148b6a75ec56937e10
+folderAsset: yes
+timeCreated: 1504711678
+>>>>>>> decorNik
 licenseType: Free
 DefaultImporter:
   userData: 

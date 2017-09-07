@@ -14,8 +14,8 @@ namespace MapGenerate
 			above = new Node(position + Vector3.forward * squareSize / 2f);
 			right = new Node(position + Vector3.right * squareSize / 2f);
 
-			wallAbove = new Node(above.position - new Vector3(0, position.y + 0.5f, 0));
-			wallRight = new Node(right.position - new Vector3(0, position.y + 0.5f, 0));
+			wallAbove = new Node(above.position - new Vector3(0, position.y + 0.1f, 0));
+			wallRight = new Node(right.position - new Vector3(0, position.y + 0.1f, 0));
 		}
 	}
 }

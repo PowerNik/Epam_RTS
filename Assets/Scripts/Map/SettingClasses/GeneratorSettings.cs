@@ -16,7 +16,7 @@ public class GeneratorSettings
 	[SerializeField]
 	private int fillPercent = 100;
 
-	[Range(0, 100)]
+	[Range(0, 10)]
 	[SerializeField]
 	private int smoothCount = 5;
 
