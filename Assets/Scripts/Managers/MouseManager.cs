@@ -97,7 +97,9 @@ public class MouseManager : MonoBehaviour
 
                 if (hit.collider.GetComponent<Unit>() != null)
                 {
-                    if (hit.collider.GetComponent<Unit>().IsEnemyFor(GetComponent<Unit>().playerOwner))
+					//TODO HOTFIX
+                   // if (hit.collider.GetComponent<Unit>().IsEnemyFor(GetComponent<Unit>().playerOwner))
+					if (hit.collider.GetComponent<Unit>().IsEnemyFor(hit.collider.GetComponent<Unit>().playerOwner))
                     {
                         hit.collider.GetComponent<Selectable>().AttackSelection();
                         foreach (var obj in SelectedObjects)
