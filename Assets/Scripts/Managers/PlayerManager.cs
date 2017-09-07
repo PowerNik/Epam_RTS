@@ -94,19 +94,32 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
 
-        #region RegionForTestingSpawnUnityWithFactory
-        RhiroUnitFactory ruf = new RhiroUnitFactory(this);
-        playerUnits.Add(ruf.CreateUnit(new Vector3(10, 0, 27)));
+		#region RegionForTestingSpawnUnityWithFactory
+		Vector3 citBase = GameManager.GetGameManager().MapManagerInstance.GetCitizenBasePoint();
+
+		RhiroUnitFactory ruf = new RhiroUnitFactory(this);
+        playerUnits.Add(ruf.CreateUnit(citBase + new Vector3(20, 0, 20)));
+
         RoverUnitFactory rovuf = new RoverUnitFactory(this);
-        playerUnits.Add(rovuf.CreateUnit(new Vector3(18, 0, 27)));
+        playerUnits.Add(rovuf.CreateUnit(citBase + new Vector3(10, 0, 10)));
+
         FootSoldierUnitFactory fsuf = new FootSoldierUnitFactory(this);
-        playerUnits.Add(fsuf.CreateUnit(new Vector3(14, 0, 27)));
-        FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
-        playerUnits.Add(flameruf.CreateUnit(new Vector3(12, 0, 29)));
+        playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(10, 0, 15)));
+
+		FootSoldierUnitFactory fsuf1 = new FootSoldierUnitFactory(this);
+		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(15, 0, 15)));
+
+		FootSoldierUnitFactory fsuf2 = new FootSoldierUnitFactory(this);
+		playerUnits.Add(fsuf.CreateUnit(citBase + new Vector3(15, 0, 10)));
+
+		FlamerUnitFactory flameruf = new FlamerUnitFactory(this);
+        playerUnits.Add(flameruf.CreateUnit(citBase + new Vector3(15, 0, 15)));
+
         SpiderUnitFactory spideruf = new SpiderUnitFactory(this);
-        playerUnits.Add(spideruf.CreateUnit(new Vector3(20, 0, 31)));
+        playerUnits.Add(spideruf.CreateUnit(citBase + new Vector3(20, 0, 25)));
+
         CitizenBuilderUnitFactory citizenBuilderFactory = new CitizenBuilderUnitFactory(this);
-        playerUnits.Add(citizenBuilderFactory.CreateUnit(new Vector3(20, 0, 30)));
+        playerUnits.Add(citizenBuilderFactory.CreateUnit(citBase + new Vector3(5, 0, 5)));
         #endregion
     }
     #endregion
