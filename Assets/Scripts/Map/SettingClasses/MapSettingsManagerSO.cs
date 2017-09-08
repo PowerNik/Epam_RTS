@@ -5,28 +5,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MapSettingsManager", menuName = "MapSettings/MapSettingsManager", order = 100)]
 public class MapSettingsManagerSO : ScriptableObject
 {
+	private string mainSeed;
+
 	[SerializeField]
 	private MapSizeSettingsSO mapSizeSettings;
 
 	[SerializeField]
 	private MainPointsSettingsSO mainPointsSettings;
 
+	[SerializeField]
+	private LayerSettingsSO layerTileSettings;
 
 	[SerializeField]
-	private HeightMapSettingsSO heightMapSettings;
+	private DecorationSettingsSO staticDecorSettings;
 
 	[SerializeField]
-	private LayerTileSettingsSO layerTileSettings;
+	private DecorationSettingsSO dynamicDecorSettings;
 
-	[SerializeField]
-	private FramingTileSettingsSO framingTileSettings;
-
-	[SerializeField]
-	private ColoringTileSettingsSO coloringTileSettings;
-
-	[SerializeField]
-	private DecorationSettingsSO decorationSettings;
-
+	private void OnEnable()
+	{
+		mainSeed = mapSizeSettings.GetMapSizeSettings().mainSeed;
+	}
 
 	public MapSizeSettings GetMapSizeSettings()
 	{
@@ -35,31 +34,25 @@ public class MapSettingsManagerSO : ScriptableObject
 
 	public MainPointsSettingsSO GetMainPointsSettings()
 	{
+		mainPointsSettings.SetMainSeed(mainSeed);
 		return mainPointsSettings;
 	}
 
-	public HeightMapSettings GetHeightMapSettings()
+	public LayerSettings GetLayerTileSettings()
 	{
-		return heightMapSettings.GetHeightMapSettings();
+		layerTileSettings.GetLayerSettings().SetMainSeed(mainSeed);
+		return layerTileSettings.GetLayerSettings();
 	}
 
-	public LayerTileSettings GetLayerTileSettings()
+	public DecorationSettings[] GetStaticDecorationSettings()
 	{
-		return layerTileSettings.GetLayerTileSettings();
+		staticDecorSettings.SetMainSeed(mainSeed);
+		return staticDecorSettings.GetDecorationSettings();
 	}
 
-	public FramingTileSettings GetFramingTileSettings()
+	public DecorationSettings[] GetDynamicDecorationSettings()
 	{
-		return framingTileSettings.GetFramingTileSettings();
-	}
-
-	public ColoringTileSettings GetColoringTileSettings()
-	{
-		return coloringTileSettings.GetColoringTileSettings();
-	}
-
-	public DecorationSettings[] GetDecorationSettings()
-	{
-		return decorationSettings.GetDecorationSettings();
+		dynamicDecorSettings.SetMainSeed(mainSeed);
+		return dynamicDecorSettings.GetDecorationSettings();
 	}
 }

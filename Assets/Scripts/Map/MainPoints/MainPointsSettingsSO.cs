@@ -15,43 +15,69 @@ public class MainPointsSettingsSO : ScriptableObject
 	private TradePointSettingsSO TradePointSettings;
 
 	[SerializeField]
-	private NeutralPointSettingsSO NeutralSpawnSettings;
+	private NeutralPointSettingsSO NeutralPointSettings;
 
 	[Space(10)]
+	[Tooltip("Ключ для генерации точек")]
 	[SerializeField]
-	private SectorSettings basePointsSectors;
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
-	private SectorSettings smallSectors;
+	private SectorSettings sectorSettings;
 
+	[SerializeField]
+	private Material nonDecorableAreaMaterial;
 
-	public BasePointSettings GetBasePointSettings()
+	public Tile GetNonDecorableTile()
 	{
-		return BasePointSettings.GetBasePointSettings();
+		Tile tile = new Tile(TileType.NonDecorable, TileType.GroundLayer);
+		tile.SetDefaultMaterial(nonDecorableAreaMaterial);
+		return tile;
 	}
 
-	public ExtractPointSettings GetExtractPointSettings()
+	public void SetMainSeed(string mainSeed)
 	{
-		return ExtractPointSettings.GetExtractPointSettings();
+		this.mainSeed = mainSeed;
 	}
 
-	public TradePointSettings GetTradePointSettings()
+	public IMainPointSettings GetMainPointSettings(MainPointType type)
 	{
-		return TradePointSettings.GetTradePointSettings();
+		IMainPointSettings sets;
+		switch (type)
+		{
+			default:
+			case MainPointType.Base:
+				sets = BasePointSettings.GetBasePointSettings();
+				break;
+
+			case MainPointType.Extract:
+				sets = ExtractPointSettings.GetExtractPointSettings();
+				break;
+
+			case MainPointType.Trade:
+				sets = TradePointSettings.GetTradePointSettings();
+				break;
+
+			case MainPointType.Neutral:
+				sets = NeutralPointSettings.GetNeutralPointSettings();
+				break;
+		}
+
+		if (seed != "")
+		{
+			sets.SetMainSeed(seed);
+		}
+		else
+		{
+			sets.SetMainSeed(mainSeed);
+		}
+
+		return sets;
 	}
 
-	public NeutralPointSettings GetNeutralSpawnSettings()
+	public SectorSettings GetSectorsSettings()
 	{
-		return NeutralSpawnSettings.GetNeutralPointSettings();
-	}
-
-	public SectorSettings GetBaseSectorSettings()
-	{
-		return basePointsSectors;
-	}
-
-	public SectorSettings GetSmallSettings()
-	{
-		return smallSectors;
+		return sectorSettings;
 	}
 }

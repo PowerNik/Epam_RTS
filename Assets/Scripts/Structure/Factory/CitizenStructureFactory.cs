@@ -12,6 +12,24 @@ public class CitizenStructureFactory : StructureFactory
     CitizenMilitaryStructure citizenMilitaryStructure = new CitizenMilitaryStructure();
     CitizenScientificStructure citizenScientificStructure = new CitizenScientificStructure();
 
+    public override GameResources GetStructurePrice(StructuresTypes type)
+    {
+        //TODO.Fix other buildings
+        switch (type)
+        {
+            case (StructuresTypes.BaseStructure):
+                return this.citizenBaseStructure.structurePrice;
+            case (StructuresTypes.ExtractStucture):
+                return this.citizenBaseStructure.structurePrice;
+            case (StructuresTypes.MilitaryStructure):
+                return this.citizenBaseStructure.structurePrice;
+            case (StructuresTypes.ScientificStructure):
+                return this.citizenBaseStructure.structurePrice;
+            default:
+                return new GameResources();
+        }
+    }
+
     public override Structure SpawnBaseStructure(Vector3 SpawnPosition)
     {
         return citizenBaseStructure.Build(SpawnPosition, playerManager.StructuresPlaceHolder.transform);

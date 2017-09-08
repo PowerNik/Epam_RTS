@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Structure : MonoBehaviour
+public class Structure : Unit
 {
     protected StructureSettings structureSettings;
 
     public void Init(StructureSettings settings)
     {
         structureSettings = settings;
+        this.Settings = settings;
+        Health = settings.MaxHealth;
     }
 
     private void OnDestroy()

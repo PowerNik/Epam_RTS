@@ -4,47 +4,44 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-	public int MapWidth { get; private set; }
-	public int MapLength { get; private set; }
-
-	public int TileCountX { get; private set; }
-	public int TileCountZ { get; private set; }
-	public float TileSize { get; private set; }
+	public int MapWidth { get { return mapSizeSets.width; } }
+	public int MapLength { get { return mapSizeSets.length; } }
 
 	[SerializeField]
 	private MapSettingsManagerSO mapSetsManager;
+
+	//TODO FOR TEST selecting
+	private LayerMask layerToRay;
 
 	private GridManager gridManager;
 	private MapCreator mapCreator;
 	private MapSizeSettings mapSizeSets;
 
 	private BuildAreaSelecter buildAreaSelecter;
+	private DecorationCreator decorationCreator;
 
 	private void Awake()
 	{
-		SetParams();
+		//TODO FOR TEST selecting
+		layerToRay = GameObject.Find("MinimapCamera").GetComponent<MinimapCamera>().GetLayerToRay();
+
+		mapSizeSets = mapSetsManager.GetMapSizeSettings();
 		CreateMap();
 
+		decorationCreator = gameObject.AddComponent<DecorationCreator>();
+		decorationCreator.SetTileGrid(ref gridManager.tileGrid);
+		decorationCreator.SetDecorationSettings(mapSetsManager.GetStaticDecorationSettings(), 
+			mapSetsManager.GetDynamicDecorationSettings());
+		decorationCreator.CreateStaticDecorations();
+
 		buildAreaSelecter = gameObject.AddComponent<BuildAreaSelecter>();
-	}
-
-	private void SetParams()
-	{
-		mapSizeSets = mapSetsManager.GetMapSizeSettings();
-
-		MapWidth = mapSizeSets.width;
-		MapLength = mapSizeSets.length;
-		TileSize = mapSizeSets.tileSize;
-		TileCountX = mapSizeSets.TileCountX;
-		TileCountZ = mapSizeSets.TileCountZ;
+		buildAreaSelecter.SetGridManager(gridManager);
 	}
 
 	private void CreateMap()
 	{
-		mapCreator = new MapCreator(mapSetsManager);
-		gridManager = new GridManager(mapSetsManager);
-		gridManager.SetLayerMap(mapCreator.LayerGrid, mapSetsManager.GetLayerTileSettings());
-		gridManager.SetAllFramingTiles(mapSetsManager.GetFramingTileSettings().GetFramingTilePairs());
+		gridManager = new GridManager(mapSetsManager.GetMapSizeSettings());
+		mapCreator = new MapCreator(mapSetsManager, ref gridManager.tileGrid);
 
 		GameObject mapGO = new GameObject();
 		mapGO.name = "Map";
@@ -64,28 +61,48 @@ public class MapManager : MonoBehaviour
 		lnmb.m_Size = new Vector3(MapWidth, 20, MapLength);
 	}
 
-	#region FOR TEST selecting buildArea
+	#region FOR TEST selecting Area
 	private void Update()
 	{
 		if (Input.GetKey(KeyCode.Alpha1))
-			SelectArea();
+			SelectBuildArea(Race.Fermer);
 		if (Input.GetKeyUp(KeyCode.Alpha1))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha2))
+			SelectBuildArea(Race.Citizen);
+		if (Input.GetKeyUp(KeyCode.Alpha2))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha3))
+			SelectExtractArea(Race.Fermer);
+		if (Input.GetKeyUp(KeyCode.Alpha3))
+			DeselectArea();
+
+		if (Input.GetKey(KeyCode.Alpha4))
+			SelectExtractArea(Race.Citizen);
+		if (Input.GetKeyUp(KeyCode.Alpha4))
 			DeselectArea();
 	}
 
-	public void SelectArea()
+	public void SelectBuildArea(Race race)
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit))
+		if (Physics.Raycast(ray, out hit, 1000, layerToRay))
 		{
-			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 0.3f, 3.1f, 3f, Race.Fermer);
+			IsBuildableArea(GetTilePos(hit.point) + Vector3.up * 1.3f, 3.1f, 3f, race);
 		}
 	}
 
-	public void DeselectArea()
+	public void SelectExtractArea(Race race)
 	{
-		buildAreaSelecter.DeselectBuildArea();
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit, 1000, layerToRay))
+		{
+			IsExtractableArea(GetTilePos(hit.point) + Vector3.up * 1.3f, 2.5f, 3f, race);
+		}
 	}
 	#endregion
 
@@ -94,26 +111,57 @@ public class MapManager : MonoBehaviour
 		return gridManager.GetTilePos(position);
 	}
 
-	public bool IsBuildableTile(Vector3 position, Race race)
-	{
-		return gridManager.IsBuildableTile(position, race);
-	}
-
 	public bool IsBuildableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
 	{
-		// TODO Nik Cнять заглушку
-		// 01.09.17. Сейчас недопилена постройка для горожан
-		// Поэтому стоит заглушка
-		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, Race.Fermer);
+		return buildAreaSelecter.SelectBuildArea(pos, areaSizeX, areaSizeZ, race);
 	}
+
+	public bool IsExtractableArea(Vector3 pos, float areaSizeX, float areaSizeZ, Race race)
+	{
+		return buildAreaSelecter.SelectExtractArea(pos, areaSizeX, areaSizeZ, race);
+	}
+
+	public void DeselectArea()
+	{
+		buildAreaSelecter.DeselectArea();
+	}
+
+	#region GetMainPointPositions
 
 	public Vector3 GetCitizenBasePoint()
 	{
-		return mapCreator.CitizenBasePoint;
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Base, Race.Citizen)[0];
 	}
 
 	public Vector3[] GetFermerBasePoints()
 	{
-		return mapCreator.FermerBasePoints;
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Base, Race.Fermer);
 	}
+
+	public Vector3[] GetCitizenExtractPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Extract, Race.Citizen);
+	}
+
+	public Vector3[] GetFermerExtractPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Extract, Race.Fermer);
+	}
+
+	public Vector3[] GetTradePoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Trade, Race.Citizen);
+	}
+
+	public Vector3[] GetAgressiveNeutralPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Neutral, Race.Citizen);
+	}
+
+	public Vector3[] GetPeacefulNeutralPoitns()
+	{
+		return mapCreator.mainPointsCreator.MainPointPositions(MainPointType.Neutral, Race.Fermer);
+	}
+
+	#endregion
 }

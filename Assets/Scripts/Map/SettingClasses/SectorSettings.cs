@@ -5,10 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public class SectorSettings
 {
-	public int countX = 4;
-	public int countZ = 4;
+	[Header("Число регионов на карте (для баз)")]
+	[Range(3, 5)]
+	public int regionCountX = 4;
+	[Range(3, 5)]
+	public int regionCountZ = 4;
 
-	public bool isUnique = true;
-
-	public string seed = "main";
+	[Space(10)]
+	[Header("Число секторов в каждом регионе")]
+	[Range(3, 5)]
+	public int sectorCountX = 4;
+	[Range(3, 5)]
+	public int sectorCountZ = 4;
 }

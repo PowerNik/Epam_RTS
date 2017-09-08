@@ -12,7 +12,7 @@ public enum StructuresTypes
 }
 
 [System.Serializable]
-public class StructureSettings
+public class StructureSettings : UnitSettings
 {
     [SerializeField]
     protected string structureName;
@@ -25,10 +25,18 @@ public class StructureSettings
     public Race structureRace;// { get; protected set; }
 
     [SerializeField]
-    protected int health;
+    protected float timeToBuild;
 
     [SerializeField]
-    protected float timeToBuild;
+    protected GameResources price;
+
+    public GameResources structurePrice
+    {
+        get
+        {
+            return price;
+        }
+    }
 
     [SerializeField]
     protected GameObject structureGameObject;
@@ -52,9 +60,10 @@ public class StructureSettings
     //Bad architecture
     public void Init(StructureSettings settings)
     {
-        this.health = settings.health;
+        this.MaxHealth = settings.MaxHealth;
         this.structureGameObject = settings.structureGameObject;
         this.timeToBuild = settings.timeToBuild;
+        this.price = settings.price;
         this.structureName = settings.structureName;
         this.structureType = settings.structureType;
         this.structureRace = settings.structureRace;

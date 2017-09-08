@@ -5,35 +5,40 @@ using UnityEngine.Events;
 
 public class Timer : MonoBehaviour
 {
-    public bool isRepeatable { get; set; }
+    private bool isRepeatable { get; set; }
 
     private float timerValue,
                   initTimerValue;
 
-    //public UnityAction timerAction0;
-
+    UnityAction timerAction;
     private float TimerValue
     {
         get { return timerValue; }
         set
         {
+            timerValue = value;
             if (timerValue <= 0 && isRepeatable)
             {
-
+                timerAction.Invoke();
+                timerValue = initTimerValue;
+            }else if(timerValue <= 0)
+            {
+                if(timerAction != null)
+                {
+                    timerAction.Invoke();
+                }
             }
         }
     }
 
-    public void Init(float val)
+    public void Init(float val, bool isRepeatable, UnityAction timerAction)
     {
         initTimerValue = timerValue = val;
+        this.timerAction = timerAction;
     }
-
-	void Start () {
-		
-	}
 	
-	void Update () {
-		
+	void FixedUpdate ()
+    {
+        TimerValue -= Time.fixedDeltaTime;	
 	}
 }

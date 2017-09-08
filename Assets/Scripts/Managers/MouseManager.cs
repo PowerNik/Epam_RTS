@@ -17,6 +17,7 @@ public class MouseManager : MonoBehaviour
     private List<Selectable> selectedObjects = new List<Selectable>();
     public List<Selectable> SelectedObjects { get { return selectedObjects; } }
 
+    public PlayerManager CurrentPlayer;
     public GameObject targetPoint;
 
     // Для группового выделения
@@ -45,7 +46,7 @@ public class MouseManager : MonoBehaviour
                 var selectable = hit.collider.GetComponent<Selectable>();
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    if (selectable.GetComponent<Movable>() && !selectable.GetComponent<Unit>().IsEnemy)
+                    if (selectable.GetComponent<Movable>() && !selectable.GetComponent<Unit>().IsEnemyFor(CurrentPlayer)) 
                     {
                         selectable.Select();
                         selectedObjects.Add(selectable);
@@ -87,7 +88,7 @@ public class MouseManager : MonoBehaviour
                 return;
             else
             {
-                if (selectedObjects[0].GetComponent<Unit>().IsEnemy)
+                if (selectedObjects[0].GetComponent<Unit>().IsEnemyFor(CurrentPlayer))
                     return;
 
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -96,11 +97,15 @@ public class MouseManager : MonoBehaviour
 
                 if (hit.collider.GetComponent<Unit>() != null)
                 {
-                    if (hit.collider.GetComponent<Unit>().IsEnemy)
+					//TODO HOTFIX
+                   // if (hit.collider.GetComponent<Unit>().IsEnemyFor(GetComponent<Unit>().playerOwner))
+					if (hit.collider.GetComponent<Unit>().IsEnemyFor(hit.collider.GetComponent<Unit>().playerOwner))
                     {
                         hit.collider.GetComponent<Selectable>().AttackSelection();
                         foreach (var obj in SelectedObjects)
                         {
+							//Hotfix2
+							if(obj!= null)
                             if (obj.GetComponent<Attack>() != null)
                             {
                                 obj.GetComponent<Attack>().EnableAttack(hit.collider.GetComponent<Unit>());
@@ -124,6 +129,8 @@ public class MouseManager : MonoBehaviour
                 {
                     foreach (var unit in selectedObjects)
                     {
+						//Hotfix2
+						if(unit != null)
                         if (unit.GetComponent<Movable>()!=null)
                             unit.GetComponent<Movable>().MoveToTarget(hit.point);
                     }
@@ -154,7 +161,7 @@ public class MouseManager : MonoBehaviour
             {
                 var holder = Camera.main.WorldToScreenPoint(u.transform.position);
                 holder.y = Screen.height - holder.y;
-                if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemy) && (u.GetComponent<Movable>() != null))
+                if ((rect.Contains(holder, true)) && (!u.GetComponent<Unit>().IsEnemyFor(CurrentPlayer)) && (u.GetComponent<Movable>() != null))
                 {
         //            if (selectedObjects.Contains(u))
         //                return;

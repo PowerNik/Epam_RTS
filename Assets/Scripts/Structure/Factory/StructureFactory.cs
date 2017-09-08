@@ -9,6 +9,8 @@ public abstract class StructureFactory
         playerManager = playerManagerRef;
     }
     protected PlayerManager playerManager { get; set; }
+
+    public abstract GameResources GetStructurePrice(StructuresTypes type);
     public abstract Structure SpawnBaseStructure(Vector3 SpawnPosition);
     public abstract Structure SpawnMilitaryStructure(Vector3 SpawnPosition);
     public abstract Structure SpawnScientificStructure(Vector3 SpawnPosition);

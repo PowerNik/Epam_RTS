@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class NeutralPointSettings
+public class NeutralPointSettings : IMainPointSettings
 {
 	[SerializeField]
-	private string overseed = "";
+	private string seed = "";
+	private string mainSeed = "";
 
 	[SerializeField]
 	private bool isCenter = true;
@@ -32,9 +34,21 @@ public class NeutralPointSettings
 	private DomainSettings peacefulNeuntralPointDomainSets;
 
 
-	public string GetOverseed()
+	public void SetMainSeed(string mainSeed)
 	{
-		return overseed;
+		this.mainSeed = mainSeed;
+	}
+
+	public string GetSeed()
+	{
+		if (seed != "")
+		{
+			return seed;
+		}
+		else
+		{
+			return mainSeed;
+		}
 	}
 
 	public bool GetIsCenter()
@@ -42,7 +56,17 @@ public class NeutralPointSettings
 		return isCenter;
 	}
 
-	public MainPointTile GetNeutralPoint(Race race)
+	public Dictionary<TileType, Tile> GetTileDictionary()
+	{
+		Dictionary<TileType, Tile> tileDict = new Dictionary<TileType, Tile>();
+
+		tileDict.Add(TileType.AggressiveNeuntralsPoint, GetMainPoint(Race.Citizen).GetTile());
+		tileDict.Add(TileType.PeacefulNeuntralsPoint, GetMainPoint(Race.Fermer).GetTile());
+
+		return tileDict;
+	}
+
+	public MainPointTile GetMainPoint(Race race)
 	{
 		if (race == Race.Citizen)
 		{
@@ -62,7 +86,7 @@ public class NeutralPointSettings
 		}
 	}
 
-	public int GetNeutralPointCount(Race race)
+	public int GetMainPointCount(Race race)
 	{
 		if (race == Race.Citizen)
 		{
